@@ -28,9 +28,9 @@ if sys.version_info[0] >= 3:
     raw_input = input
 
 tokens = (
-    'NAME','NUMBER',
+    'ID','NUMBER',
     'PLUS','MINUS','TIMES','DIVIDE','EQUALS','POW','MOD',
-    'LPAREN','RPAREN',
+    'LPAREN','RPAREN', 'STRING',
     )
 
 # Tokens
@@ -44,7 +44,8 @@ t_POW     = r'\^'
 t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
-t_NAME    = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_STRING  = r'\"[a-zA-Z_][a-zA-Z0-9_ ]*\"'
 
 def t_NUMBER(t):
     r'\d+'
@@ -80,8 +81,19 @@ precedence = (
 # dictionary of names
 names = { }	
 
+def p_start(t):
+    '''start : function
+             | statement'''
+
+def p_function(t):
+    '''function : ID LPAREN STRING RPAREN
+                | ID LPAREN expression RPAREN'''
+    if t[1] == "print" : print t[3]
+    xvar = t[3]
+    print "done function"
+
 def p_statement_assign(t):
-    'statement : NAME EQUALS expression'
+    'statement : ID EQUALS expression'
     names[t[1]] = t[3]
 
 def p_statement_expr(t):
@@ -129,12 +141,14 @@ def p_expression_number(t):
     t[0] = t[1]
 
 def p_expression_name(t):
-    'expression : NAME'
+    'expression : ID'
     try:
         t[0] = names[t[1]]
     except LookupError:
         print("Undefined name '%s'" % t[1])
         t[0] = 0
+
+
 
 def p_error(t):
     if t:
@@ -146,7 +160,7 @@ import ply.yacc as yacc
 yacc.yacc(optimize=1)
 mode = 2
 if mode == 1:
-    s = raw_input("SWIM > ")
+    s = raw_input("SWIM REPL> ")
     lex.input(s)
 while 1:
     if mode == 1:
@@ -156,7 +170,7 @@ while 1:
             break
     else:
         try:
-            s = raw_input('SWIM > ')
+            s = raw_input('SWIM REPL> ')
         except EOFError:
             break
         yacc.parse(s)
