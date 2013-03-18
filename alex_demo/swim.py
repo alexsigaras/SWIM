@@ -29,8 +29,8 @@ if sys.version_info[0] >= 3:
 
 tokens = (
     'NAME','NUMBER',
-    'PLUS','MINUS','TIMES','DIVIDE','EQUALS',
-    'LPAREN','RPAREN','IF', 'ELSE',
+    'PLUS','MINUS','TIMES','DIVIDE','EQUALS','POW','MOD',
+    'LPAREN','RPAREN',
     )
 
 # Tokens
@@ -40,11 +40,11 @@ t_MINUS   = r'-'
 t_TIMES   = r'\*'
 t_DIVIDE  = r'/'
 t_EQUALS  = r'='
+t_POW     = r'\^'
+t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_NAME    = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_IF      = r'if'
-t_ELSE    = r'else'
 
 def t_NUMBER(t):
     r'\d+'
@@ -73,8 +73,8 @@ lex.lex(optimize=1)
 
 precedence = (
     ('left','PLUS','MINUS'),
-    ('left','TIMES','DIVIDE'),
-    ('right','UMINUS'),
+    ('left','TIMES','DIVIDE', 'MOD'),
+    ('right','UMINUS','POW'),
     )
 
 # dictionary of names
@@ -92,11 +92,27 @@ def p_expression_binop(t):
     '''expression : expression PLUS expression
                   | expression MINUS expression
                   | expression TIMES expression
-                  | expression DIVIDE expression'''
-    if t[2] == '+'  : print "add"               #t[0] = t[1] + t[3]
-    elif t[2] == '-': print "subtract"          #t[0] = t[1] - t[3]
-    elif t[2] == '*': print "multiply"          #t[0] = t[1] * t[3]
-    elif t[2] == '/': print "divide"            #t[0] = t[1] / t[3]
+                  | expression DIVIDE expression
+                  | expression POW expression
+                  | expression MOD expression'''
+    if t[2]   == '+':
+        t[0] = t[1] + t[3]  # add
+        print t[0]          # Print Result
+    elif t[2] == '-':
+        t[0] = t[1] - t[3]  # subtract
+        print t[0]          # Print Result
+    elif t[2] == '*':
+        t[0] = t[1] * t[3]  # multiply
+        print t[0]          # Print Result
+    elif t[2] == '/':
+        t[0] = t[1] / t[3]  # divide
+        print t[0]          # Print Result
+    elif t[2] == '^': 
+        t[0] = t[1] ** t[3] # power
+        print t[0]          # Print Result
+    elif t[2] == '%': 
+        t[0] = t[1] % t[3]  # remainder
+        print t[0]          # Print Result
     elif t[2] == '<': t[0] = t[1] < t[3]
 
 def p_expression_uminus(t):
@@ -109,7 +125,8 @@ def p_expression_group(t):
 
 def p_expression_number(t):
     'expression : NUMBER'
-    print "push " + str(t[1])#t[0] = t[1]
+    #print "push " + str(t[1])#t[0] = t[1]
+    t[0] = t[1]
 
 def p_expression_name(t):
     'expression : NAME'
@@ -127,10 +144,19 @@ def p_error(t):
 
 import ply.yacc as yacc
 yacc.yacc(optimize=1)
-
+mode = 2
+if mode == 1:
+    s = raw_input("SWIM > ")
+    lex.input(s)
 while 1:
-    try:
-        s = raw_input('SWIM > ')
-    except EOFError:
-        break
-    yacc.parse(s)
+    if mode == 1:
+        tok = lex.token()
+        print tok
+        if not tok:
+            break
+    else:
+        try:
+            s = raw_input('SWIM > ')
+        except EOFError:
+            break
+        yacc.parse(s)
