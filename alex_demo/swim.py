@@ -109,22 +109,16 @@ def p_expression_binop(t):
                   | expression MOD expression'''
     if t[2]   == '+':
         t[0] = t[1] + t[3]  # add
-        print t[0]          # Print Result
     elif t[2] == '-':
         t[0] = t[1] - t[3]  # subtract
-        print t[0]          # Print Result
     elif t[2] == '*':
         t[0] = t[1] * t[3]  # multiply
-        print t[0]          # Print Result
     elif t[2] == '/':
         t[0] = t[1] / t[3]  # divide
-        print t[0]          # Print Result
     elif t[2] == '^': 
         t[0] = t[1] ** t[3] # power
-        print t[0]          # Print Result
     elif t[2] == '%': 
         t[0] = t[1] % t[3]  # remainder
-        print t[0]          # Print Result
     elif t[2] == '<': t[0] = t[1] < t[3]
 
 def p_expression_uminus(t):

@@ -38,8 +38,8 @@ _lr_productions = [
   ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','swim.py',107),
   ('expression -> expression POW expression','expression',3,'p_expression_binop','swim.py',108),
   ('expression -> expression MOD expression','expression',3,'p_expression_binop','swim.py',109),
-  ('expression -> MINUS expression','expression',2,'p_expression_uminus','swim.py',131),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','swim.py',135),
-  ('expression -> NUMBER','expression',1,'p_expression_number','swim.py',139),
-  ('expression -> ID','expression',1,'p_expression_name','swim.py',144),
+  ('expression -> MINUS expression','expression',2,'p_expression_uminus','swim.py',125),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','swim.py',129),
+  ('expression -> NUMBER','expression',1,'p_expression_number','swim.py',133),
+  ('expression -> ID','expression',1,'p_expression_name','swim.py',138),
 ]
