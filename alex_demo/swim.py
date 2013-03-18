@@ -98,7 +98,7 @@ def p_statement_assign(t):
 
 def p_statement_expr(t):
     'statement : expression'
-    print "done"
+    print t[1]
 
 def p_expression_binop(t):
     '''expression : expression PLUS expression
@@ -118,7 +118,7 @@ def p_expression_binop(t):
     elif t[2] == '^': 
         t[0] = t[1] ** t[3] # power
     elif t[2] == '%': 
-        t[0] = t[1] % t[3]  # remainder
+        t[0] = t[1] % t[3]  # remainder3
     elif t[2] == '<': t[0] = t[1] < t[3]
 
 def p_expression_uminus(t):
