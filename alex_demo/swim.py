@@ -30,7 +30,7 @@ if sys.version_info[0] >= 3:
 tokens = (
     'NAME','NUMBER',
     'PLUS','MINUS','TIMES','DIVIDE','EQUALS',
-    'LPAREN','RPAREN',
+    'LPAREN','RPAREN','IF', 'ELSE',
     )
 
 # Tokens
@@ -43,6 +43,8 @@ t_EQUALS  = r'='
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_NAME    = r'[a-zA-Z_][a-zA-Z0-9_]*'
+t_IF      = r'if'
+t_ELSE    = r'else'
 
 def t_NUMBER(t):
     r'\d+'
@@ -91,10 +93,10 @@ def p_expression_binop(t):
                   | expression MINUS expression
                   | expression TIMES expression
                   | expression DIVIDE expression'''
-    if t[2] == '+'  : print "add"#t[0] = t[1] + t[3]
-    elif t[2] == '-': print "subtract"#t[0] = t[1] - t[3]
-    elif t[2] == '*': print "multiply"#t[0] = t[1] * t[3]
-    elif t[2] == '/': print "divide"#t[0] = t[1] / t[3]
+    if t[2] == '+'  : print "add"               #t[0] = t[1] + t[3]
+    elif t[2] == '-': print "subtract"          #t[0] = t[1] - t[3]
+    elif t[2] == '*': print "multiply"          #t[0] = t[1] * t[3]
+    elif t[2] == '/': print "divide"            #t[0] = t[1] / t[3]
     elif t[2] == '<': t[0] = t[1] < t[3]
 
 def p_expression_uminus(t):
@@ -128,7 +130,7 @@ yacc.yacc(optimize=1)
 
 while 1:
     try:
-        s = raw_input('machine code translator > ')
+        s = raw_input('SWIM > ')
     except EOFError:
         break
     yacc.parse(s)
