@@ -1,1 +1,78 @@
 Created by PLY version 3.4 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    DIVIDE
+    NUMBER
+    TIMES
+    EQUALS
+    PLUS
+    MINUS
+
+Grammar
+
+Rule 0     S' -> function
+Rule 1     function -> ID LPAREN STRING RPAREN
+
+Terminals, with rules where they appear
+
+DIVIDE               : 
+EQUALS               : 
+ID                   : 1
+LPAREN               : 1
+MINUS                : 
+NUMBER               : 
+PLUS                 : 
+RPAREN               : 1
+STRING               : 1
+TIMES                : 
+error                : 
+
+Nonterminals, with rules where they appear
+
+function             : 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . function
+    (1) function -> . ID LPAREN STRING RPAREN
+
+    ID              shift and go to state 2
+
+    function                       shift and go to state 1
+
+state 1
+
+    (0) S' -> function .
+
+
+
+state 2
+
+    (1) function -> ID . LPAREN STRING RPAREN
+
+    LPAREN          shift and go to state 3
+
+
+state 3
+
+    (1) function -> ID LPAREN . STRING RPAREN
+
+    STRING          shift and go to state 4
+
+
+state 4
+
+    (1) function -> ID LPAREN STRING . RPAREN
+
+    RPAREN          shift and go to state 5
+
+
+state 5
+
+    (1) function -> ID LPAREN STRING RPAREN .
+
+    $end            reduce using rule 1 (function -> ID LPAREN STRING RPAREN .)
+
