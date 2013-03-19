@@ -47,12 +47,21 @@ t_RPAREN  = r'\)'
 t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
 t_STRING  = r'\"[a-zA-Z_][a-zA-Z0-9_ ]*\"'
 
+# def t_NUMBER(t):
+#     r'\d+'
+#     try:
+#         t.value = int(t.value)
+#     except ValueError:
+#         print("Integer value too large %s" % t.value)
+#         t.value = 0
+#     return t
+
 def t_NUMBER(t):
-    r'\d+'
+    r'[0-9]*\.?[0-9]+'
     try:
-        t.value = int(t.value)
+        t.value = float(t.value)
     except ValueError:
-        print("Integer value too large %s" % t.value)
+        print("Float value too large %s" % t.value)
         t.value = 0
     return t
 
@@ -141,8 +150,6 @@ def p_expression_name(t):
     except LookupError:
         print("Undefined name '%s'" % t[1])
         t[0] = 0
-
-
 
 def p_error(t):
     if t:
