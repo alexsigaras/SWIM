@@ -1,25 +1,28 @@
-# -----------------------------------------------------------------------------
-# COLUMBIA UNIVERSITY - FU FOUNDATION SCHOOL OF ENGINEERING
-# COMPUTER SCIENCE DEPARTMENT
-#
-# COMS W4115 - PROGRAMMING LANGUAGES AND TRANSLATORS
-# Professor A. Aho
-#
-# Team 3 Final Project: "SWIM"
-# Team Mentor: A. Aho
-#
-# Team members:
-#
-#    Name                    Role                         UNI
-# Morris Hopkins        Project Manager                 mah2250
-# Seungwoo Lee          Language Guru                   sl3492
-# Lev Brie              System Architect                ldb2001
-# Alexandros Sigaras    System Integrator               as4161
-# Michal Wolski         Verification and Validation     mtw2135
-#
-# Programming and Translational language 
-# Prof.Aho
-# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------#
+#                                                                              #
+#           COLUMBIA UNIVERSITY - FU FOUNDATION SCHOOL OF ENGINEERING          #
+#                             COMPUTER SCIENCE DEPARTMENT                      #
+#                                                                              #
+# COMS W4115 - PROGRAMMING LANGUAGES AND TRANSLATORS                           #
+# Professor A. Aho                                                             #
+#                                                                              #
+# Team 3 Final Project: "SWIM"                                                 #
+# Team Mentor: A. Aho                                                          #
+#                                                                              #
+# Team members:                                                                #
+#                                                                              #
+#    Name                    Role                         UNI                  #
+# Morris Hopkins        Project Manager                 mah2250                #
+# Seungwoo Lee          Language Guru                   sl3492                 #
+# Lev Brie              System Architect                ldb2001                #
+# Alexandros Sigaras    System Integrator               as4161                 #
+# Michal Wolski         Verification and Validation     mtw2135                #
+#                                                                              #
+# -----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                               Library Import                                #
+#-----------------------------------------------------------------------------#
 
 import sys
 sys.path.insert(0,"..")
@@ -27,10 +30,16 @@ sys.path.insert(0,"..")
 if sys.version_info[0] >= 3:
     raw_input = input
 
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                               Declare tokens                                #
+#-----------------------------------------------------------------------------#
+
 tokens = (
-    'ID','NUMBER',
-    'PLUS','MINUS','TIMES','DIVIDE','EQUALS','POW','MOD',
-    'LPAREN','RPAREN', 'STRING',
+    'ID','NUMBER', 'TRUE', 'FALSE',
+    'PLUS','MINUS','TIMES','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
+    'LPAREN','RPAREN', 'STRING', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
     )
 
 # Tokens
@@ -39,22 +48,22 @@ t_PLUS    = r'\+'
 t_MINUS   = r'-'
 t_TIMES   = r'\*'
 t_DIVIDE  = r'/'
-t_EQUALS  = r'='
+t_ASSIGN  = r'='
+t_EQUALS = r'=='
 t_POW     = r'\^'
 t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
 t_STRING  = r'\"[a-zA-Z_][a-zA-Z0-9_ ]*\"'
-
-# def t_NUMBER(t):
-#     r'\d+'
-#     try:
-#         t.value = int(t.value)
-#     except ValueError:
-#         print("Integer value too large %s" % t.value)
-#         t.value = 0
-#     return t
+t_IF      = r'if'
+t_ELSE    = r'else'
+t_DO      = r'do'
+t_TRUE    = r'True'
+t_FALSE   = r'False'
+t_WHILE   = r'while'
+t_FOR     = r'for'
+t_FOREACH = r'foreach'
 
 def t_NUMBER(t):
     r'[0-9]*\.?[0-9]+'
@@ -74,12 +83,22 @@ def t_newline(t):
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
     t.lexer.skip(1)
+
+#-----------------------------------------------------------------------------#
+
+
+#-----------------------------------------------------------------------------#
+#                                    Lex                                      #
+#-----------------------------------------------------------------------------#
     
-# Build the lexer
 import ply.lex as lex
 lex.lex(optimize=1)
 
-# Parsing rules
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                               Parsing Rules                                 #
+#-----------------------------------------------------------------------------#
 
 precedence = (
     ('left','PLUS','MINUS'),
@@ -91,19 +110,36 @@ precedence = (
 names = { }	
 
 def p_start(t):
-    '''start : function
-             | statement'''
+    '''start : statement
+             | function'''
+
+# def p_statement_true(t):
+#     'statement : TRUE'
+#     print True
+# def p_statement_false(t):
+#     'statement : FALSE'
+#     print False
 
 def p_function(t):
     '''function : ID LPAREN STRING RPAREN
                 | ID LPAREN expression RPAREN'''
+
     if t[1] == "print" : print t[3]
     xvar = t[3]
     print "done function"
 
 def p_statement_assign(t):
-    'statement : ID EQUALS expression'
+    'statement : ID ASSIGN expression'
     names[t[1]] = t[3]
+
+def p_statement_equals(t):
+    'statement : expression EQUALS expression'
+    print t[1] == t[3]
+
+def p_statement_if_else(t):
+    'statement : IF expression DO expression ELSE expression'
+    if t[2] : t[4] 
+    else    : t[6]
 
 def p_statement_expr(t):
     'statement : expression'
@@ -115,8 +151,10 @@ def p_expression_binop(t):
                   | expression TIMES expression
                   | expression DIVIDE expression
                   | expression POW expression
-                  | expression MOD expression'''
-    if t[2]   == '+':
+                  | expression MOD expression
+                  | TRUE
+                  | FALSE'''
+    if t[2] == '+':
         t[0] = t[1] + t[3]  # add
     elif t[2] == '-':
         t[0] = t[1] - t[3]  # subtract
@@ -128,6 +166,10 @@ def p_expression_binop(t):
         t[0] = t[1] ** t[3] # power
     elif t[2] == '%': 
         t[0] = t[1] % t[3]  # remainder3
+    elif t[1] == 'True':
+        t[0] = True
+    elif t[1] == 'False':
+        t[0] = False
     elif t[2] == '<': t[0] = t[1] < t[3]
 
 def p_expression_uminus(t):
@@ -157,6 +199,12 @@ def p_error(t):
     else:
         print("Syntax error at EOF")
 
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                                    Yacc                                     #
+#-----------------------------------------------------------------------------#
+
 import ply.yacc as yacc
 yacc.yacc(optimize=1)
 mode = 2
@@ -175,3 +223,5 @@ while 1:
         except EOFError:
             break
         yacc.parse(s)
+
+#-----------------------------------------------------------------------------#
