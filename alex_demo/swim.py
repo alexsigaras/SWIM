@@ -37,9 +37,9 @@ if sys.version_info[0] >= 3:
 #-----------------------------------------------------------------------------#
 
 tokens = (
-    'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT',
+    'STRING', 'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT',
     'PLUS','MINUS','MULTIPLY','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
-    'LPAREN','RPAREN', 'STRING', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
+    'LPAREN','RPAREN', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
     )
 
 # Tokens
@@ -60,8 +60,9 @@ t_POW     = r'\^'
 t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
-t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_STRING  = r'"\\?.*"'
+t_STRING  = r'u?"\\?.*"'
+t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]+'
+
 
 # Keywords
 
@@ -130,10 +131,12 @@ def p_start(t):
 #     print False
 
 def p_function(t):
-    '''function : ID LPAREN STRING RPAREN
-                | ID LPAREN expression RPAREN'''
+    '''function : ID LPAREN STRING RPAREN'''
 
-    if t[1] == "print" : print t[3]
+    if t[1] == "print" :
+        if t[3][0] == 'u':
+        else:
+            print t[3].replace('"','')
     xvar = t[3]
     print "done function"
 
@@ -230,7 +233,7 @@ import ply.yacc as yacc
 yacc.yacc(optimize=1)
 mode = 2
 if mode == 1:
-    s = raw_input("SWIM REPL> ")
+    s = input("SWIM REPL> ")
     lex.input(s)
 while 1:
     if mode == 1:
@@ -240,7 +243,8 @@ while 1:
             break
     else:
         try:
-            s = raw_input('SWIM REPL> ')
+            s = input('SWIM REPL> ')
+
         except EOFError:
             break
         yacc.parse(s)

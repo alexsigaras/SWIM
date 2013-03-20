@@ -54,8 +54,8 @@ tokens = (
 #---------------------------------#
 
 t_SINGLE_LINE_COMMENT      = '//'
-t_MULTI_LINE_COMMENT_START = '/*'
-t_MULTI_LINE_COMMENT_END   = '/*'
+t_MULTI_LINE_COMMENT_START = '/\*'
+t_MULTI_LINE_COMMENT_END   = '/\*'
 
 #---------------------------------#
 
@@ -75,7 +75,7 @@ t_RPAREN  = r'\)'
 t_TRUE    = r'True'
 t_FALSE   = r'False'
 t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_STRING  = r'"[a-zA-Z0-9_ ]*"'
+t_STRING  = '"[a-zA-Z_][a-zA-Z0-9_]*"'
 
 def t_NUMBER(t):
     r'[0-9]*\.?[0-9]+'
@@ -139,6 +139,10 @@ t_MOD       			= r'\%'
 import ply.lex as lex
 lex.lex(optimize=1)
 
+def t_error(t): 
+    print "Illegal character '%s'" % t.value[0]
+    t.lexer.skip(1)
+
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -177,5 +181,7 @@ while 1:
         except EOFError:
             break
         yacc.parse(s)
+
+
 
 #-----------------------------------------------------------------------------#
