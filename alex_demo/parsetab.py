@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = '\xcb\xeb\xd2#\xce\x1e\x9fY%\x02P\xa6(3)\x17'
+_lr_signature = '@`\xca\xbf\xef\xff\xaa\xdb\xf7w\xbf,\x1c\xdb\x89Q'
     
-_lr_action_items = {'RPAREN':([3,9,10,11,20,21,22,23,24,25,26,28,29,],[-15,-16,-13,20,-14,-10,-11,-9,-7,-8,-12,30,31,]),'DIVIDE':([3,7,8,9,10,11,20,21,22,23,24,25,26,27,29,],[-15,12,-16,-16,-13,12,-14,-10,-11,-9,12,12,-12,12,12,]),'POW':([3,7,8,9,10,11,20,21,22,23,24,25,26,27,29,],[-15,13,-16,-16,13,13,-14,13,13,13,13,13,13,13,13,]),'NUMBER':([0,4,6,12,13,14,15,16,17,18,19,],[3,3,3,3,3,3,3,3,3,3,3,]),'ID':([0,4,6,12,13,14,15,16,17,18,19,],[8,9,9,9,9,9,9,9,9,9,9,]),'EQUALS':([8,],[18,]),'PLUS':([3,7,8,9,10,11,20,21,22,23,24,25,26,27,29,],[-15,15,-16,-16,-13,15,-14,-10,-11,-9,-7,-8,-12,15,15,]),'MOD':([3,7,8,9,10,11,20,21,22,23,24,25,26,27,29,],[-15,17,-16,-16,-13,17,-14,-10,-11,-9,17,17,-12,17,17,]),'LPAREN':([0,4,6,8,12,13,14,15,16,17,18,19,],[6,6,6,19,6,6,6,6,6,6,6,6,]),'STRING':([19,],[28,]),'TIMES':([3,7,8,9,10,11,20,21,22,23,24,25,26,27,29,],[-15,14,-16,-16,-13,14,-14,-10,-11,-9,14,14,-12,14,14,]),'MINUS':([0,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,],[4,-15,4,4,16,-16,-16,-13,16,4,4,4,4,4,4,4,4,-14,-10,-11,-9,-7,-8,-12,16,16,]),'$end':([1,2,3,5,7,8,9,10,20,21,22,23,24,25,26,27,30,31,],[-1,-2,-15,0,-6,-16,-16,-13,-14,-10,-11,-9,-7,-8,-12,-5,-3,-4,]),}
+_lr_action_items = {'DO':([1,2,10,13,14,18,19,30,35,36,37,38,40,41,42,43,44,],[-23,-19,-20,-24,-21,34,-18,-22,-15,-17,-12,-13,-16,-9,-11,-10,-14,]),'NUMBER':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,]),'MULTIPLY':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,27,-24,-21,27,27,27,-22,27,27,27,27,-12,-13,27,27,27,-11,27,-14,27,27,]),'TRUE':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,]),'MINUS':([0,1,2,3,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,33,34,35,36,37,38,39,40,41,42,43,44,47,48,49,],[3,-23,-19,3,3,-24,3,-20,3,28,-24,-21,28,3,3,28,28,3,3,3,3,3,3,3,3,3,3,-22,28,28,3,28,28,-12,-13,28,28,-9,-11,-10,-14,28,3,28,]),'STRING':([17,],[32,]),'RPAREN':([1,2,10,13,14,15,19,30,32,33,35,36,37,38,40,41,42,43,44,],[-23,-19,-20,-24,-21,30,-18,-22,45,46,-15,-17,-12,-13,-16,-9,-11,-10,-14,]),'POW':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,23,-24,23,23,23,23,-22,23,23,23,23,23,23,23,23,23,23,23,23,23,23,]),'PLUS':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,26,-24,-21,26,26,26,-22,26,26,26,26,-12,-13,26,26,-9,-11,-10,-14,26,26,]),'ASSIGN':([8,],[16,]),'$end':([1,2,4,5,6,8,10,12,13,14,19,30,31,35,36,37,38,39,40,41,42,43,44,45,46,49,],[-23,-19,0,-1,-2,-24,-20,-8,-24,-21,-18,-22,-5,-15,-17,-12,-13,-6,-16,-9,-11,-10,-14,-3,-4,-7,]),'XOR':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,21,-24,-21,21,21,21,-22,21,21,21,21,-12,-13,21,21,-9,-11,-10,-14,21,21,]),'DIVIDE':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,22,-24,-21,22,22,22,-22,22,22,22,22,-12,-13,22,22,22,-11,22,-14,22,22,]),'EQUALS':([1,2,8,10,12,13,14,19,30,35,36,37,38,40,41,42,43,44,],[-23,-19,-24,-20,24,-24,-21,-18,-22,-15,-17,-12,-13,-16,-9,-11,-10,-14,]),'ELSE':([1,2,10,13,14,19,30,35,36,37,38,40,41,42,43,44,47,],[-23,-19,-20,-24,-21,-18,-22,-15,-17,-12,-13,-16,-9,-11,-10,-14,48,]),'LPAREN':([0,3,7,8,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[7,7,7,17,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,7,]),'ID':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[8,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,]),'IF':([0,],[9,]),'AND':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,20,-24,-21,20,20,20,-22,20,20,20,20,-12,-13,20,20,-9,-11,-10,-14,20,20,]),'FALSE':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,]),'NOT':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,]),'OR':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,25,-24,-21,25,25,25,-22,25,25,25,25,-12,-13,25,25,-9,-11,-10,-14,25,25,]),'MOD':([1,2,8,10,12,13,14,15,18,19,30,31,33,35,36,37,38,39,40,41,42,43,44,47,49,],[-23,-19,-24,-20,29,-24,-21,29,29,29,-22,29,29,29,29,-12,-13,29,29,29,-11,29,-14,29,29,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'function':([0,],[1,]),'start':([0,],[5,]),'expression':([0,4,6,12,13,14,15,16,17,18,19,],[7,10,11,21,22,23,24,25,26,27,29,]),'statement':([0,],[2,]),}
+_lr_goto_items = {'function':([0,],[6,]),'start':([0,],[4,]),'expression':([0,3,7,9,11,16,17,20,21,22,23,24,25,26,27,28,29,34,48,],[12,14,15,18,19,31,33,35,36,37,38,39,40,41,42,43,44,47,49,]),'statement':([0,],[5,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -26,20 +26,28 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> start","S'",1,None,None,None),
-  ('start -> function','start',1,'p_start','swim.py',94),
-  ('start -> statement','start',1,'p_start','swim.py',95),
-  ('function -> ID LPAREN STRING RPAREN','function',4,'p_function','swim.py',98),
-  ('function -> ID LPAREN expression RPAREN','function',4,'p_function','swim.py',99),
-  ('statement -> ID EQUALS expression','statement',3,'p_statement_assign','swim.py',105),
-  ('statement -> expression','statement',1,'p_statement_expr','swim.py',109),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','swim.py',113),
-  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','swim.py',114),
-  ('expression -> expression TIMES expression','expression',3,'p_expression_binop','swim.py',115),
-  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','swim.py',116),
-  ('expression -> expression POW expression','expression',3,'p_expression_binop','swim.py',117),
-  ('expression -> expression MOD expression','expression',3,'p_expression_binop','swim.py',118),
-  ('expression -> MINUS expression','expression',2,'p_expression_uminus','swim.py',134),
-  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','swim.py',138),
-  ('expression -> NUMBER','expression',1,'p_expression_number','swim.py',142),
-  ('expression -> ID','expression',1,'p_expression_name','swim.py',147),
+  ('start -> statement','start',1,'p_start','swim.py',122),
+  ('start -> function','start',1,'p_start','swim.py',123),
+  ('function -> ID LPAREN STRING RPAREN','function',4,'p_function','swim.py',133),
+  ('function -> ID LPAREN expression RPAREN','function',4,'p_function','swim.py',134),
+  ('statement -> ID ASSIGN expression','statement',3,'p_statement_assign','swim.py',141),
+  ('statement -> expression EQUALS expression','statement',3,'p_statement_equals','swim.py',145),
+  ('statement -> IF expression DO expression ELSE expression','statement',6,'p_statement_if_else','swim.py',149),
+  ('statement -> expression','statement',1,'p_statement_expr','swim.py',154),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_binop','swim.py',158),
+  ('expression -> expression MINUS expression','expression',3,'p_expression_binop','swim.py',159),
+  ('expression -> expression MULTIPLY expression','expression',3,'p_expression_binop','swim.py',160),
+  ('expression -> expression DIVIDE expression','expression',3,'p_expression_binop','swim.py',161),
+  ('expression -> expression POW expression','expression',3,'p_expression_binop','swim.py',162),
+  ('expression -> expression MOD expression','expression',3,'p_expression_binop','swim.py',163),
+  ('expression -> expression AND expression','expression',3,'p_expression_binop','swim.py',164),
+  ('expression -> expression OR expression','expression',3,'p_expression_binop','swim.py',165),
+  ('expression -> expression XOR expression','expression',3,'p_expression_binop','swim.py',166),
+  ('expression -> NOT expression','expression',2,'p_expression_binop','swim.py',167),
+  ('expression -> TRUE','expression',1,'p_expression_binop','swim.py',168),
+  ('expression -> FALSE','expression',1,'p_expression_binop','swim.py',169),
+  ('expression -> MINUS expression','expression',2,'p_expression_uminus','swim.py',197),
+  ('expression -> LPAREN expression RPAREN','expression',3,'p_expression_group','swim.py',201),
+  ('expression -> NUMBER','expression',1,'p_expression_number','swim.py',205),
+  ('expression -> ID','expression',1,'p_expression_name','swim.py',210),
 ]

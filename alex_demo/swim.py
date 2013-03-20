@@ -37,19 +37,22 @@ if sys.version_info[0] >= 3:
 #-----------------------------------------------------------------------------#
 
 tokens = (
-    'ID','NUMBER', 'TRUE', 'FALSE',
-    'PLUS','MINUS','TIMES','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
+    'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT',
+    'PLUS','MINUS','MULTIPLY','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
     'LPAREN','RPAREN', 'STRING', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
     )
 
 # Tokens
+
+# Operator Tokens
+
 t_AND     = r'and|&&'
 t_OR      = r'or|\|\|'
 t_XOR     = r'xor'
 t_NOT     = r'not|!'
 t_PLUS    = r'\+'
 t_MINUS   = r'-'
-t_TIMES   = r'\*'
+t_MULTIPLY   = r'\*'
 t_DIVIDE  = r'/'
 t_ASSIGN  = r'='
 t_EQUALS  = r'=='
@@ -58,7 +61,10 @@ t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_STRING  = r'"[a-zA-Z0-9_ ]*"'
+t_STRING  = r'"\\?.*"'
+
+# Keywords
+
 t_IF      = r'if'
 t_ELSE    = r'else'
 t_DO      = r'do'
@@ -105,12 +111,12 @@ lex.lex(optimize=1)
 
 precedence = (
     ('left','PLUS','MINUS'),
-    ('left','TIMES','DIVIDE', 'MOD'),
+    ('left','MULTIPLY','DIVIDE', 'MOD'),
     ('right','UMINUS','POW'),
     )
 
 # dictionary of names
-names = { }	
+names = { } 
 
 def p_start(t):
     '''start : statement
@@ -151,7 +157,7 @@ def p_statement_expr(t):
 def p_expression_binop(t):
     '''expression : expression PLUS expression
                   | expression MINUS expression
-                  | expression TIMES expression
+                  | expression MULTIPLY expression
                   | expression DIVIDE expression
                   | expression POW expression
                   | expression MOD expression
