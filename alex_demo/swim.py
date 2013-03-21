@@ -24,13 +24,14 @@
 #                               Library Import                                #
 #-----------------------------------------------------------------------------#
 
-import sys
+import sys, os
 import re
 sys.path.insert(0,"..")
 
 if sys.version_info[0] >= 3:
     raw_input = input
 
+sys.path.insert(0, os.path.join("..", "lxml"))
 from pyquery import PyQuery as pq
 import urllib
 #-----------------------------------------------------------------------------#
