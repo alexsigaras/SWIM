@@ -31,6 +31,16 @@ sys.path.insert(0,"..")
 if sys.version_info[0] >= 3:
     raw_input = input
 
+from pyquery import PyQuery as pq
+import urllib
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                             External Functions                              #
+#-----------------------------------------------------------------------------#
+def stripe_quotation(string):
+	result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
+	return result
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -38,7 +48,7 @@ if sys.version_info[0] >= 3:
 #-----------------------------------------------------------------------------#
 
 tokens = (
-    'STRING', 'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT',
+    'STRING1', 'STRING2', 'SELECTOR', 'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT', 'COMMA',
     'PLUS','MINUS','MULTIPLY','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
     'LPAREN','RPAREN', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
     )
@@ -61,9 +71,11 @@ t_POW     = r'\^'
 t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
-t_STRING  = r'u?"\\?.*"'
+t_STRING1 = r'u?"\\?[^"]*"'
+t_STRING2 = r"u?'\\?[^']*'"
 t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-
+t_SELECTOR = r'@'
+t_COMMA   = r','
 
 # Keywords
 
@@ -140,13 +152,21 @@ def p_function(t):
     	for seq in escaped_sequences:
     		if t[3].find(seq) != -1:		
     			t[3] = t[3].decode('string-escape')
-    			 		
+    		
+    	# string containing "" 		 		
     	# 2 byte unicode with unicode characters
         if re.match(r'u"\\u', t[3]):
         	print unichr(int(t[3][4:8], 16))
         # 2 byte unicode with strings
         elif re.match(r'^u"', t[3]):
         	print t[3].replace('"','')[1:].decode("utf-8")
+        	
+    	# string containing ''        	
+        elif re.match(r"u'\\u", t[3]):
+        	print unichr(int(t[3][4:8], 16))
+        # 2 byte unicode with strings
+        elif re.match(r"^u'", t[3]):
+        	print t[3].replace('"','')[1:].decode("utf-8")        	
         else:
             print t[3].replace('"','')
 
@@ -213,6 +233,16 @@ def p_expression_uminus(t):
 def p_expression_group(t):
     'expression : LPAREN expression RPAREN'
     t[0] = t[2]
+def p_expression_parse(t):
+	'expression : parse'
+	t[0] = t[1]
+	
+def p_expression_parse_text(t):
+    'parse : SELECTOR LPAREN string COMMA string RPAREN'
+    t[5] = stripe_quotation(t[5])
+    t[3] = stripe_quotation(t[3])
+    d = pq(url=t[5], opener=lambda url: urllib.urlopen(url).read())
+    t[0] = d(t[3]).text()
 
 def p_expression_number(t):
     'expression : NUMBER'
@@ -227,14 +257,22 @@ def p_expression_name(t):
         print("Undefined name '%s'" % t[1])
         t[0] = 0
 def p_expression_string(t):
-    'expression : STRING'
+    'expression : string'
     try:
         t[0] = t[1]
     except LookupError:
         print("Undefined name '%s'" % t[1])
         t[0] = 0
+def p_expression_string_twoways(t):
+    '''string : STRING1
+    		  | STRING2''' 
+    try:    		
+        t[0] = t[1]
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
+        t[0] = 0        
 def p_expression_unistring(t):
-    'expression : ID STRING'
+    'expression : ID string'
     try:
     	if t[1] == 'u':
     		t[0] = t[1] + t[2]
@@ -276,4 +314,3 @@ while 1:
             break
         yacc.parse(s)
 
-#-----------------------------------------------------------------------------#

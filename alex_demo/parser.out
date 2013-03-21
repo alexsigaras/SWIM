@@ -30,15 +30,20 @@ Rule 18    expression -> TRUE
 Rule 19    expression -> FALSE
 Rule 20    expression -> MINUS expression
 Rule 21    expression -> LPAREN expression RPAREN
-Rule 22    expression -> NUMBER
-Rule 23    expression -> ID
-Rule 24    expression -> STRING
-Rule 25    expression -> ID STRING
+Rule 22    expression -> parse
+Rule 23    parse -> SELECTOR LPAREN string COMMA string RPAREN
+Rule 24    expression -> NUMBER
+Rule 25    expression -> ID
+Rule 26    expression -> string
+Rule 27    string -> STRING1
+Rule 28    string -> STRING2
+Rule 29    expression -> ID string
 
 Terminals, with rules where they appear
 
 AND                  : 14
 ASSIGN               : 4
+COMMA                : 23
 DIVIDE               : 11
 DO                   : 6
 ELSE                 : 6
@@ -46,19 +51,21 @@ EQUALS               : 5
 FALSE                : 19
 FOR                  : 
 FOREACH              : 
-ID                   : 3 4 23 25
+ID                   : 3 4 25 29
 IF                   : 6
-LPAREN               : 3 21
+LPAREN               : 3 21 23
 MINUS                : 9 20
 MOD                  : 13
 MULTIPLY             : 10
 NOT                  : 17
-NUMBER               : 22
+NUMBER               : 24
 OR                   : 15
 PLUS                 : 8
 POW                  : 12
-RPAREN               : 3 21
-STRING               : 24 25
+RPAREN               : 3 21 23
+SELECTOR             : 23
+STRING1              : 27
+STRING2              : 28
 TRUE                 : 18
 WHILE                : 
 XOR                  : 16
@@ -68,8 +75,10 @@ Nonterminals, with rules where they appear
 
 expression           : 3 4 5 5 6 6 6 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 20 21
 function             : 2
+parse                : 22
 start                : 0
 statement            : 1
+string               : 23 23 26 29
 
 Parsing method: LALR
 
@@ -97,47 +106,82 @@ state 0
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    ID              shift and go to state 9
-    IF              shift and go to state 10
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    ID              shift and go to state 13
+    IF              shift and go to state 14
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    STRING          shift and go to state 4
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    function                       shift and go to state 7
-    start                          shift and go to state 5
-    expression                     shift and go to state 13
-    statement                      shift and go to state 6
+    function                       shift and go to state 11
+    string                         shift and go to state 6
+    parse                          shift and go to state 3
+    start                          shift and go to state 7
+    statement                      shift and go to state 8
+    expression                     shift and go to state 17
 
 state 1
 
-    (22) expression -> NUMBER .
+    (24) expression -> NUMBER .
 
-    PLUS            reduce using rule 22 (expression -> NUMBER .)
-    MINUS           reduce using rule 22 (expression -> NUMBER .)
-    MULTIPLY        reduce using rule 22 (expression -> NUMBER .)
-    DIVIDE          reduce using rule 22 (expression -> NUMBER .)
-    POW             reduce using rule 22 (expression -> NUMBER .)
-    MOD             reduce using rule 22 (expression -> NUMBER .)
-    AND             reduce using rule 22 (expression -> NUMBER .)
-    OR              reduce using rule 22 (expression -> NUMBER .)
-    XOR             reduce using rule 22 (expression -> NUMBER .)
-    EQUALS          reduce using rule 22 (expression -> NUMBER .)
-    $end            reduce using rule 22 (expression -> NUMBER .)
-    RPAREN          reduce using rule 22 (expression -> NUMBER .)
-    DO              reduce using rule 22 (expression -> NUMBER .)
-    ELSE            reduce using rule 22 (expression -> NUMBER .)
+    PLUS            reduce using rule 24 (expression -> NUMBER .)
+    MINUS           reduce using rule 24 (expression -> NUMBER .)
+    MULTIPLY        reduce using rule 24 (expression -> NUMBER .)
+    DIVIDE          reduce using rule 24 (expression -> NUMBER .)
+    POW             reduce using rule 24 (expression -> NUMBER .)
+    MOD             reduce using rule 24 (expression -> NUMBER .)
+    AND             reduce using rule 24 (expression -> NUMBER .)
+    OR              reduce using rule 24 (expression -> NUMBER .)
+    XOR             reduce using rule 24 (expression -> NUMBER .)
+    $end            reduce using rule 24 (expression -> NUMBER .)
+    EQUALS          reduce using rule 24 (expression -> NUMBER .)
+    RPAREN          reduce using rule 24 (expression -> NUMBER .)
+    DO              reduce using rule 24 (expression -> NUMBER .)
+    ELSE            reduce using rule 24 (expression -> NUMBER .)
 
 
 state 2
+
+    (23) parse -> SELECTOR . LPAREN string COMMA string RPAREN
+
+    LPAREN          shift and go to state 18
+
+
+state 3
+
+    (22) expression -> parse .
+
+    PLUS            reduce using rule 22 (expression -> parse .)
+    MINUS           reduce using rule 22 (expression -> parse .)
+    MULTIPLY        reduce using rule 22 (expression -> parse .)
+    DIVIDE          reduce using rule 22 (expression -> parse .)
+    POW             reduce using rule 22 (expression -> parse .)
+    MOD             reduce using rule 22 (expression -> parse .)
+    AND             reduce using rule 22 (expression -> parse .)
+    OR              reduce using rule 22 (expression -> parse .)
+    XOR             reduce using rule 22 (expression -> parse .)
+    $end            reduce using rule 22 (expression -> parse .)
+    EQUALS          reduce using rule 22 (expression -> parse .)
+    RPAREN          reduce using rule 22 (expression -> parse .)
+    DO              reduce using rule 22 (expression -> parse .)
+    ELSE            reduce using rule 22 (expression -> parse .)
+
+
+state 4
 
     (18) expression -> TRUE .
 
@@ -150,14 +194,14 @@ state 2
     AND             reduce using rule 18 (expression -> TRUE .)
     OR              reduce using rule 18 (expression -> TRUE .)
     XOR             reduce using rule 18 (expression -> TRUE .)
-    EQUALS          reduce using rule 18 (expression -> TRUE .)
     $end            reduce using rule 18 (expression -> TRUE .)
+    EQUALS          reduce using rule 18 (expression -> TRUE .)
     RPAREN          reduce using rule 18 (expression -> TRUE .)
     DO              reduce using rule 18 (expression -> TRUE .)
     ELSE            reduce using rule 18 (expression -> TRUE .)
 
 
-state 3
+state 5
 
     (20) expression -> MINUS . expression
     (8) expression -> . expression PLUS expression
@@ -174,63 +218,113 @@ state 3
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 15
+    parse                          shift and go to state 3
+    expression                     shift and go to state 20
+    string                         shift and go to state 6
 
-state 4
+state 6
 
-    (24) expression -> STRING .
+    (26) expression -> string .
 
-    PLUS            reduce using rule 24 (expression -> STRING .)
-    MINUS           reduce using rule 24 (expression -> STRING .)
-    MULTIPLY        reduce using rule 24 (expression -> STRING .)
-    DIVIDE          reduce using rule 24 (expression -> STRING .)
-    POW             reduce using rule 24 (expression -> STRING .)
-    MOD             reduce using rule 24 (expression -> STRING .)
-    AND             reduce using rule 24 (expression -> STRING .)
-    OR              reduce using rule 24 (expression -> STRING .)
-    XOR             reduce using rule 24 (expression -> STRING .)
-    EQUALS          reduce using rule 24 (expression -> STRING .)
-    $end            reduce using rule 24 (expression -> STRING .)
-    RPAREN          reduce using rule 24 (expression -> STRING .)
-    DO              reduce using rule 24 (expression -> STRING .)
-    ELSE            reduce using rule 24 (expression -> STRING .)
+    PLUS            reduce using rule 26 (expression -> string .)
+    MINUS           reduce using rule 26 (expression -> string .)
+    MULTIPLY        reduce using rule 26 (expression -> string .)
+    DIVIDE          reduce using rule 26 (expression -> string .)
+    POW             reduce using rule 26 (expression -> string .)
+    MOD             reduce using rule 26 (expression -> string .)
+    AND             reduce using rule 26 (expression -> string .)
+    OR              reduce using rule 26 (expression -> string .)
+    XOR             reduce using rule 26 (expression -> string .)
+    $end            reduce using rule 26 (expression -> string .)
+    EQUALS          reduce using rule 26 (expression -> string .)
+    RPAREN          reduce using rule 26 (expression -> string .)
+    DO              reduce using rule 26 (expression -> string .)
+    ELSE            reduce using rule 26 (expression -> string .)
 
 
-state 5
+state 7
 
     (0) S' -> start .
 
 
 
-state 6
+state 8
 
     (1) start -> statement .
 
     $end            reduce using rule 1 (start -> statement .)
 
 
-state 7
+state 9
+
+    (28) string -> STRING2 .
+
+    PLUS            reduce using rule 28 (string -> STRING2 .)
+    MINUS           reduce using rule 28 (string -> STRING2 .)
+    MULTIPLY        reduce using rule 28 (string -> STRING2 .)
+    DIVIDE          reduce using rule 28 (string -> STRING2 .)
+    POW             reduce using rule 28 (string -> STRING2 .)
+    MOD             reduce using rule 28 (string -> STRING2 .)
+    AND             reduce using rule 28 (string -> STRING2 .)
+    OR              reduce using rule 28 (string -> STRING2 .)
+    XOR             reduce using rule 28 (string -> STRING2 .)
+    EQUALS          reduce using rule 28 (string -> STRING2 .)
+    $end            reduce using rule 28 (string -> STRING2 .)
+    RPAREN          reduce using rule 28 (string -> STRING2 .)
+    DO              reduce using rule 28 (string -> STRING2 .)
+    ELSE            reduce using rule 28 (string -> STRING2 .)
+    COMMA           reduce using rule 28 (string -> STRING2 .)
+
+
+state 10
+
+    (27) string -> STRING1 .
+
+    PLUS            reduce using rule 27 (string -> STRING1 .)
+    MINUS           reduce using rule 27 (string -> STRING1 .)
+    MULTIPLY        reduce using rule 27 (string -> STRING1 .)
+    DIVIDE          reduce using rule 27 (string -> STRING1 .)
+    POW             reduce using rule 27 (string -> STRING1 .)
+    MOD             reduce using rule 27 (string -> STRING1 .)
+    AND             reduce using rule 27 (string -> STRING1 .)
+    OR              reduce using rule 27 (string -> STRING1 .)
+    XOR             reduce using rule 27 (string -> STRING1 .)
+    EQUALS          reduce using rule 27 (string -> STRING1 .)
+    $end            reduce using rule 27 (string -> STRING1 .)
+    RPAREN          reduce using rule 27 (string -> STRING1 .)
+    DO              reduce using rule 27 (string -> STRING1 .)
+    ELSE            reduce using rule 27 (string -> STRING1 .)
+    COMMA           reduce using rule 27 (string -> STRING1 .)
+
+
+state 11
 
     (2) start -> function .
 
     $end            reduce using rule 2 (start -> function .)
 
 
-state 8
+state 12
 
     (21) expression -> LPAREN . expression RPAREN
     (8) expression -> . expression PLUS expression
@@ -247,46 +341,58 @@ state 8
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 16
+    parse                          shift and go to state 3
+    expression                     shift and go to state 21
+    string                         shift and go to state 6
 
-state 9
+state 13
 
     (4) statement -> ID . ASSIGN expression
     (3) function -> ID . LPAREN expression RPAREN
-    (23) expression -> ID .
-    (25) expression -> ID . STRING
+    (25) expression -> ID .
+    (29) expression -> ID . string
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    ASSIGN          shift and go to state 18
-    LPAREN          shift and go to state 19
-    EQUALS          reduce using rule 23 (expression -> ID .)
-    PLUS            reduce using rule 23 (expression -> ID .)
-    MINUS           reduce using rule 23 (expression -> ID .)
-    MULTIPLY        reduce using rule 23 (expression -> ID .)
-    DIVIDE          reduce using rule 23 (expression -> ID .)
-    POW             reduce using rule 23 (expression -> ID .)
-    MOD             reduce using rule 23 (expression -> ID .)
-    AND             reduce using rule 23 (expression -> ID .)
-    OR              reduce using rule 23 (expression -> ID .)
-    XOR             reduce using rule 23 (expression -> ID .)
-    $end            reduce using rule 23 (expression -> ID .)
-    STRING          shift and go to state 17
+    ASSIGN          shift and go to state 23
+    LPAREN          shift and go to state 24
+    EQUALS          reduce using rule 25 (expression -> ID .)
+    PLUS            reduce using rule 25 (expression -> ID .)
+    MINUS           reduce using rule 25 (expression -> ID .)
+    MULTIPLY        reduce using rule 25 (expression -> ID .)
+    DIVIDE          reduce using rule 25 (expression -> ID .)
+    POW             reduce using rule 25 (expression -> ID .)
+    MOD             reduce using rule 25 (expression -> ID .)
+    AND             reduce using rule 25 (expression -> ID .)
+    OR              reduce using rule 25 (expression -> ID .)
+    XOR             reduce using rule 25 (expression -> ID .)
+    $end            reduce using rule 25 (expression -> ID .)
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
+    string                         shift and go to state 22
 
-state 10
+state 14
 
     (6) statement -> IF . expression DO expression ELSE expression
     (8) expression -> . expression PLUS expression
@@ -303,23 +409,31 @@ state 10
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 20
+    parse                          shift and go to state 3
+    expression                     shift and go to state 25
+    string                         shift and go to state 6
 
-state 11
+state 15
 
     (19) expression -> FALSE .
 
@@ -332,14 +446,14 @@ state 11
     AND             reduce using rule 19 (expression -> FALSE .)
     OR              reduce using rule 19 (expression -> FALSE .)
     XOR             reduce using rule 19 (expression -> FALSE .)
-    EQUALS          reduce using rule 19 (expression -> FALSE .)
     $end            reduce using rule 19 (expression -> FALSE .)
+    EQUALS          reduce using rule 19 (expression -> FALSE .)
     RPAREN          reduce using rule 19 (expression -> FALSE .)
     DO              reduce using rule 19 (expression -> FALSE .)
     ELSE            reduce using rule 19 (expression -> FALSE .)
 
 
-state 12
+state 16
 
     (17) expression -> NOT . expression
     (8) expression -> . expression PLUS expression
@@ -356,23 +470,31 @@ state 12
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 21
+    parse                          shift and go to state 3
+    expression                     shift and go to state 26
+    string                         shift and go to state 6
 
-state 13
+state 17
 
     (5) statement -> expression . EQUALS expression
     (7) statement -> expression .
@@ -386,42 +508,57 @@ state 13
     (15) expression -> expression . OR expression
     (16) expression -> expression . XOR expression
 
-    EQUALS          shift and go to state 26
+    EQUALS          shift and go to state 31
     $end            reduce using rule 7 (statement -> expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 14
+state 18
 
-    (23) expression -> ID .
-    (25) expression -> ID . STRING
+    (23) parse -> SELECTOR LPAREN . string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    PLUS            reduce using rule 23 (expression -> ID .)
-    MINUS           reduce using rule 23 (expression -> ID .)
-    MULTIPLY        reduce using rule 23 (expression -> ID .)
-    DIVIDE          reduce using rule 23 (expression -> ID .)
-    POW             reduce using rule 23 (expression -> ID .)
-    MOD             reduce using rule 23 (expression -> ID .)
-    AND             reduce using rule 23 (expression -> ID .)
-    OR              reduce using rule 23 (expression -> ID .)
-    XOR             reduce using rule 23 (expression -> ID .)
-    EQUALS          reduce using rule 23 (expression -> ID .)
-    $end            reduce using rule 23 (expression -> ID .)
-    RPAREN          reduce using rule 23 (expression -> ID .)
-    DO              reduce using rule 23 (expression -> ID .)
-    ELSE            reduce using rule 23 (expression -> ID .)
-    STRING          shift and go to state 17
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
+    string                         shift and go to state 37
 
-state 15
+state 19
+
+    (25) expression -> ID .
+    (29) expression -> ID . string
+    (27) string -> . STRING1
+    (28) string -> . STRING2
+
+    PLUS            reduce using rule 25 (expression -> ID .)
+    MINUS           reduce using rule 25 (expression -> ID .)
+    MULTIPLY        reduce using rule 25 (expression -> ID .)
+    DIVIDE          reduce using rule 25 (expression -> ID .)
+    POW             reduce using rule 25 (expression -> ID .)
+    MOD             reduce using rule 25 (expression -> ID .)
+    AND             reduce using rule 25 (expression -> ID .)
+    OR              reduce using rule 25 (expression -> ID .)
+    XOR             reduce using rule 25 (expression -> ID .)
+    $end            reduce using rule 25 (expression -> ID .)
+    EQUALS          reduce using rule 25 (expression -> ID .)
+    RPAREN          reduce using rule 25 (expression -> ID .)
+    DO              reduce using rule 25 (expression -> ID .)
+    ELSE            reduce using rule 25 (expression -> ID .)
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
+
+    string                         shift and go to state 22
+
+state 20
 
     (20) expression -> MINUS expression .
     (8) expression -> expression . PLUS expression
@@ -442,25 +579,25 @@ state 15
     AND             reduce using rule 20 (expression -> MINUS expression .)
     OR              reduce using rule 20 (expression -> MINUS expression .)
     XOR             reduce using rule 20 (expression -> MINUS expression .)
-    EQUALS          reduce using rule 20 (expression -> MINUS expression .)
     $end            reduce using rule 20 (expression -> MINUS expression .)
+    EQUALS          reduce using rule 20 (expression -> MINUS expression .)
     RPAREN          reduce using rule 20 (expression -> MINUS expression .)
     DO              reduce using rule 20 (expression -> MINUS expression .)
     ELSE            reduce using rule 20 (expression -> MINUS expression .)
-    POW             shift and go to state 25
+    POW             shift and go to state 30
 
   ! POW             [ reduce using rule 20 (expression -> MINUS expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! MULTIPLY        [ shift and go to state 29 ]
-  ! DIVIDE          [ shift and go to state 24 ]
-  ! MOD             [ shift and go to state 31 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! MOD             [ shift and go to state 36 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 16
+state 21
 
     (21) expression -> LPAREN expression . RPAREN
     (8) expression -> expression . PLUS expression
@@ -473,39 +610,39 @@ state 16
     (15) expression -> expression . OR expression
     (16) expression -> expression . XOR expression
 
-    RPAREN          shift and go to state 32
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    RPAREN          shift and go to state 38
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 17
+state 22
 
-    (25) expression -> ID STRING .
+    (29) expression -> ID string .
 
-    PLUS            reduce using rule 25 (expression -> ID STRING .)
-    MINUS           reduce using rule 25 (expression -> ID STRING .)
-    MULTIPLY        reduce using rule 25 (expression -> ID STRING .)
-    DIVIDE          reduce using rule 25 (expression -> ID STRING .)
-    POW             reduce using rule 25 (expression -> ID STRING .)
-    MOD             reduce using rule 25 (expression -> ID STRING .)
-    AND             reduce using rule 25 (expression -> ID STRING .)
-    OR              reduce using rule 25 (expression -> ID STRING .)
-    XOR             reduce using rule 25 (expression -> ID STRING .)
-    EQUALS          reduce using rule 25 (expression -> ID STRING .)
-    $end            reduce using rule 25 (expression -> ID STRING .)
-    RPAREN          reduce using rule 25 (expression -> ID STRING .)
-    DO              reduce using rule 25 (expression -> ID STRING .)
-    ELSE            reduce using rule 25 (expression -> ID STRING .)
+    PLUS            reduce using rule 29 (expression -> ID string .)
+    MINUS           reduce using rule 29 (expression -> ID string .)
+    MULTIPLY        reduce using rule 29 (expression -> ID string .)
+    DIVIDE          reduce using rule 29 (expression -> ID string .)
+    POW             reduce using rule 29 (expression -> ID string .)
+    MOD             reduce using rule 29 (expression -> ID string .)
+    AND             reduce using rule 29 (expression -> ID string .)
+    OR              reduce using rule 29 (expression -> ID string .)
+    XOR             reduce using rule 29 (expression -> ID string .)
+    $end            reduce using rule 29 (expression -> ID string .)
+    EQUALS          reduce using rule 29 (expression -> ID string .)
+    RPAREN          reduce using rule 29 (expression -> ID string .)
+    DO              reduce using rule 29 (expression -> ID string .)
+    ELSE            reduce using rule 29 (expression -> ID string .)
 
 
-state 18
+state 23
 
     (4) statement -> ID ASSIGN . expression
     (8) expression -> . expression PLUS expression
@@ -522,23 +659,31 @@ state 18
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 33
+    parse                          shift and go to state 3
+    expression                     shift and go to state 39
+    string                         shift and go to state 6
 
-state 19
+state 24
 
     (3) function -> ID LPAREN . expression RPAREN
     (8) expression -> . expression PLUS expression
@@ -555,23 +700,31 @@ state 19
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 34
+    parse                          shift and go to state 3
+    expression                     shift and go to state 40
+    string                         shift and go to state 6
 
-state 20
+state 25
 
     (6) statement -> IF expression . DO expression ELSE expression
     (8) expression -> expression . PLUS expression
@@ -584,19 +737,19 @@ state 20
     (15) expression -> expression . OR expression
     (16) expression -> expression . XOR expression
 
-    DO              shift and go to state 35
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    DO              shift and go to state 41
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 21
+state 26
 
     (17) expression -> NOT expression .
     (8) expression -> expression . PLUS expression
@@ -618,20 +771,20 @@ state 21
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
-    EQUALS          reduce using rule 17 (expression -> NOT expression .)
     $end            reduce using rule 17 (expression -> NOT expression .)
+    EQUALS          reduce using rule 17 (expression -> NOT expression .)
     RPAREN          reduce using rule 17 (expression -> NOT expression .)
     DO              reduce using rule 17 (expression -> NOT expression .)
     ELSE            reduce using rule 17 (expression -> NOT expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
   ! PLUS            [ reduce using rule 17 (expression -> NOT expression .) ]
   ! MINUS           [ reduce using rule 17 (expression -> NOT expression .) ]
@@ -644,7 +797,7 @@ state 21
   ! XOR             [ reduce using rule 17 (expression -> NOT expression .) ]
 
 
-state 22
+state 27
 
     (14) expression -> expression AND . expression
     (8) expression -> . expression PLUS expression
@@ -661,23 +814,31 @@ state 22
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 36
+    parse                          shift and go to state 3
+    expression                     shift and go to state 42
+    string                         shift and go to state 6
 
-state 23
+state 28
 
     (16) expression -> expression XOR . expression
     (8) expression -> . expression PLUS expression
@@ -694,23 +855,31 @@ state 23
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 37
+    parse                          shift and go to state 3
+    expression                     shift and go to state 43
+    string                         shift and go to state 6
 
-state 24
+state 29
 
     (11) expression -> expression DIVIDE . expression
     (8) expression -> . expression PLUS expression
@@ -727,23 +896,31 @@ state 24
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 38
+    parse                          shift and go to state 3
+    expression                     shift and go to state 44
+    string                         shift and go to state 6
 
-state 25
+state 30
 
     (12) expression -> expression POW . expression
     (8) expression -> . expression PLUS expression
@@ -760,23 +937,31 @@ state 25
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 39
+    parse                          shift and go to state 3
+    expression                     shift and go to state 45
+    string                         shift and go to state 6
 
-state 26
+state 31
 
     (5) statement -> expression EQUALS . expression
     (8) expression -> . expression PLUS expression
@@ -793,23 +978,31 @@ state 26
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 40
+    parse                          shift and go to state 3
+    expression                     shift and go to state 46
+    string                         shift and go to state 6
 
-state 27
+state 32
 
     (15) expression -> expression OR . expression
     (8) expression -> . expression PLUS expression
@@ -826,23 +1019,31 @@ state 27
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 41
+    parse                          shift and go to state 3
+    expression                     shift and go to state 47
+    string                         shift and go to state 6
 
-state 28
+state 33
 
     (8) expression -> expression PLUS . expression
     (8) expression -> . expression PLUS expression
@@ -859,23 +1060,31 @@ state 28
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 42
+    parse                          shift and go to state 3
+    expression                     shift and go to state 48
+    string                         shift and go to state 6
 
-state 29
+state 34
 
     (10) expression -> expression MULTIPLY . expression
     (8) expression -> . expression PLUS expression
@@ -892,23 +1101,31 @@ state 29
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 43
+    parse                          shift and go to state 3
+    expression                     shift and go to state 49
+    string                         shift and go to state 6
 
-state 30
+state 35
 
     (9) expression -> expression MINUS . expression
     (8) expression -> . expression PLUS expression
@@ -925,23 +1142,31 @@ state 30
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 44
+    parse                          shift and go to state 3
+    expression                     shift and go to state 50
+    string                         shift and go to state 6
 
-state 31
+state 36
 
     (13) expression -> expression MOD . expression
     (8) expression -> . expression PLUS expression
@@ -958,23 +1183,38 @@ state 31
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 45
+    parse                          shift and go to state 3
+    expression                     shift and go to state 51
+    string                         shift and go to state 6
 
-state 32
+state 37
+
+    (23) parse -> SELECTOR LPAREN string . COMMA string RPAREN
+
+    COMMA           shift and go to state 52
+
+
+state 38
 
     (21) expression -> LPAREN expression RPAREN .
 
@@ -987,14 +1227,14 @@ state 32
     AND             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     OR              reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     XOR             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     $end            reduce using rule 21 (expression -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     RPAREN          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     DO              reduce using rule 21 (expression -> LPAREN expression RPAREN .)
     ELSE            reduce using rule 21 (expression -> LPAREN expression RPAREN .)
 
 
-state 33
+state 39
 
     (4) statement -> ID ASSIGN expression .
     (8) expression -> expression . PLUS expression
@@ -1008,18 +1248,18 @@ state 33
     (16) expression -> expression . XOR expression
 
     $end            reduce using rule 4 (statement -> ID ASSIGN expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 34
+state 40
 
     (3) function -> ID LPAREN expression . RPAREN
     (8) expression -> expression . PLUS expression
@@ -1032,19 +1272,19 @@ state 34
     (15) expression -> expression . OR expression
     (16) expression -> expression . XOR expression
 
-    RPAREN          shift and go to state 46
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    RPAREN          shift and go to state 53
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 35
+state 41
 
     (6) statement -> IF expression DO . expression ELSE expression
     (8) expression -> . expression PLUS expression
@@ -1061,23 +1301,31 @@ state 35
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 47
+    parse                          shift and go to state 3
+    expression                     shift and go to state 54
+    string                         shift and go to state 6
 
-state 36
+state 42
 
     (14) expression -> expression AND expression .
     (8) expression -> expression . PLUS expression
@@ -1099,20 +1347,20 @@ state 36
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
-    EQUALS          reduce using rule 14 (expression -> expression AND expression .)
     $end            reduce using rule 14 (expression -> expression AND expression .)
+    EQUALS          reduce using rule 14 (expression -> expression AND expression .)
     RPAREN          reduce using rule 14 (expression -> expression AND expression .)
     DO              reduce using rule 14 (expression -> expression AND expression .)
     ELSE            reduce using rule 14 (expression -> expression AND expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
   ! PLUS            [ reduce using rule 14 (expression -> expression AND expression .) ]
   ! MINUS           [ reduce using rule 14 (expression -> expression AND expression .) ]
@@ -1125,7 +1373,7 @@ state 36
   ! XOR             [ reduce using rule 14 (expression -> expression AND expression .) ]
 
 
-state 37
+state 43
 
     (16) expression -> expression XOR expression .
     (8) expression -> expression . PLUS expression
@@ -1147,20 +1395,20 @@ state 37
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
-    EQUALS          reduce using rule 16 (expression -> expression XOR expression .)
     $end            reduce using rule 16 (expression -> expression XOR expression .)
+    EQUALS          reduce using rule 16 (expression -> expression XOR expression .)
     RPAREN          reduce using rule 16 (expression -> expression XOR expression .)
     DO              reduce using rule 16 (expression -> expression XOR expression .)
     ELSE            reduce using rule 16 (expression -> expression XOR expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
   ! PLUS            [ reduce using rule 16 (expression -> expression XOR expression .) ]
   ! MINUS           [ reduce using rule 16 (expression -> expression XOR expression .) ]
@@ -1173,7 +1421,7 @@ state 37
   ! XOR             [ reduce using rule 16 (expression -> expression XOR expression .) ]
 
 
-state 38
+state 44
 
     (11) expression -> expression DIVIDE expression .
     (8) expression -> expression . PLUS expression
@@ -1194,25 +1442,25 @@ state 38
     AND             reduce using rule 11 (expression -> expression DIVIDE expression .)
     OR              reduce using rule 11 (expression -> expression DIVIDE expression .)
     XOR             reduce using rule 11 (expression -> expression DIVIDE expression .)
-    EQUALS          reduce using rule 11 (expression -> expression DIVIDE expression .)
     $end            reduce using rule 11 (expression -> expression DIVIDE expression .)
+    EQUALS          reduce using rule 11 (expression -> expression DIVIDE expression .)
     RPAREN          reduce using rule 11 (expression -> expression DIVIDE expression .)
     DO              reduce using rule 11 (expression -> expression DIVIDE expression .)
     ELSE            reduce using rule 11 (expression -> expression DIVIDE expression .)
-    POW             shift and go to state 25
+    POW             shift and go to state 30
 
   ! POW             [ reduce using rule 11 (expression -> expression DIVIDE expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! MULTIPLY        [ shift and go to state 29 ]
-  ! DIVIDE          [ shift and go to state 24 ]
-  ! MOD             [ shift and go to state 31 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! MOD             [ shift and go to state 36 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 39
+state 45
 
     (12) expression -> expression POW expression .
     (8) expression -> expression . PLUS expression
@@ -1233,25 +1481,25 @@ state 39
     AND             reduce using rule 12 (expression -> expression POW expression .)
     OR              reduce using rule 12 (expression -> expression POW expression .)
     XOR             reduce using rule 12 (expression -> expression POW expression .)
-    EQUALS          reduce using rule 12 (expression -> expression POW expression .)
     $end            reduce using rule 12 (expression -> expression POW expression .)
+    EQUALS          reduce using rule 12 (expression -> expression POW expression .)
     RPAREN          reduce using rule 12 (expression -> expression POW expression .)
     DO              reduce using rule 12 (expression -> expression POW expression .)
     ELSE            reduce using rule 12 (expression -> expression POW expression .)
-    POW             shift and go to state 25
+    POW             shift and go to state 30
 
   ! POW             [ reduce using rule 12 (expression -> expression POW expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! MULTIPLY        [ shift and go to state 29 ]
-  ! DIVIDE          [ shift and go to state 24 ]
-  ! MOD             [ shift and go to state 31 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! MOD             [ shift and go to state 36 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 40
+state 46
 
     (5) statement -> expression EQUALS expression .
     (8) expression -> expression . PLUS expression
@@ -1265,18 +1513,18 @@ state 40
     (16) expression -> expression . XOR expression
 
     $end            reduce using rule 5 (statement -> expression EQUALS expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 41
+state 47
 
     (15) expression -> expression OR expression .
     (8) expression -> expression . PLUS expression
@@ -1298,20 +1546,20 @@ state 41
   ! shift/reduce conflict for AND resolved as shift
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
-    EQUALS          reduce using rule 15 (expression -> expression OR expression .)
     $end            reduce using rule 15 (expression -> expression OR expression .)
+    EQUALS          reduce using rule 15 (expression -> expression OR expression .)
     RPAREN          reduce using rule 15 (expression -> expression OR expression .)
     DO              reduce using rule 15 (expression -> expression OR expression .)
     ELSE            reduce using rule 15 (expression -> expression OR expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
   ! PLUS            [ reduce using rule 15 (expression -> expression OR expression .) ]
   ! MINUS           [ reduce using rule 15 (expression -> expression OR expression .) ]
@@ -1324,7 +1572,7 @@ state 41
   ! XOR             [ reduce using rule 15 (expression -> expression OR expression .) ]
 
 
-state 42
+state 48
 
     (8) expression -> expression PLUS expression .
     (8) expression -> expression . PLUS expression
@@ -1342,28 +1590,28 @@ state 42
     AND             reduce using rule 8 (expression -> expression PLUS expression .)
     OR              reduce using rule 8 (expression -> expression PLUS expression .)
     XOR             reduce using rule 8 (expression -> expression PLUS expression .)
-    EQUALS          reduce using rule 8 (expression -> expression PLUS expression .)
     $end            reduce using rule 8 (expression -> expression PLUS expression .)
+    EQUALS          reduce using rule 8 (expression -> expression PLUS expression .)
     RPAREN          reduce using rule 8 (expression -> expression PLUS expression .)
     DO              reduce using rule 8 (expression -> expression PLUS expression .)
     ELSE            reduce using rule 8 (expression -> expression PLUS expression .)
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
 
   ! MULTIPLY        [ reduce using rule 8 (expression -> expression PLUS expression .) ]
   ! DIVIDE          [ reduce using rule 8 (expression -> expression PLUS expression .) ]
   ! POW             [ reduce using rule 8 (expression -> expression PLUS expression .) ]
   ! MOD             [ reduce using rule 8 (expression -> expression PLUS expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 43
+state 49
 
     (10) expression -> expression MULTIPLY expression .
     (8) expression -> expression . PLUS expression
@@ -1384,25 +1632,25 @@ state 43
     AND             reduce using rule 10 (expression -> expression MULTIPLY expression .)
     OR              reduce using rule 10 (expression -> expression MULTIPLY expression .)
     XOR             reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    EQUALS          reduce using rule 10 (expression -> expression MULTIPLY expression .)
     $end            reduce using rule 10 (expression -> expression MULTIPLY expression .)
+    EQUALS          reduce using rule 10 (expression -> expression MULTIPLY expression .)
     RPAREN          reduce using rule 10 (expression -> expression MULTIPLY expression .)
     DO              reduce using rule 10 (expression -> expression MULTIPLY expression .)
     ELSE            reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    POW             shift and go to state 25
+    POW             shift and go to state 30
 
   ! POW             [ reduce using rule 10 (expression -> expression MULTIPLY expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! MULTIPLY        [ shift and go to state 29 ]
-  ! DIVIDE          [ shift and go to state 24 ]
-  ! MOD             [ shift and go to state 31 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! MOD             [ shift and go to state 36 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 44
+state 50
 
     (9) expression -> expression MINUS expression .
     (8) expression -> expression . PLUS expression
@@ -1420,28 +1668,28 @@ state 44
     AND             reduce using rule 9 (expression -> expression MINUS expression .)
     OR              reduce using rule 9 (expression -> expression MINUS expression .)
     XOR             reduce using rule 9 (expression -> expression MINUS expression .)
-    EQUALS          reduce using rule 9 (expression -> expression MINUS expression .)
     $end            reduce using rule 9 (expression -> expression MINUS expression .)
+    EQUALS          reduce using rule 9 (expression -> expression MINUS expression .)
     RPAREN          reduce using rule 9 (expression -> expression MINUS expression .)
     DO              reduce using rule 9 (expression -> expression MINUS expression .)
     ELSE            reduce using rule 9 (expression -> expression MINUS expression .)
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
 
   ! MULTIPLY        [ reduce using rule 9 (expression -> expression MINUS expression .) ]
   ! DIVIDE          [ reduce using rule 9 (expression -> expression MINUS expression .) ]
   ! POW             [ reduce using rule 9 (expression -> expression MINUS expression .) ]
   ! MOD             [ reduce using rule 9 (expression -> expression MINUS expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 45
+state 51
 
     (13) expression -> expression MOD expression .
     (8) expression -> expression . PLUS expression
@@ -1462,32 +1710,43 @@ state 45
     AND             reduce using rule 13 (expression -> expression MOD expression .)
     OR              reduce using rule 13 (expression -> expression MOD expression .)
     XOR             reduce using rule 13 (expression -> expression MOD expression .)
-    EQUALS          reduce using rule 13 (expression -> expression MOD expression .)
     $end            reduce using rule 13 (expression -> expression MOD expression .)
+    EQUALS          reduce using rule 13 (expression -> expression MOD expression .)
     RPAREN          reduce using rule 13 (expression -> expression MOD expression .)
     DO              reduce using rule 13 (expression -> expression MOD expression .)
     ELSE            reduce using rule 13 (expression -> expression MOD expression .)
-    POW             shift and go to state 25
+    POW             shift and go to state 30
 
   ! POW             [ reduce using rule 13 (expression -> expression MOD expression .) ]
-  ! PLUS            [ shift and go to state 28 ]
-  ! MINUS           [ shift and go to state 30 ]
-  ! MULTIPLY        [ shift and go to state 29 ]
-  ! DIVIDE          [ shift and go to state 24 ]
-  ! MOD             [ shift and go to state 31 ]
-  ! AND             [ shift and go to state 22 ]
-  ! OR              [ shift and go to state 27 ]
-  ! XOR             [ shift and go to state 23 ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 35 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 29 ]
+  ! MOD             [ shift and go to state 36 ]
+  ! AND             [ shift and go to state 27 ]
+  ! OR              [ shift and go to state 32 ]
+  ! XOR             [ shift and go to state 28 ]
 
 
-state 46
+state 52
+
+    (23) parse -> SELECTOR LPAREN string COMMA . string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
+
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
+
+    string                         shift and go to state 55
+
+state 53
 
     (3) function -> ID LPAREN expression RPAREN .
 
     $end            reduce using rule 3 (function -> ID LPAREN expression RPAREN .)
 
 
-state 47
+state 54
 
     (6) statement -> IF expression DO expression . ELSE expression
     (8) expression -> expression . PLUS expression
@@ -1500,19 +1759,26 @@ state 47
     (15) expression -> expression . OR expression
     (16) expression -> expression . XOR expression
 
-    ELSE            shift and go to state 48
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    ELSE            shift and go to state 56
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 
-state 48
+state 55
+
+    (23) parse -> SELECTOR LPAREN string COMMA string . RPAREN
+
+    RPAREN          shift and go to state 57
+
+
+state 56
 
     (6) statement -> IF expression DO expression ELSE . expression
     (8) expression -> . expression PLUS expression
@@ -1529,23 +1795,51 @@ state 48
     (19) expression -> . FALSE
     (20) expression -> . MINUS expression
     (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . NUMBER
-    (23) expression -> . ID
-    (24) expression -> . STRING
-    (25) expression -> . ID STRING
+    (22) expression -> . parse
+    (24) expression -> . NUMBER
+    (25) expression -> . ID
+    (26) expression -> . string
+    (29) expression -> . ID string
+    (23) parse -> . SELECTOR LPAREN string COMMA string RPAREN
+    (27) string -> . STRING1
+    (28) string -> . STRING2
 
-    NOT             shift and go to state 12
-    TRUE            shift and go to state 2
-    FALSE           shift and go to state 11
-    MINUS           shift and go to state 3
-    LPAREN          shift and go to state 8
+    NOT             shift and go to state 16
+    TRUE            shift and go to state 4
+    FALSE           shift and go to state 15
+    MINUS           shift and go to state 5
+    LPAREN          shift and go to state 12
     NUMBER          shift and go to state 1
-    ID              shift and go to state 14
-    STRING          shift and go to state 4
+    ID              shift and go to state 19
+    SELECTOR        shift and go to state 2
+    STRING1         shift and go to state 10
+    STRING2         shift and go to state 9
 
-    expression                     shift and go to state 49
+    parse                          shift and go to state 3
+    expression                     shift and go to state 58
+    string                         shift and go to state 6
 
-state 49
+state 57
+
+    (23) parse -> SELECTOR LPAREN string COMMA string RPAREN .
+
+    PLUS            reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    MINUS           reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    MULTIPLY        reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    DIVIDE          reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    POW             reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    MOD             reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    AND             reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    OR              reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    XOR             reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    EQUALS          reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    $end            reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    RPAREN          reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    DO              reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+    ELSE            reduce using rule 23 (parse -> SELECTOR LPAREN string COMMA string RPAREN .)
+
+
+state 58
 
     (6) statement -> IF expression DO expression ELSE expression .
     (8) expression -> expression . PLUS expression
@@ -1559,52 +1853,52 @@ state 49
     (16) expression -> expression . XOR expression
 
     $end            reduce using rule 6 (statement -> IF expression DO expression ELSE expression .)
-    PLUS            shift and go to state 28
-    MINUS           shift and go to state 30
-    MULTIPLY        shift and go to state 29
-    DIVIDE          shift and go to state 24
-    POW             shift and go to state 25
-    MOD             shift and go to state 31
-    AND             shift and go to state 22
-    OR              shift and go to state 27
-    XOR             shift and go to state 23
+    PLUS            shift and go to state 33
+    MINUS           shift and go to state 35
+    MULTIPLY        shift and go to state 34
+    DIVIDE          shift and go to state 29
+    POW             shift and go to state 30
+    MOD             shift and go to state 36
+    AND             shift and go to state 27
+    OR              shift and go to state 32
+    XOR             shift and go to state 28
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for PLUS in state 21 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 21 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 21 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 21 resolved as shift
-WARNING: shift/reduce conflict for POW in state 21 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 21 resolved as shift
-WARNING: shift/reduce conflict for AND in state 21 resolved as shift
-WARNING: shift/reduce conflict for OR in state 21 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 21 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 36 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 36 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 36 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 36 resolved as shift
-WARNING: shift/reduce conflict for POW in state 36 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 36 resolved as shift
-WARNING: shift/reduce conflict for AND in state 36 resolved as shift
-WARNING: shift/reduce conflict for OR in state 36 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 36 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 37 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 37 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 37 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 37 resolved as shift
-WARNING: shift/reduce conflict for POW in state 37 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 37 resolved as shift
-WARNING: shift/reduce conflict for AND in state 37 resolved as shift
-WARNING: shift/reduce conflict for OR in state 37 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 37 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 41 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 41 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 41 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 41 resolved as shift
-WARNING: shift/reduce conflict for POW in state 41 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 41 resolved as shift
-WARNING: shift/reduce conflict for AND in state 41 resolved as shift
-WARNING: shift/reduce conflict for OR in state 41 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 41 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 26 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 26 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 26 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 26 resolved as shift
+WARNING: shift/reduce conflict for POW in state 26 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 26 resolved as shift
+WARNING: shift/reduce conflict for AND in state 26 resolved as shift
+WARNING: shift/reduce conflict for OR in state 26 resolved as shift
+WARNING: shift/reduce conflict for XOR in state 26 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 42 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 42 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 42 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 42 resolved as shift
+WARNING: shift/reduce conflict for POW in state 42 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 42 resolved as shift
+WARNING: shift/reduce conflict for AND in state 42 resolved as shift
+WARNING: shift/reduce conflict for OR in state 42 resolved as shift
+WARNING: shift/reduce conflict for XOR in state 42 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 43 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 43 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 43 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 43 resolved as shift
+WARNING: shift/reduce conflict for POW in state 43 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 43 resolved as shift
+WARNING: shift/reduce conflict for AND in state 43 resolved as shift
+WARNING: shift/reduce conflict for OR in state 43 resolved as shift
+WARNING: shift/reduce conflict for XOR in state 43 resolved as shift
+WARNING: shift/reduce conflict for PLUS in state 47 resolved as shift
+WARNING: shift/reduce conflict for MINUS in state 47 resolved as shift
+WARNING: shift/reduce conflict for MULTIPLY in state 47 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 47 resolved as shift
+WARNING: shift/reduce conflict for POW in state 47 resolved as shift
+WARNING: shift/reduce conflict for MOD in state 47 resolved as shift
+WARNING: shift/reduce conflict for AND in state 47 resolved as shift
+WARNING: shift/reduce conflict for OR in state 47 resolved as shift
+WARNING: shift/reduce conflict for XOR in state 47 resolved as shift
