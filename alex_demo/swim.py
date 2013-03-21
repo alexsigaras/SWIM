@@ -137,6 +137,8 @@ def p_function(t):
     if t[1] == "print" :
         if re.match(r'u"\\u', t[3]):
         	print unichr(int(t[3][4:8], 16))
+        elif re.match(r'^u"', t[3]):
+        	print t[3].replace('"','')[1:].decode("utf-8")
         else:
             print t[3].replace('"','')
     xvar = t[3]
@@ -235,7 +237,7 @@ import ply.yacc as yacc
 yacc.yacc(optimize=1)
 mode = 2
 if mode == 1:
-    s = input("SWIM REPL> ")
+    s = raw_input("SWIM REPL> ")
     lex.input(s)
 while 1:
     if mode == 1:
@@ -245,7 +247,7 @@ while 1:
             break
     else:
         try:
-            s = input('SWIM REPL> ')
+            s = raw_input('SWIM REPL> ')
 
         except EOFError:
             break
