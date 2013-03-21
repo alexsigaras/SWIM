@@ -25,6 +25,7 @@
 #-----------------------------------------------------------------------------#
 
 import sys
+import re
 sys.path.insert(0,"..")
 
 if sys.version_info[0] >= 3:
@@ -134,7 +135,8 @@ def p_function(t):
     '''function : ID LPAREN STRING RPAREN'''
 
     if t[1] == "print" :
-        if t[3][0] == 'u':
+        if re.match(r'u"\\u', t[3]):
+        	print unichr(int(t[3][4:8], 16))
         else:
             print t[3].replace('"','')
     xvar = t[3]
