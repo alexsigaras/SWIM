@@ -62,7 +62,7 @@ t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
 t_STRING  = r'u?"\\?.*"'
-t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]+'
+t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
 
 
 # Keywords
@@ -132,7 +132,7 @@ def p_start(t):
 #     print False
 
 def p_function(t):
-    '''function : ID LPAREN STRING RPAREN'''
+    '''function : ID LPAREN expression RPAREN'''
 
     if t[1] == "print" :
     	# Escaped sequence handling
@@ -149,8 +149,6 @@ def p_function(t):
         	print t[3].replace('"','')[1:].decode("utf-8")
         else:
             print t[3].replace('"','')
-    xvar = t[3]
-    print "done function"
 
 def p_statement_assign(t):
     'statement : ID ASSIGN expression'
@@ -225,6 +223,23 @@ def p_expression_name(t):
     'expression : ID'
     try:
         t[0] = names[t[1]]
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
+        t[0] = 0
+def p_expression_string(t):
+    'expression : STRING'
+    try:
+        t[0] = t[1]
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
+        t[0] = 0
+def p_expression_unistring(t):
+    'expression : ID STRING'
+    try:
+    	if t[1] == 'u':
+    		t[0] = t[1] + t[2]
+    	else:
+	    	raise Exception()
     except LookupError:
         print("Undefined name '%s'" % t[1])
         t[0] = 0
