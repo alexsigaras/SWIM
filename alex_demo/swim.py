@@ -135,8 +135,16 @@ def p_function(t):
     '''function : ID LPAREN STRING RPAREN'''
 
     if t[1] == "print" :
+    	# Escaped sequence handling
+    	escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
+    	for seq in escaped_sequences:
+    		if t[3].find(seq) != -1:		
+    			t[3] = t[3].decode('string-escape')
+    			 		
+    	# 2 byte unicode with unicode characters
         if re.match(r'u"\\u', t[3]):
         	print unichr(int(t[3][4:8], 16))
+        # 2 byte unicode with strings
         elif re.match(r'^u"', t[3]):
         	print t[3].replace('"','')[1:].decode("utf-8")
         else:
