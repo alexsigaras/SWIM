@@ -184,10 +184,11 @@ def p_function(t):
 	    	# for our user test
 	    	filename = stripe_quotation(t[3][1])
 	    	filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
+	    	print filename
 	    	
 	    	f.output(os.path.join("..","doc",filename),'F')
     	except:
-	    	print("Mismatch grammar for parsing!")
+	    	print("Mismatch grammar for pdf output!")
 	    	t[0] = 0  	
 
 def p_statement_assign(t):
