@@ -1,0 +1,25 @@
+# Hello, World Web Crawler
+# Web Crawler that visits a given uri, searches f
+# for the text "Hello, World!", and prints "Hello, World!"
+# whenever the page visited does not contain "Hello, World!" 
+# @author Lev Brie
+# @university-info PLT SWIM 2013 Columbia University
+# @professor Alfred V. Aho
+
+import crawler
+
+stringToFind = "Hello, World!"
+session = visit "http://columbia.edu" 		
+																# visit, from the crawler library, expects a
+																# url as a string, although it's also possible
+																# to explicitly act on a url with:
+																# visit url("http://columbia.edu")
+																# session is a Session object, also part of the 
+																# crawler library, which holds a connection to
+																# a given url and has methods like findInPage
+																# which can take either strings or regular 
+																# expressions
+if session.findInPage stringToFind
+	print stringToFind
+
+

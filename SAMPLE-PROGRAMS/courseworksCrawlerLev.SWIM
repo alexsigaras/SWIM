@@ -1,0 +1,46 @@
+import Authorization
+# note: the Authorization stores special variables such as the most
+# recent crawl result with names like CRAWL_RESULT
+
+setLooseMatchingStrength(0.7)
+
+# use Authorization library method storeAsAuth to store relevant login
+myLogin = storeAsAuth(username: ldb2001, password: 1179pass)
+
+
+courseworksURL = "courseworks.columbia.edu"
+
+# create session variable on page visit
+session = visit courseworks
+
+# find the appropriate authentication form
+if session.locateFormContaining(myLogin.keys)
+	myLogin.authenticate			# session is implied for all Authorization calls
+else
+	if crawlFor(myLogin.keys) within session
+		session.visit CRAWL_RESULT
+		myLogin.authenticate		# session is implied for all Authorization calls
+
+if authenticated?						# ruby-style ? for boolean calls
+	visit findLink("analysis" + "algorithms")			# ignore_case is the default
+	visit findLink "gradebook"
+	table = findTableContaining "grade"
+	for each "grade" in gradebook
+		records = recordAsGrade("title", "date", "grade")
+	visit "assignments"
+	table = findTableContaining "assignment"
+		records += recordAsHomeworkInfo("assignment", "open", "due") where:
+			"due" isA date
+			"open" isA date
+			"assignment" isA tuple(name, link)
+	for each "assignment" in table
+		visit "assignment" 			# it knows it's a link from the tuple assignment
+		assignmentFile = download fileOfType(".pdf")
+		records += (assignmentFile, "assignment"
+
+joinAll records by "title", "assignment", "assignment"
+displayAs table
+
+
+
+

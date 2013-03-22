@@ -1,0 +1,14 @@
+# Hello, World Web Crawler
+# Web Crawler that visits a given uri, searches f
+# for the text "Hello, World!", and prints "Hello, World!"
+# whenever the page visited does not contain "Hello, World!" 
+# @author Lev Brie
+# @university-info PLT SWIM 2013 Columbia University
+# @professor Alfred V. Aho
+
+import crawler
+
+"Hello, World!"
+visit "http://columbia.edu" 		
+if session.findInPage stringToFind
+	print stringToFind

@@ -1,0 +1,92 @@
+statement
+    : block
+    |   ASSERT expression (':' expression)? ';'
+    |   'if' parExpression statement ('else' statement)?
+    |   'for' '(' forControl ')' statement
+    |   'while' parExpression statement
+    |   'do' statement 'while' parExpression ';'
+    |   'try' block
+        ( catches 'finally' block
+        | catches
+        | 'finally' block
+        )
+    |   'switch' parExpression switchBlock
+    |   'synchronized' parExpression block
+    |   'return' expression? ';'
+    |   'throw' expression ';'
+    |   'break' Identifier? ';'
+    |   'continue' Identifier? ';'
+    |   ';'
+    |   statementExpression ';'
+    |   Identifier ':' statement
+    ;
+
+parExpression
+    :   '(' expression ')'
+    ;
+
+expressionList
+    :   expression (',' expression)*
+    ;
+
+statementExpression
+    :   expression
+    ;
+
+constantExpression
+    :   expression
+    ;
+
+expression
+    :   primary
+    |   expression '.' Identifier
+    |   expression '.' 'this'
+    |   expression '.' 'super' '(' expressionList? ')'
+    |   expression '.' 'new' Identifier '(' expressionList? ')'
+    |   expression '.' 'super' '.' Identifier arguments?
+    |   expression '.' explicitGenericInvocation
+    |   expression '[' expression ']'
+    |   expression '(' expressionList? ')'
+    |   expression ('++' | '--')
+    |   ('+'|'-'|'++'|'--') expression
+    |   ('~'|'!') expression
+    |   '(' type ')' expression
+    |   'new' creator
+    |   expression ('*'|'/'|'%') expression
+    |   expression ('+'|'-') expression
+    |   expression ('<' '<' | '>' '>' '>' | '>' '>') expression
+    |   expression ('<' '=' | '>' '=' | '>' | '<') expression
+    |   expression 'instanceof' type
+    |   expression ('==' | '!=') expression
+    |   expression '&' expression
+    |   expression '^' expression
+    |   expression '|' expression
+    |   expression '&&' expression
+    |   expression '||' expression
+    |   expression '?' expression ':' expression
+    |   expression
+        ('^='<assoc=right>
+        |'+='<assoc=right>
+        |'-='<assoc=right>
+        |'*='<assoc=right>
+        |'/='<assoc=right>
+        |'&='<assoc=right>
+        |'|='<assoc=right>
+        |'='<assoc=right>
+        |'>' '>' '='<assoc=right>
+        |'>' '>' '>' '='<assoc=right>
+        |'<' '<' '='<assoc=right>
+        |'%='<assoc=right>
+        )
+        expression
+    ;
+
+primary
+    :   '(' expression ')'
+    |   'this'
+    |   'super'
+    |   literal
+    |   Identifier
+    |   type '.' 'class'
+    |   'void' '.' 'class'
+    ;
