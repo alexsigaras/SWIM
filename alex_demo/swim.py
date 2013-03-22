@@ -33,7 +33,7 @@ if sys.version_info[0] >= 3:
 
 # Parsing
 from pyquery import PyQuery as pq
-import urllib
+import urllib, getpass
 
 # PDF
 from fpdf import fpdf as pdf
@@ -179,8 +179,13 @@ def p_function(t):
 	    	f = pdf.FPDF()
 	    	f.add_page()
 	    	f.set_font('Arial','B',16)	    	
-	    	f.multi_cell(w=200,h=5,txt = stripe_quotation(t[3][0]))
-	    	f.output(os.path.join("..","doc",stripe_quotation(t[3][1])),'F')
+	    	f.multi_cell(w=200,h=5,txt = stripe_quotation(t[3][0])) 
+	    	
+	    	# for our user test
+	    	filename = stripe_quotation(t[3][1])
+	    	filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
+	    	
+	    	f.output(os.path.join("..","doc",filename),'F')
     	except:
 	    	print("Mismatch grammar for parsing!")
 	    	t[0] = 0  	
@@ -324,17 +329,33 @@ mode = 2
 if mode == 1:
     s = raw_input("SWIM REPL> ")
     lex.input(s)
-while 1:
-    if mode == 1:
-        tok = lex.token()
-        print tok
-        if not tok:
-            break
-    else:
-        try:
-            s = raw_input('SWIM REPL> ')
-
-        except EOFError:
-            break
-        yacc.parse(s)
-
+    
+if len(sys.argv) > 1:
+	fn = open(sys.argv[1])
+	for line in fn.readlines():
+		if line == "\n": continue
+		if mode == 1:
+			lex.input(line)
+			while 1:
+				tok = lex.token()
+				print tok
+				if not tok:
+					break
+		else:
+			yacc.parse(line)
+	fn.close()	
+else:
+	while 1:
+	    if mode == 1:
+	        tok = lex.token()
+	        print tok
+	        if not tok:
+	            break
+	    else:
+	        try:
+	            s = raw_input('SWIM REPL> ')
+	
+	        except EOFError:
+	            break
+	        yacc.parse(s)
+	
