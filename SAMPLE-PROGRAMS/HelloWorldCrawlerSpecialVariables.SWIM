@@ -8,7 +8,10 @@
 
 import crawler
 
+@modes
+	special_variables
+	
 "Hello, World!"
 visit "http://columbia.edu" 		
-if session.findInPage stringToFind
-	print stringToFind
+if @Session.findInPage @String
+	print @String
