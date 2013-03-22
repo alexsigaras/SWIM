@@ -26,14 +26,17 @@
 
 import sys, os
 import re
-sys.path.insert(0,"..")
+sys.path.insert(0,os.path.join("..", "include"))
 
 if sys.version_info[0] >= 3:
     raw_input = input
 
-#sys.path.insert(0, os.path.join("..", "lxml"))
+# Parsing
 from pyquery import PyQuery as pq
 import urllib
+
+# PDF
+from fpdf import fpdf as pdf
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -125,7 +128,7 @@ lex.lex(optimize=1)
 #-----------------------------------------------------------------------------#
 
 precedence = (
-    ('left','PLUS','MINUS'),
+    ('left','PLUS','MINUS', 'COMMA'),
     ('left','MULTIPLY','DIVIDE', 'MOD'),
     ('right','UMINUS','POW'),
     )
@@ -167,9 +170,20 @@ def p_function(t):
         	print unichr(int(t[3][4:8], 16))
         # 2 byte unicode with strings
         elif re.match(r"^u'", t[3]):
-        	print t[3].replace('"','')[1:].decode("utf-8")        	
+        	print t[3].replace("'",'')[1:].decode("utf-8")        	
         else:
-            print t[3].replace('"','')
+            print t[3].replace("'",'')
+    elif t[1] == "pdf":
+    	try:
+    		#print stripe_quotation(t[3][0])
+	    	f = pdf.FPDF()
+	    	f.add_page()
+	    	f.set_font('Arial','B',16)	    	
+	    	f.multi_cell(w=200,h=5,txt = stripe_quotation(t[3][0]))
+	    	f.output(os.path.join("..","doc",stripe_quotation(t[3][1])),'F')
+    	except:
+	    	print("Mismatch grammar for parsing!")
+	    	t[0] = 0  	
 
 def p_statement_assign(t):
     'statement : ID ASSIGN expression'
@@ -234,16 +248,25 @@ def p_expression_uminus(t):
 def p_expression_group(t):
     'expression : LPAREN expression RPAREN'
     t[0] = t[2]
+def p_expression_parameters(t):
+	'expression : expression COMMA expression'	
+	# Stacking the parameters to the right as list
+	t[0] = [t[1], t[3]]
+	    
 def p_expression_parse(t):
 	'expression : parse'
 	t[0] = t[1]
 	
 def p_expression_parse_text(t):
-    'parse : SELECTOR LPAREN string COMMA string RPAREN'
-    t[5] = stripe_quotation(t[5])
-    t[3] = stripe_quotation(t[3])
-    d = pq(url=t[5], opener=lambda url: urllib.urlopen(url).read())
-    t[0] = d(t[3]).text()
+    'parse : SELECTOR LPAREN expression RPAREN'
+    try:
+		selector = stripe_quotation(t[3][0])
+		url = stripe_quotation(t[3][1])
+		d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+		t[0] = d(selector).text()
+    except Exception:
+		print("Mismatch grammar for parsing!")
+		t[0] = 0
 
 def p_expression_number(t):
     'expression : NUMBER'
