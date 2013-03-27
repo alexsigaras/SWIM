@@ -267,9 +267,12 @@ def p_expression_parse_text(t):
     'parse : SELECTOR LPAREN expression RPAREN'
     try:
 		selector = stripe_quotation(t[3][0])
-		url = stripe_quotation(t[3][1])
-		d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-		t[0] = d(selector).text()
+		if type(t[3][1]) == str:
+			url = stripe_quotation(t[3][1])
+			d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+			t[0] = d(selector)
+		else:
+			t[0] = t[3][1](selector)
     except Exception:
 		print("Mismatch grammar for parsing!")
 		t[0] = 0
