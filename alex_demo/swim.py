@@ -221,10 +221,8 @@ def p_statement_if_else(t):
     'statement : IF expression DO expression ELSE expression'
     if t[2]:
     	t[4] 
-    	print "here1"
     else:
     	t[6]
-    	print "here2"
 
 def p_statement_expr(t):
     'statement : expression'
