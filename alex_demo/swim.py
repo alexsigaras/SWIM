@@ -51,11 +51,22 @@ def stripe_quotation(string):
 #                               Declare tokens                                #
 #-----------------------------------------------------------------------------#
 
-tokens = (
-    'STRING1', 'STRING2', 'SELECTOR', 'ID','NUMBER', 'TRUE', 'FALSE', 'AND', 'OR', 'XOR', 'NOT', 'COMMA',
+reserved = {
+	'if'       : 'IF',
+	'else'     : 'ELSE',
+	'do'       : 'DO',
+	'True'     : 'TRUE',
+	'False'    : 'FALSE',
+	'while'    : 'WHILE',
+	'for'      : 'FOR',
+	'foreach'  : 'FOREACH',
+}
+
+tokens = [
+    'STRING1', 'STRING2', 'SELECTOR', 'ID','NUMBER', 'AND', 'OR', 'XOR', 'NOT', 'COMMA',
     'PLUS','MINUS','MULTIPLY','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
-    'LPAREN','RPAREN', 'IF', 'ELSE', 'DO', 'WHILE', 'FOR', 'FOREACH',
-    )
+    'LPAREN','RPAREN'
+    ] + list(reserved.values())
 
 # Tokens
 
@@ -75,14 +86,10 @@ t_POW     = r'\^'
 t_MOD     = r'\%'
 t_LPAREN  = r'\('
 t_RPAREN  = r'\)'
-t_STRING1 = r'u?"\\?[^"]*"'
-t_STRING2 = r"u?'\\?[^']*'"
-t_ID      = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_SELECTOR = r'@'
-t_COMMA   = r','
+
 
 # Keywords
-
+'''
 t_IF      = r'if'
 t_ELSE    = r'else'
 t_DO      = r'do'
@@ -91,6 +98,12 @@ t_FALSE   = r'False'
 t_WHILE   = r'while'
 t_FOR     = r'for'
 t_FOREACH = r'foreach'
+'''
+
+t_STRING1 = r'u?"\\?[^"]*"'
+t_STRING2 = r"u?'\\?[^']*'"
+t_SELECTOR = r'@'
+t_COMMA   = r','
 
 def t_NUMBER(t):
     r'[0-9]*\.?[0-9]+'
@@ -100,6 +113,12 @@ def t_NUMBER(t):
         print("Float value too large %s" % t.value)
         t.value = 0
     return t
+    
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z_0-9]*'
+    t.type = reserved.get(t.value,'ID')    # Check for reserved words
+    return t
+
 
 t_ignore = " \t"
 
@@ -137,8 +156,7 @@ precedence = (
 names = { } 
 
 def p_start(t):
-    '''start : statement
-             | function'''
+    '''start : statement'''
 
 # def p_statement_true(t):
 #     'statement : TRUE'
@@ -201,8 +219,12 @@ def p_statement_equals(t):
 
 def p_statement_if_else(t):
     'statement : IF expression DO expression ELSE expression'
-    if t[2] : t[4] 
-    else    : t[6]
+    if t[2]:
+    	t[4] 
+    	print "here1"
+    else:
+    	t[6]
+    	print "here2"
 
 def p_statement_expr(t):
     'statement : expression'
@@ -262,7 +284,12 @@ def p_expression_parameters(t):
 def p_expression_parse(t):
 	'expression : parse'
 	t[0] = t[1]
+def p_expression_function(t):
+	'expression : function'
+	t[0] = t[1]
 	
+	
+
 def p_expression_parse_text(t):
     'parse : SELECTOR LPAREN expression RPAREN'
     try:

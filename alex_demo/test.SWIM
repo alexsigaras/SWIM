@@ -1,7 +1,7 @@
 selector = "#toolsHome a"
 url = "http://www.nytimes.com/"
 contents = @(selector, "https://nytimes.com")
-print(contents)
+contents
 
 pdf(contents,"swimm.pdf")
 

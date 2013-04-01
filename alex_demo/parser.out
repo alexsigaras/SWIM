@@ -10,28 +10,28 @@ Grammar
 
 Rule 0     S' -> start
 Rule 1     start -> statement
-Rule 2     start -> function
-Rule 3     function -> ID LPAREN expression RPAREN
-Rule 4     statement -> ID ASSIGN expression
-Rule 5     statement -> expression EQUALS expression
-Rule 6     statement -> IF expression DO expression ELSE expression
-Rule 7     statement -> expression
-Rule 8     expression -> expression PLUS expression
-Rule 9     expression -> expression MINUS expression
-Rule 10    expression -> expression MULTIPLY expression
-Rule 11    expression -> expression DIVIDE expression
-Rule 12    expression -> expression POW expression
-Rule 13    expression -> expression MOD expression
-Rule 14    expression -> expression AND expression
-Rule 15    expression -> expression OR expression
-Rule 16    expression -> expression XOR expression
-Rule 17    expression -> NOT expression
-Rule 18    expression -> TRUE
-Rule 19    expression -> FALSE
-Rule 20    expression -> MINUS expression
-Rule 21    expression -> LPAREN expression RPAREN
-Rule 22    expression -> expression COMMA expression
-Rule 23    expression -> parse
+Rule 2     function -> ID LPAREN expression RPAREN
+Rule 3     statement -> ID ASSIGN expression
+Rule 4     statement -> expression EQUALS expression
+Rule 5     statement -> IF expression DO expression ELSE expression
+Rule 6     statement -> expression
+Rule 7     expression -> expression PLUS expression
+Rule 8     expression -> expression MINUS expression
+Rule 9     expression -> expression MULTIPLY expression
+Rule 10    expression -> expression DIVIDE expression
+Rule 11    expression -> expression POW expression
+Rule 12    expression -> expression MOD expression
+Rule 13    expression -> expression AND expression
+Rule 14    expression -> expression OR expression
+Rule 15    expression -> expression XOR expression
+Rule 16    expression -> NOT expression
+Rule 17    expression -> TRUE
+Rule 18    expression -> FALSE
+Rule 19    expression -> MINUS expression
+Rule 20    expression -> LPAREN expression RPAREN
+Rule 21    expression -> expression COMMA expression
+Rule 22    expression -> parse
+Rule 23    expression -> function
 Rule 24    parse -> SELECTOR LPAREN expression RPAREN
 Rule 25    expression -> NUMBER
 Rule 26    expression -> ID
@@ -42,41 +42,41 @@ Rule 30    expression -> ID string
 
 Terminals, with rules where they appear
 
-AND                  : 14
-ASSIGN               : 4
-COMMA                : 22
-DIVIDE               : 11
-DO                   : 6
-ELSE                 : 6
-EQUALS               : 5
-FALSE                : 19
+AND                  : 13
+ASSIGN               : 3
+COMMA                : 21
+DIVIDE               : 10
+DO                   : 5
+ELSE                 : 5
+EQUALS               : 4
+FALSE                : 18
 FOR                  : 
 FOREACH              : 
-ID                   : 3 4 26 30
-IF                   : 6
-LPAREN               : 3 21 24
-MINUS                : 9 20
-MOD                  : 13
-MULTIPLY             : 10
-NOT                  : 17
+ID                   : 2 3 26 30
+IF                   : 5
+LPAREN               : 2 20 24
+MINUS                : 8 19
+MOD                  : 12
+MULTIPLY             : 9
+NOT                  : 16
 NUMBER               : 25
-OR                   : 15
-PLUS                 : 8
-POW                  : 12
-RPAREN               : 3 21 24
+OR                   : 14
+PLUS                 : 7
+POW                  : 11
+RPAREN               : 2 20 24
 SELECTOR             : 24
 STRING1              : 28
 STRING2              : 29
-TRUE                 : 18
+TRUE                 : 17
 WHILE                : 
-XOR                  : 16
+XOR                  : 15
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 3 4 5 5 6 6 6 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 16 17 20 21 22 22 24
-function             : 2
-parse                : 23
+expression           : 2 3 4 4 5 5 5 6 7 7 8 8 9 9 10 10 11 11 12 12 13 13 14 14 15 15 16 19 20 21 21 24
+function             : 23
+parse                : 22
 start                : 0
 statement            : 1
 string               : 27 30
@@ -87,33 +87,33 @@ state 0
 
     (0) S' -> . start
     (1) start -> . statement
-    (2) start -> . function
-    (4) statement -> . ID ASSIGN expression
-    (5) statement -> . expression EQUALS expression
-    (6) statement -> . IF expression DO expression ELSE expression
-    (7) statement -> . expression
-    (3) function -> . ID LPAREN expression RPAREN
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (3) statement -> . ID ASSIGN expression
+    (4) statement -> . expression EQUALS expression
+    (5) statement -> . IF expression DO expression ELSE expression
+    (6) statement -> . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -150,8 +150,8 @@ state 1
     OR              reduce using rule 25 (expression -> NUMBER .)
     XOR             reduce using rule 25 (expression -> NUMBER .)
     COMMA           reduce using rule 25 (expression -> NUMBER .)
-    $end            reduce using rule 25 (expression -> NUMBER .)
     EQUALS          reduce using rule 25 (expression -> NUMBER .)
+    $end            reduce using rule 25 (expression -> NUMBER .)
     RPAREN          reduce using rule 25 (expression -> NUMBER .)
     DO              reduce using rule 25 (expression -> NUMBER .)
     ELSE            reduce using rule 25 (expression -> NUMBER .)
@@ -166,70 +166,72 @@ state 2
 
 state 3
 
-    (23) expression -> parse .
+    (22) expression -> parse .
 
-    PLUS            reduce using rule 23 (expression -> parse .)
-    MINUS           reduce using rule 23 (expression -> parse .)
-    MULTIPLY        reduce using rule 23 (expression -> parse .)
-    DIVIDE          reduce using rule 23 (expression -> parse .)
-    POW             reduce using rule 23 (expression -> parse .)
-    MOD             reduce using rule 23 (expression -> parse .)
-    AND             reduce using rule 23 (expression -> parse .)
-    OR              reduce using rule 23 (expression -> parse .)
-    XOR             reduce using rule 23 (expression -> parse .)
-    COMMA           reduce using rule 23 (expression -> parse .)
-    $end            reduce using rule 23 (expression -> parse .)
-    EQUALS          reduce using rule 23 (expression -> parse .)
-    RPAREN          reduce using rule 23 (expression -> parse .)
-    DO              reduce using rule 23 (expression -> parse .)
-    ELSE            reduce using rule 23 (expression -> parse .)
+    PLUS            reduce using rule 22 (expression -> parse .)
+    MINUS           reduce using rule 22 (expression -> parse .)
+    MULTIPLY        reduce using rule 22 (expression -> parse .)
+    DIVIDE          reduce using rule 22 (expression -> parse .)
+    POW             reduce using rule 22 (expression -> parse .)
+    MOD             reduce using rule 22 (expression -> parse .)
+    AND             reduce using rule 22 (expression -> parse .)
+    OR              reduce using rule 22 (expression -> parse .)
+    XOR             reduce using rule 22 (expression -> parse .)
+    COMMA           reduce using rule 22 (expression -> parse .)
+    EQUALS          reduce using rule 22 (expression -> parse .)
+    $end            reduce using rule 22 (expression -> parse .)
+    RPAREN          reduce using rule 22 (expression -> parse .)
+    DO              reduce using rule 22 (expression -> parse .)
+    ELSE            reduce using rule 22 (expression -> parse .)
 
 
 state 4
 
-    (18) expression -> TRUE .
+    (17) expression -> TRUE .
 
-    PLUS            reduce using rule 18 (expression -> TRUE .)
-    MINUS           reduce using rule 18 (expression -> TRUE .)
-    MULTIPLY        reduce using rule 18 (expression -> TRUE .)
-    DIVIDE          reduce using rule 18 (expression -> TRUE .)
-    POW             reduce using rule 18 (expression -> TRUE .)
-    MOD             reduce using rule 18 (expression -> TRUE .)
-    AND             reduce using rule 18 (expression -> TRUE .)
-    OR              reduce using rule 18 (expression -> TRUE .)
-    XOR             reduce using rule 18 (expression -> TRUE .)
-    COMMA           reduce using rule 18 (expression -> TRUE .)
-    $end            reduce using rule 18 (expression -> TRUE .)
-    EQUALS          reduce using rule 18 (expression -> TRUE .)
-    RPAREN          reduce using rule 18 (expression -> TRUE .)
-    DO              reduce using rule 18 (expression -> TRUE .)
-    ELSE            reduce using rule 18 (expression -> TRUE .)
+    PLUS            reduce using rule 17 (expression -> TRUE .)
+    MINUS           reduce using rule 17 (expression -> TRUE .)
+    MULTIPLY        reduce using rule 17 (expression -> TRUE .)
+    DIVIDE          reduce using rule 17 (expression -> TRUE .)
+    POW             reduce using rule 17 (expression -> TRUE .)
+    MOD             reduce using rule 17 (expression -> TRUE .)
+    AND             reduce using rule 17 (expression -> TRUE .)
+    OR              reduce using rule 17 (expression -> TRUE .)
+    XOR             reduce using rule 17 (expression -> TRUE .)
+    COMMA           reduce using rule 17 (expression -> TRUE .)
+    EQUALS          reduce using rule 17 (expression -> TRUE .)
+    $end            reduce using rule 17 (expression -> TRUE .)
+    RPAREN          reduce using rule 17 (expression -> TRUE .)
+    DO              reduce using rule 17 (expression -> TRUE .)
+    ELSE            reduce using rule 17 (expression -> TRUE .)
 
 
 state 5
 
-    (20) expression -> MINUS . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (19) expression -> MINUS . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -245,6 +247,7 @@ state 5
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 20
     string                         shift and go to state 6
 
@@ -262,8 +265,8 @@ state 6
     OR              reduce using rule 27 (expression -> string .)
     XOR             reduce using rule 27 (expression -> string .)
     COMMA           reduce using rule 27 (expression -> string .)
-    $end            reduce using rule 27 (expression -> string .)
     EQUALS          reduce using rule 27 (expression -> string .)
+    $end            reduce using rule 27 (expression -> string .)
     RPAREN          reduce using rule 27 (expression -> string .)
     DO              reduce using rule 27 (expression -> string .)
     ELSE            reduce using rule 27 (expression -> string .)
@@ -326,35 +329,51 @@ state 10
 
 state 11
 
-    (2) start -> function .
+    (23) expression -> function .
 
-    $end            reduce using rule 2 (start -> function .)
+    PLUS            reduce using rule 23 (expression -> function .)
+    MINUS           reduce using rule 23 (expression -> function .)
+    MULTIPLY        reduce using rule 23 (expression -> function .)
+    DIVIDE          reduce using rule 23 (expression -> function .)
+    POW             reduce using rule 23 (expression -> function .)
+    MOD             reduce using rule 23 (expression -> function .)
+    AND             reduce using rule 23 (expression -> function .)
+    OR              reduce using rule 23 (expression -> function .)
+    XOR             reduce using rule 23 (expression -> function .)
+    COMMA           reduce using rule 23 (expression -> function .)
+    EQUALS          reduce using rule 23 (expression -> function .)
+    $end            reduce using rule 23 (expression -> function .)
+    RPAREN          reduce using rule 23 (expression -> function .)
+    DO              reduce using rule 23 (expression -> function .)
+    ELSE            reduce using rule 23 (expression -> function .)
 
 
 state 12
 
-    (21) expression -> LPAREN . expression RPAREN
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (20) expression -> LPAREN . expression RPAREN
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -370,20 +389,20 @@ state 12
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 21
     string                         shift and go to state 6
 
 state 13
 
-    (4) statement -> ID . ASSIGN expression
-    (3) function -> ID . LPAREN expression RPAREN
+    (3) statement -> ID . ASSIGN expression
     (26) expression -> ID .
     (30) expression -> ID . string
+    (2) function -> ID . LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
     ASSIGN          shift and go to state 23
-    LPAREN          shift and go to state 24
     EQUALS          reduce using rule 26 (expression -> ID .)
     PLUS            reduce using rule 26 (expression -> ID .)
     MINUS           reduce using rule 26 (expression -> ID .)
@@ -396,6 +415,7 @@ state 13
     XOR             reduce using rule 26 (expression -> ID .)
     COMMA           reduce using rule 26 (expression -> ID .)
     $end            reduce using rule 26 (expression -> ID .)
+    LPAREN          shift and go to state 24
     STRING1         shift and go to state 10
     STRING2         shift and go to state 9
 
@@ -403,28 +423,30 @@ state 13
 
 state 14
 
-    (6) statement -> IF . expression DO expression ELSE expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (5) statement -> IF . expression DO expression ELSE expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -440,54 +462,57 @@ state 14
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 25
     string                         shift and go to state 6
 
 state 15
 
-    (19) expression -> FALSE .
+    (18) expression -> FALSE .
 
-    PLUS            reduce using rule 19 (expression -> FALSE .)
-    MINUS           reduce using rule 19 (expression -> FALSE .)
-    MULTIPLY        reduce using rule 19 (expression -> FALSE .)
-    DIVIDE          reduce using rule 19 (expression -> FALSE .)
-    POW             reduce using rule 19 (expression -> FALSE .)
-    MOD             reduce using rule 19 (expression -> FALSE .)
-    AND             reduce using rule 19 (expression -> FALSE .)
-    OR              reduce using rule 19 (expression -> FALSE .)
-    XOR             reduce using rule 19 (expression -> FALSE .)
-    COMMA           reduce using rule 19 (expression -> FALSE .)
-    $end            reduce using rule 19 (expression -> FALSE .)
-    EQUALS          reduce using rule 19 (expression -> FALSE .)
-    RPAREN          reduce using rule 19 (expression -> FALSE .)
-    DO              reduce using rule 19 (expression -> FALSE .)
-    ELSE            reduce using rule 19 (expression -> FALSE .)
+    PLUS            reduce using rule 18 (expression -> FALSE .)
+    MINUS           reduce using rule 18 (expression -> FALSE .)
+    MULTIPLY        reduce using rule 18 (expression -> FALSE .)
+    DIVIDE          reduce using rule 18 (expression -> FALSE .)
+    POW             reduce using rule 18 (expression -> FALSE .)
+    MOD             reduce using rule 18 (expression -> FALSE .)
+    AND             reduce using rule 18 (expression -> FALSE .)
+    OR              reduce using rule 18 (expression -> FALSE .)
+    XOR             reduce using rule 18 (expression -> FALSE .)
+    COMMA           reduce using rule 18 (expression -> FALSE .)
+    EQUALS          reduce using rule 18 (expression -> FALSE .)
+    $end            reduce using rule 18 (expression -> FALSE .)
+    RPAREN          reduce using rule 18 (expression -> FALSE .)
+    DO              reduce using rule 18 (expression -> FALSE .)
+    ELSE            reduce using rule 18 (expression -> FALSE .)
 
 
 state 16
 
-    (17) expression -> NOT . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (16) expression -> NOT . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -503,26 +528,27 @@ state 16
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 26
     string                         shift and go to state 6
 
 state 17
 
-    (5) statement -> expression . EQUALS expression
-    (7) statement -> expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (4) statement -> expression . EQUALS expression
+    (6) statement -> expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     EQUALS          shift and go to state 31
-    $end            reduce using rule 7 (statement -> expression .)
+    $end            reduce using rule 6 (statement -> expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -538,27 +564,29 @@ state 17
 state 18
 
     (24) parse -> SELECTOR LPAREN . expression RPAREN
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -574,6 +602,7 @@ state 18
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 38
     string                         shift and go to state 6
 
@@ -581,6 +610,7 @@ state 19
 
     (26) expression -> ID .
     (30) expression -> ID . string
+    (2) function -> ID . LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -594,11 +624,12 @@ state 19
     OR              reduce using rule 26 (expression -> ID .)
     XOR             reduce using rule 26 (expression -> ID .)
     COMMA           reduce using rule 26 (expression -> ID .)
-    $end            reduce using rule 26 (expression -> ID .)
     EQUALS          reduce using rule 26 (expression -> ID .)
+    $end            reduce using rule 26 (expression -> ID .)
     RPAREN          reduce using rule 26 (expression -> ID .)
     DO              reduce using rule 26 (expression -> ID .)
     ELSE            reduce using rule 26 (expression -> ID .)
+    LPAREN          shift and go to state 24
     STRING1         shift and go to state 10
     STRING2         shift and go to state 9
 
@@ -606,35 +637,35 @@ state 19
 
 state 20
 
-    (20) expression -> MINUS expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (19) expression -> MINUS expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 20 (expression -> MINUS expression .)
-    MINUS           reduce using rule 20 (expression -> MINUS expression .)
-    MULTIPLY        reduce using rule 20 (expression -> MINUS expression .)
-    DIVIDE          reduce using rule 20 (expression -> MINUS expression .)
-    MOD             reduce using rule 20 (expression -> MINUS expression .)
-    AND             reduce using rule 20 (expression -> MINUS expression .)
-    OR              reduce using rule 20 (expression -> MINUS expression .)
-    XOR             reduce using rule 20 (expression -> MINUS expression .)
-    COMMA           reduce using rule 20 (expression -> MINUS expression .)
-    $end            reduce using rule 20 (expression -> MINUS expression .)
-    EQUALS          reduce using rule 20 (expression -> MINUS expression .)
-    RPAREN          reduce using rule 20 (expression -> MINUS expression .)
-    DO              reduce using rule 20 (expression -> MINUS expression .)
-    ELSE            reduce using rule 20 (expression -> MINUS expression .)
+    PLUS            reduce using rule 19 (expression -> MINUS expression .)
+    MINUS           reduce using rule 19 (expression -> MINUS expression .)
+    MULTIPLY        reduce using rule 19 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 19 (expression -> MINUS expression .)
+    MOD             reduce using rule 19 (expression -> MINUS expression .)
+    AND             reduce using rule 19 (expression -> MINUS expression .)
+    OR              reduce using rule 19 (expression -> MINUS expression .)
+    XOR             reduce using rule 19 (expression -> MINUS expression .)
+    COMMA           reduce using rule 19 (expression -> MINUS expression .)
+    EQUALS          reduce using rule 19 (expression -> MINUS expression .)
+    $end            reduce using rule 19 (expression -> MINUS expression .)
+    RPAREN          reduce using rule 19 (expression -> MINUS expression .)
+    DO              reduce using rule 19 (expression -> MINUS expression .)
+    ELSE            reduce using rule 19 (expression -> MINUS expression .)
     POW             shift and go to state 30
 
-  ! POW             [ reduce using rule 20 (expression -> MINUS expression .) ]
+  ! POW             [ reduce using rule 19 (expression -> MINUS expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! MULTIPLY        [ shift and go to state 34 ]
@@ -648,17 +679,17 @@ state 20
 
 state 21
 
-    (21) expression -> LPAREN expression . RPAREN
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (20) expression -> LPAREN expression . RPAREN
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     RPAREN          shift and go to state 39
     PLUS            shift and go to state 33
@@ -687,8 +718,8 @@ state 22
     OR              reduce using rule 30 (expression -> ID string .)
     XOR             reduce using rule 30 (expression -> ID string .)
     COMMA           reduce using rule 30 (expression -> ID string .)
-    $end            reduce using rule 30 (expression -> ID string .)
     EQUALS          reduce using rule 30 (expression -> ID string .)
+    $end            reduce using rule 30 (expression -> ID string .)
     RPAREN          reduce using rule 30 (expression -> ID string .)
     DO              reduce using rule 30 (expression -> ID string .)
     ELSE            reduce using rule 30 (expression -> ID string .)
@@ -696,28 +727,30 @@ state 22
 
 state 23
 
-    (4) statement -> ID ASSIGN . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (3) statement -> ID ASSIGN . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -733,33 +766,36 @@ state 23
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 40
     string                         shift and go to state 6
 
 state 24
 
-    (3) function -> ID LPAREN . expression RPAREN
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (2) function -> ID LPAREN . expression RPAREN
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -775,22 +811,23 @@ state 24
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 41
     string                         shift and go to state 6
 
 state 25
 
-    (6) statement -> IF expression . DO expression ELSE expression
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (5) statement -> IF expression . DO expression ELSE expression
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     DO              shift and go to state 42
     PLUS            shift and go to state 33
@@ -807,17 +844,17 @@ state 25
 
 state 26
 
-    (17) expression -> NOT expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (16) expression -> NOT expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -829,11 +866,11 @@ state 26
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
   ! shift/reduce conflict for COMMA resolved as shift
-    $end            reduce using rule 17 (expression -> NOT expression .)
-    EQUALS          reduce using rule 17 (expression -> NOT expression .)
-    RPAREN          reduce using rule 17 (expression -> NOT expression .)
-    DO              reduce using rule 17 (expression -> NOT expression .)
-    ELSE            reduce using rule 17 (expression -> NOT expression .)
+    EQUALS          reduce using rule 16 (expression -> NOT expression .)
+    $end            reduce using rule 16 (expression -> NOT expression .)
+    RPAREN          reduce using rule 16 (expression -> NOT expression .)
+    DO              reduce using rule 16 (expression -> NOT expression .)
+    ELSE            reduce using rule 16 (expression -> NOT expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -845,42 +882,44 @@ state 26
     XOR             shift and go to state 28
     COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! MINUS           [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! MULTIPLY        [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! DIVIDE          [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! POW             [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! MOD             [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! AND             [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! OR              [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! XOR             [ reduce using rule 17 (expression -> NOT expression .) ]
-  ! COMMA           [ reduce using rule 17 (expression -> NOT expression .) ]
+  ! PLUS            [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! MINUS           [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! MULTIPLY        [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! DIVIDE          [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! POW             [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! MOD             [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! AND             [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! OR              [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! XOR             [ reduce using rule 16 (expression -> NOT expression .) ]
+  ! COMMA           [ reduce using rule 16 (expression -> NOT expression .) ]
 
 
 state 27
 
-    (14) expression -> expression AND . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (13) expression -> expression AND . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -896,33 +935,36 @@ state 27
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 43
     string                         shift and go to state 6
 
 state 28
 
-    (16) expression -> expression XOR . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (15) expression -> expression XOR . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -938,33 +980,36 @@ state 28
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 44
     string                         shift and go to state 6
 
 state 29
 
-    (11) expression -> expression DIVIDE . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (10) expression -> expression DIVIDE . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -980,33 +1025,36 @@ state 29
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 45
     string                         shift and go to state 6
 
 state 30
 
-    (12) expression -> expression POW . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (11) expression -> expression POW . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1022,33 +1070,36 @@ state 30
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 46
     string                         shift and go to state 6
 
 state 31
 
-    (5) statement -> expression EQUALS . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (4) statement -> expression EQUALS . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1064,33 +1115,36 @@ state 31
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 47
     string                         shift and go to state 6
 
 state 32
 
-    (15) expression -> expression OR . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (14) expression -> expression OR . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1106,33 +1160,36 @@ state 32
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 48
     string                         shift and go to state 6
 
 state 33
 
-    (8) expression -> expression PLUS . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (7) expression -> expression PLUS . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1148,33 +1205,36 @@ state 33
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 49
     string                         shift and go to state 6
 
 state 34
 
-    (10) expression -> expression MULTIPLY . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (9) expression -> expression MULTIPLY . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1190,33 +1250,36 @@ state 34
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 50
     string                         shift and go to state 6
 
 state 35
 
-    (22) expression -> expression COMMA . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (21) expression -> expression COMMA . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1232,33 +1295,36 @@ state 35
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 51
     string                         shift and go to state 6
 
 state 36
 
-    (9) expression -> expression MINUS . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (8) expression -> expression MINUS . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1274,33 +1340,36 @@ state 36
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 52
     string                         shift and go to state 6
 
 state 37
 
-    (13) expression -> expression MOD . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (12) expression -> expression MOD . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1316,22 +1385,23 @@ state 37
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 53
     string                         shift and go to state 6
 
 state 38
 
     (24) parse -> SELECTOR LPAREN expression . RPAREN
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     RPAREN          shift and go to state 54
     PLUS            shift and go to state 33
@@ -1348,40 +1418,40 @@ state 38
 
 state 39
 
-    (21) expression -> LPAREN expression RPAREN .
+    (20) expression -> LPAREN expression RPAREN .
 
-    PLUS            reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    MULTIPLY        reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    POW             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    MOD             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    AND             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    OR              reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    XOR             reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    COMMA           reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    $end            reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    DO              reduce using rule 21 (expression -> LPAREN expression RPAREN .)
-    ELSE            reduce using rule 21 (expression -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MULTIPLY        reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    POW             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    AND             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    OR              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    XOR             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    DO              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    ELSE            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
 
 
 state 40
 
-    (4) statement -> ID ASSIGN expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (3) statement -> ID ASSIGN expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    $end            reduce using rule 4 (statement -> ID ASSIGN expression .)
+    $end            reduce using rule 3 (statement -> ID ASSIGN expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -1396,17 +1466,17 @@ state 40
 
 state 41
 
-    (3) function -> ID LPAREN expression . RPAREN
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (2) function -> ID LPAREN expression . RPAREN
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     RPAREN          shift and go to state 55
     PLUS            shift and go to state 33
@@ -1423,28 +1493,30 @@ state 41
 
 state 42
 
-    (6) statement -> IF expression DO . expression ELSE expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (5) statement -> IF expression DO . expression ELSE expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -1460,22 +1532,23 @@ state 42
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 56
     string                         shift and go to state 6
 
 state 43
 
-    (14) expression -> expression AND expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (13) expression -> expression AND expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -1487,11 +1560,11 @@ state 43
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
   ! shift/reduce conflict for COMMA resolved as shift
-    $end            reduce using rule 14 (expression -> expression AND expression .)
-    EQUALS          reduce using rule 14 (expression -> expression AND expression .)
-    RPAREN          reduce using rule 14 (expression -> expression AND expression .)
-    DO              reduce using rule 14 (expression -> expression AND expression .)
-    ELSE            reduce using rule 14 (expression -> expression AND expression .)
+    EQUALS          reduce using rule 13 (expression -> expression AND expression .)
+    $end            reduce using rule 13 (expression -> expression AND expression .)
+    RPAREN          reduce using rule 13 (expression -> expression AND expression .)
+    DO              reduce using rule 13 (expression -> expression AND expression .)
+    ELSE            reduce using rule 13 (expression -> expression AND expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -1503,31 +1576,31 @@ state 43
     XOR             shift and go to state 28
     COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! MINUS           [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! MULTIPLY        [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! DIVIDE          [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! POW             [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! MOD             [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! AND             [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! OR              [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! XOR             [ reduce using rule 14 (expression -> expression AND expression .) ]
-  ! COMMA           [ reduce using rule 14 (expression -> expression AND expression .) ]
+  ! PLUS            [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! MINUS           [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! MULTIPLY        [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! DIVIDE          [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! POW             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! MOD             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! AND             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! OR              [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! XOR             [ reduce using rule 13 (expression -> expression AND expression .) ]
+  ! COMMA           [ reduce using rule 13 (expression -> expression AND expression .) ]
 
 
 state 44
 
-    (16) expression -> expression XOR expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (15) expression -> expression XOR expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -1539,11 +1612,11 @@ state 44
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
   ! shift/reduce conflict for COMMA resolved as shift
-    $end            reduce using rule 16 (expression -> expression XOR expression .)
-    EQUALS          reduce using rule 16 (expression -> expression XOR expression .)
-    RPAREN          reduce using rule 16 (expression -> expression XOR expression .)
-    DO              reduce using rule 16 (expression -> expression XOR expression .)
-    ELSE            reduce using rule 16 (expression -> expression XOR expression .)
+    EQUALS          reduce using rule 15 (expression -> expression XOR expression .)
+    $end            reduce using rule 15 (expression -> expression XOR expression .)
+    RPAREN          reduce using rule 15 (expression -> expression XOR expression .)
+    DO              reduce using rule 15 (expression -> expression XOR expression .)
+    ELSE            reduce using rule 15 (expression -> expression XOR expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -1555,49 +1628,49 @@ state 44
     XOR             shift and go to state 28
     COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! MINUS           [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! MULTIPLY        [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! DIVIDE          [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! POW             [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! MOD             [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! AND             [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! OR              [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! XOR             [ reduce using rule 16 (expression -> expression XOR expression .) ]
-  ! COMMA           [ reduce using rule 16 (expression -> expression XOR expression .) ]
+  ! PLUS            [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! MINUS           [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! MULTIPLY        [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! DIVIDE          [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! POW             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! MOD             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! AND             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! OR              [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! XOR             [ reduce using rule 15 (expression -> expression XOR expression .) ]
+  ! COMMA           [ reduce using rule 15 (expression -> expression XOR expression .) ]
 
 
 state 45
 
-    (11) expression -> expression DIVIDE expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (10) expression -> expression DIVIDE expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 11 (expression -> expression DIVIDE expression .)
-    MINUS           reduce using rule 11 (expression -> expression DIVIDE expression .)
-    MULTIPLY        reduce using rule 11 (expression -> expression DIVIDE expression .)
-    DIVIDE          reduce using rule 11 (expression -> expression DIVIDE expression .)
-    MOD             reduce using rule 11 (expression -> expression DIVIDE expression .)
-    AND             reduce using rule 11 (expression -> expression DIVIDE expression .)
-    OR              reduce using rule 11 (expression -> expression DIVIDE expression .)
-    XOR             reduce using rule 11 (expression -> expression DIVIDE expression .)
-    COMMA           reduce using rule 11 (expression -> expression DIVIDE expression .)
-    $end            reduce using rule 11 (expression -> expression DIVIDE expression .)
-    EQUALS          reduce using rule 11 (expression -> expression DIVIDE expression .)
-    RPAREN          reduce using rule 11 (expression -> expression DIVIDE expression .)
-    DO              reduce using rule 11 (expression -> expression DIVIDE expression .)
-    ELSE            reduce using rule 11 (expression -> expression DIVIDE expression .)
+    PLUS            reduce using rule 10 (expression -> expression DIVIDE expression .)
+    MINUS           reduce using rule 10 (expression -> expression DIVIDE expression .)
+    MULTIPLY        reduce using rule 10 (expression -> expression DIVIDE expression .)
+    DIVIDE          reduce using rule 10 (expression -> expression DIVIDE expression .)
+    MOD             reduce using rule 10 (expression -> expression DIVIDE expression .)
+    AND             reduce using rule 10 (expression -> expression DIVIDE expression .)
+    OR              reduce using rule 10 (expression -> expression DIVIDE expression .)
+    XOR             reduce using rule 10 (expression -> expression DIVIDE expression .)
+    COMMA           reduce using rule 10 (expression -> expression DIVIDE expression .)
+    EQUALS          reduce using rule 10 (expression -> expression DIVIDE expression .)
+    $end            reduce using rule 10 (expression -> expression DIVIDE expression .)
+    RPAREN          reduce using rule 10 (expression -> expression DIVIDE expression .)
+    DO              reduce using rule 10 (expression -> expression DIVIDE expression .)
+    ELSE            reduce using rule 10 (expression -> expression DIVIDE expression .)
     POW             shift and go to state 30
 
-  ! POW             [ reduce using rule 11 (expression -> expression DIVIDE expression .) ]
+  ! POW             [ reduce using rule 10 (expression -> expression DIVIDE expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! MULTIPLY        [ shift and go to state 34 ]
@@ -1611,35 +1684,35 @@ state 45
 
 state 46
 
-    (12) expression -> expression POW expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (11) expression -> expression POW expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 12 (expression -> expression POW expression .)
-    MINUS           reduce using rule 12 (expression -> expression POW expression .)
-    MULTIPLY        reduce using rule 12 (expression -> expression POW expression .)
-    DIVIDE          reduce using rule 12 (expression -> expression POW expression .)
-    MOD             reduce using rule 12 (expression -> expression POW expression .)
-    AND             reduce using rule 12 (expression -> expression POW expression .)
-    OR              reduce using rule 12 (expression -> expression POW expression .)
-    XOR             reduce using rule 12 (expression -> expression POW expression .)
-    COMMA           reduce using rule 12 (expression -> expression POW expression .)
-    $end            reduce using rule 12 (expression -> expression POW expression .)
-    EQUALS          reduce using rule 12 (expression -> expression POW expression .)
-    RPAREN          reduce using rule 12 (expression -> expression POW expression .)
-    DO              reduce using rule 12 (expression -> expression POW expression .)
-    ELSE            reduce using rule 12 (expression -> expression POW expression .)
+    PLUS            reduce using rule 11 (expression -> expression POW expression .)
+    MINUS           reduce using rule 11 (expression -> expression POW expression .)
+    MULTIPLY        reduce using rule 11 (expression -> expression POW expression .)
+    DIVIDE          reduce using rule 11 (expression -> expression POW expression .)
+    MOD             reduce using rule 11 (expression -> expression POW expression .)
+    AND             reduce using rule 11 (expression -> expression POW expression .)
+    OR              reduce using rule 11 (expression -> expression POW expression .)
+    XOR             reduce using rule 11 (expression -> expression POW expression .)
+    COMMA           reduce using rule 11 (expression -> expression POW expression .)
+    EQUALS          reduce using rule 11 (expression -> expression POW expression .)
+    $end            reduce using rule 11 (expression -> expression POW expression .)
+    RPAREN          reduce using rule 11 (expression -> expression POW expression .)
+    DO              reduce using rule 11 (expression -> expression POW expression .)
+    ELSE            reduce using rule 11 (expression -> expression POW expression .)
     POW             shift and go to state 30
 
-  ! POW             [ reduce using rule 12 (expression -> expression POW expression .) ]
+  ! POW             [ reduce using rule 11 (expression -> expression POW expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! MULTIPLY        [ shift and go to state 34 ]
@@ -1653,19 +1726,19 @@ state 46
 
 state 47
 
-    (5) statement -> expression EQUALS expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (4) statement -> expression EQUALS expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    $end            reduce using rule 5 (statement -> expression EQUALS expression .)
+    $end            reduce using rule 4 (statement -> expression EQUALS expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -1680,17 +1753,17 @@ state 47
 
 state 48
 
-    (15) expression -> expression OR expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (14) expression -> expression OR expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
   ! shift/reduce conflict for PLUS resolved as shift
   ! shift/reduce conflict for MINUS resolved as shift
@@ -1702,11 +1775,11 @@ state 48
   ! shift/reduce conflict for OR resolved as shift
   ! shift/reduce conflict for XOR resolved as shift
   ! shift/reduce conflict for COMMA resolved as shift
-    $end            reduce using rule 15 (expression -> expression OR expression .)
-    EQUALS          reduce using rule 15 (expression -> expression OR expression .)
-    RPAREN          reduce using rule 15 (expression -> expression OR expression .)
-    DO              reduce using rule 15 (expression -> expression OR expression .)
-    ELSE            reduce using rule 15 (expression -> expression OR expression .)
+    EQUALS          reduce using rule 14 (expression -> expression OR expression .)
+    $end            reduce using rule 14 (expression -> expression OR expression .)
+    RPAREN          reduce using rule 14 (expression -> expression OR expression .)
+    DO              reduce using rule 14 (expression -> expression OR expression .)
+    ELSE            reduce using rule 14 (expression -> expression OR expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
@@ -1718,52 +1791,52 @@ state 48
     XOR             shift and go to state 28
     COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! MINUS           [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! MULTIPLY        [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! DIVIDE          [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! POW             [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! MOD             [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! AND             [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! OR              [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! XOR             [ reduce using rule 15 (expression -> expression OR expression .) ]
-  ! COMMA           [ reduce using rule 15 (expression -> expression OR expression .) ]
+  ! PLUS            [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! MINUS           [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! MULTIPLY        [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! DIVIDE          [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! POW             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! MOD             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! AND             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! OR              [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! XOR             [ reduce using rule 14 (expression -> expression OR expression .) ]
+  ! COMMA           [ reduce using rule 14 (expression -> expression OR expression .) ]
 
 
 state 49
 
-    (8) expression -> expression PLUS expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (7) expression -> expression PLUS expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 8 (expression -> expression PLUS expression .)
-    MINUS           reduce using rule 8 (expression -> expression PLUS expression .)
-    AND             reduce using rule 8 (expression -> expression PLUS expression .)
-    OR              reduce using rule 8 (expression -> expression PLUS expression .)
-    XOR             reduce using rule 8 (expression -> expression PLUS expression .)
-    COMMA           reduce using rule 8 (expression -> expression PLUS expression .)
-    $end            reduce using rule 8 (expression -> expression PLUS expression .)
-    EQUALS          reduce using rule 8 (expression -> expression PLUS expression .)
-    RPAREN          reduce using rule 8 (expression -> expression PLUS expression .)
-    DO              reduce using rule 8 (expression -> expression PLUS expression .)
-    ELSE            reduce using rule 8 (expression -> expression PLUS expression .)
+    PLUS            reduce using rule 7 (expression -> expression PLUS expression .)
+    MINUS           reduce using rule 7 (expression -> expression PLUS expression .)
+    AND             reduce using rule 7 (expression -> expression PLUS expression .)
+    OR              reduce using rule 7 (expression -> expression PLUS expression .)
+    XOR             reduce using rule 7 (expression -> expression PLUS expression .)
+    COMMA           reduce using rule 7 (expression -> expression PLUS expression .)
+    EQUALS          reduce using rule 7 (expression -> expression PLUS expression .)
+    $end            reduce using rule 7 (expression -> expression PLUS expression .)
+    RPAREN          reduce using rule 7 (expression -> expression PLUS expression .)
+    DO              reduce using rule 7 (expression -> expression PLUS expression .)
+    ELSE            reduce using rule 7 (expression -> expression PLUS expression .)
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 29
     POW             shift and go to state 30
     MOD             shift and go to state 37
 
-  ! MULTIPLY        [ reduce using rule 8 (expression -> expression PLUS expression .) ]
-  ! DIVIDE          [ reduce using rule 8 (expression -> expression PLUS expression .) ]
-  ! POW             [ reduce using rule 8 (expression -> expression PLUS expression .) ]
-  ! MOD             [ reduce using rule 8 (expression -> expression PLUS expression .) ]
+  ! MULTIPLY        [ reduce using rule 7 (expression -> expression PLUS expression .) ]
+  ! DIVIDE          [ reduce using rule 7 (expression -> expression PLUS expression .) ]
+  ! POW             [ reduce using rule 7 (expression -> expression PLUS expression .) ]
+  ! MOD             [ reduce using rule 7 (expression -> expression PLUS expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! AND             [ shift and go to state 27 ]
@@ -1774,35 +1847,35 @@ state 49
 
 state 50
 
-    (10) expression -> expression MULTIPLY expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (9) expression -> expression MULTIPLY expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    MINUS           reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    MULTIPLY        reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    DIVIDE          reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    MOD             reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    AND             reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    OR              reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    XOR             reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    COMMA           reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    $end            reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    EQUALS          reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    RPAREN          reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    DO              reduce using rule 10 (expression -> expression MULTIPLY expression .)
-    ELSE            reduce using rule 10 (expression -> expression MULTIPLY expression .)
+    PLUS            reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    MINUS           reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    MULTIPLY        reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    DIVIDE          reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    MOD             reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    AND             reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    OR              reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    XOR             reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    COMMA           reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    EQUALS          reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    $end            reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    RPAREN          reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    DO              reduce using rule 9 (expression -> expression MULTIPLY expression .)
+    ELSE            reduce using rule 9 (expression -> expression MULTIPLY expression .)
     POW             shift and go to state 30
 
-  ! POW             [ reduce using rule 10 (expression -> expression MULTIPLY expression .) ]
+  ! POW             [ reduce using rule 9 (expression -> expression MULTIPLY expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! MULTIPLY        [ shift and go to state 34 ]
@@ -1816,38 +1889,38 @@ state 50
 
 state 51
 
-    (22) expression -> expression COMMA expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (21) expression -> expression COMMA expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 22 (expression -> expression COMMA expression .)
-    MINUS           reduce using rule 22 (expression -> expression COMMA expression .)
-    AND             reduce using rule 22 (expression -> expression COMMA expression .)
-    OR              reduce using rule 22 (expression -> expression COMMA expression .)
-    XOR             reduce using rule 22 (expression -> expression COMMA expression .)
-    COMMA           reduce using rule 22 (expression -> expression COMMA expression .)
-    $end            reduce using rule 22 (expression -> expression COMMA expression .)
-    EQUALS          reduce using rule 22 (expression -> expression COMMA expression .)
-    RPAREN          reduce using rule 22 (expression -> expression COMMA expression .)
-    DO              reduce using rule 22 (expression -> expression COMMA expression .)
-    ELSE            reduce using rule 22 (expression -> expression COMMA expression .)
+    PLUS            reduce using rule 21 (expression -> expression COMMA expression .)
+    MINUS           reduce using rule 21 (expression -> expression COMMA expression .)
+    AND             reduce using rule 21 (expression -> expression COMMA expression .)
+    OR              reduce using rule 21 (expression -> expression COMMA expression .)
+    XOR             reduce using rule 21 (expression -> expression COMMA expression .)
+    COMMA           reduce using rule 21 (expression -> expression COMMA expression .)
+    EQUALS          reduce using rule 21 (expression -> expression COMMA expression .)
+    $end            reduce using rule 21 (expression -> expression COMMA expression .)
+    RPAREN          reduce using rule 21 (expression -> expression COMMA expression .)
+    DO              reduce using rule 21 (expression -> expression COMMA expression .)
+    ELSE            reduce using rule 21 (expression -> expression COMMA expression .)
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 29
     POW             shift and go to state 30
     MOD             shift and go to state 37
 
-  ! MULTIPLY        [ reduce using rule 22 (expression -> expression COMMA expression .) ]
-  ! DIVIDE          [ reduce using rule 22 (expression -> expression COMMA expression .) ]
-  ! POW             [ reduce using rule 22 (expression -> expression COMMA expression .) ]
-  ! MOD             [ reduce using rule 22 (expression -> expression COMMA expression .) ]
+  ! MULTIPLY        [ reduce using rule 21 (expression -> expression COMMA expression .) ]
+  ! DIVIDE          [ reduce using rule 21 (expression -> expression COMMA expression .) ]
+  ! POW             [ reduce using rule 21 (expression -> expression COMMA expression .) ]
+  ! MOD             [ reduce using rule 21 (expression -> expression COMMA expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! AND             [ shift and go to state 27 ]
@@ -1858,38 +1931,38 @@ state 51
 
 state 52
 
-    (9) expression -> expression MINUS expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (8) expression -> expression MINUS expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 9 (expression -> expression MINUS expression .)
-    MINUS           reduce using rule 9 (expression -> expression MINUS expression .)
-    AND             reduce using rule 9 (expression -> expression MINUS expression .)
-    OR              reduce using rule 9 (expression -> expression MINUS expression .)
-    XOR             reduce using rule 9 (expression -> expression MINUS expression .)
-    COMMA           reduce using rule 9 (expression -> expression MINUS expression .)
-    $end            reduce using rule 9 (expression -> expression MINUS expression .)
-    EQUALS          reduce using rule 9 (expression -> expression MINUS expression .)
-    RPAREN          reduce using rule 9 (expression -> expression MINUS expression .)
-    DO              reduce using rule 9 (expression -> expression MINUS expression .)
-    ELSE            reduce using rule 9 (expression -> expression MINUS expression .)
+    PLUS            reduce using rule 8 (expression -> expression MINUS expression .)
+    MINUS           reduce using rule 8 (expression -> expression MINUS expression .)
+    AND             reduce using rule 8 (expression -> expression MINUS expression .)
+    OR              reduce using rule 8 (expression -> expression MINUS expression .)
+    XOR             reduce using rule 8 (expression -> expression MINUS expression .)
+    COMMA           reduce using rule 8 (expression -> expression MINUS expression .)
+    EQUALS          reduce using rule 8 (expression -> expression MINUS expression .)
+    $end            reduce using rule 8 (expression -> expression MINUS expression .)
+    RPAREN          reduce using rule 8 (expression -> expression MINUS expression .)
+    DO              reduce using rule 8 (expression -> expression MINUS expression .)
+    ELSE            reduce using rule 8 (expression -> expression MINUS expression .)
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 29
     POW             shift and go to state 30
     MOD             shift and go to state 37
 
-  ! MULTIPLY        [ reduce using rule 9 (expression -> expression MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 9 (expression -> expression MINUS expression .) ]
-  ! POW             [ reduce using rule 9 (expression -> expression MINUS expression .) ]
-  ! MOD             [ reduce using rule 9 (expression -> expression MINUS expression .) ]
+  ! MULTIPLY        [ reduce using rule 8 (expression -> expression MINUS expression .) ]
+  ! DIVIDE          [ reduce using rule 8 (expression -> expression MINUS expression .) ]
+  ! POW             [ reduce using rule 8 (expression -> expression MINUS expression .) ]
+  ! MOD             [ reduce using rule 8 (expression -> expression MINUS expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! AND             [ shift and go to state 27 ]
@@ -1900,35 +1973,35 @@ state 52
 
 state 53
 
-    (13) expression -> expression MOD expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (12) expression -> expression MOD expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    PLUS            reduce using rule 13 (expression -> expression MOD expression .)
-    MINUS           reduce using rule 13 (expression -> expression MOD expression .)
-    MULTIPLY        reduce using rule 13 (expression -> expression MOD expression .)
-    DIVIDE          reduce using rule 13 (expression -> expression MOD expression .)
-    MOD             reduce using rule 13 (expression -> expression MOD expression .)
-    AND             reduce using rule 13 (expression -> expression MOD expression .)
-    OR              reduce using rule 13 (expression -> expression MOD expression .)
-    XOR             reduce using rule 13 (expression -> expression MOD expression .)
-    COMMA           reduce using rule 13 (expression -> expression MOD expression .)
-    $end            reduce using rule 13 (expression -> expression MOD expression .)
-    EQUALS          reduce using rule 13 (expression -> expression MOD expression .)
-    RPAREN          reduce using rule 13 (expression -> expression MOD expression .)
-    DO              reduce using rule 13 (expression -> expression MOD expression .)
-    ELSE            reduce using rule 13 (expression -> expression MOD expression .)
+    PLUS            reduce using rule 12 (expression -> expression MOD expression .)
+    MINUS           reduce using rule 12 (expression -> expression MOD expression .)
+    MULTIPLY        reduce using rule 12 (expression -> expression MOD expression .)
+    DIVIDE          reduce using rule 12 (expression -> expression MOD expression .)
+    MOD             reduce using rule 12 (expression -> expression MOD expression .)
+    AND             reduce using rule 12 (expression -> expression MOD expression .)
+    OR              reduce using rule 12 (expression -> expression MOD expression .)
+    XOR             reduce using rule 12 (expression -> expression MOD expression .)
+    COMMA           reduce using rule 12 (expression -> expression MOD expression .)
+    EQUALS          reduce using rule 12 (expression -> expression MOD expression .)
+    $end            reduce using rule 12 (expression -> expression MOD expression .)
+    RPAREN          reduce using rule 12 (expression -> expression MOD expression .)
+    DO              reduce using rule 12 (expression -> expression MOD expression .)
+    ELSE            reduce using rule 12 (expression -> expression MOD expression .)
     POW             shift and go to state 30
 
-  ! POW             [ reduce using rule 13 (expression -> expression MOD expression .) ]
+  ! POW             [ reduce using rule 12 (expression -> expression MOD expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 36 ]
   ! MULTIPLY        [ shift and go to state 34 ]
@@ -1963,24 +2036,38 @@ state 54
 
 state 55
 
-    (3) function -> ID LPAREN expression RPAREN .
+    (2) function -> ID LPAREN expression RPAREN .
 
-    $end            reduce using rule 3 (function -> ID LPAREN expression RPAREN .)
+    PLUS            reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    MINUS           reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    MULTIPLY        reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    POW             reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    MOD             reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    AND             reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    OR              reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    XOR             reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    COMMA           reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    $end            reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    DO              reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
+    ELSE            reduce using rule 2 (function -> ID LPAREN expression RPAREN .)
 
 
 state 56
 
-    (6) statement -> IF expression DO expression . ELSE expression
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (5) statement -> IF expression DO expression . ELSE expression
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
     ELSE            shift and go to state 57
     PLUS            shift and go to state 33
@@ -1997,28 +2084,30 @@ state 56
 
 state 57
 
-    (6) statement -> IF expression DO expression ELSE . expression
-    (8) expression -> . expression PLUS expression
-    (9) expression -> . expression MINUS expression
-    (10) expression -> . expression MULTIPLY expression
-    (11) expression -> . expression DIVIDE expression
-    (12) expression -> . expression POW expression
-    (13) expression -> . expression MOD expression
-    (14) expression -> . expression AND expression
-    (15) expression -> . expression OR expression
-    (16) expression -> . expression XOR expression
-    (17) expression -> . NOT expression
-    (18) expression -> . TRUE
-    (19) expression -> . FALSE
-    (20) expression -> . MINUS expression
-    (21) expression -> . LPAREN expression RPAREN
-    (22) expression -> . expression COMMA expression
-    (23) expression -> . parse
+    (5) statement -> IF expression DO expression ELSE . expression
+    (7) expression -> . expression PLUS expression
+    (8) expression -> . expression MINUS expression
+    (9) expression -> . expression MULTIPLY expression
+    (10) expression -> . expression DIVIDE expression
+    (11) expression -> . expression POW expression
+    (12) expression -> . expression MOD expression
+    (13) expression -> . expression AND expression
+    (14) expression -> . expression OR expression
+    (15) expression -> . expression XOR expression
+    (16) expression -> . NOT expression
+    (17) expression -> . TRUE
+    (18) expression -> . FALSE
+    (19) expression -> . MINUS expression
+    (20) expression -> . LPAREN expression RPAREN
+    (21) expression -> . expression COMMA expression
+    (22) expression -> . parse
+    (23) expression -> . function
     (25) expression -> . NUMBER
     (26) expression -> . ID
     (27) expression -> . string
     (30) expression -> . ID string
     (24) parse -> . SELECTOR LPAREN expression RPAREN
+    (2) function -> . ID LPAREN expression RPAREN
     (28) string -> . STRING1
     (29) string -> . STRING2
 
@@ -2034,24 +2123,25 @@ state 57
     STRING2         shift and go to state 9
 
     parse                          shift and go to state 3
+    function                       shift and go to state 11
     expression                     shift and go to state 58
     string                         shift and go to state 6
 
 state 58
 
-    (6) statement -> IF expression DO expression ELSE expression .
-    (8) expression -> expression . PLUS expression
-    (9) expression -> expression . MINUS expression
-    (10) expression -> expression . MULTIPLY expression
-    (11) expression -> expression . DIVIDE expression
-    (12) expression -> expression . POW expression
-    (13) expression -> expression . MOD expression
-    (14) expression -> expression . AND expression
-    (15) expression -> expression . OR expression
-    (16) expression -> expression . XOR expression
-    (22) expression -> expression . COMMA expression
+    (5) statement -> IF expression DO expression ELSE expression .
+    (7) expression -> expression . PLUS expression
+    (8) expression -> expression . MINUS expression
+    (9) expression -> expression . MULTIPLY expression
+    (10) expression -> expression . DIVIDE expression
+    (11) expression -> expression . POW expression
+    (12) expression -> expression . MOD expression
+    (13) expression -> expression . AND expression
+    (14) expression -> expression . OR expression
+    (15) expression -> expression . XOR expression
+    (21) expression -> expression . COMMA expression
 
-    $end            reduce using rule 6 (statement -> IF expression DO expression ELSE expression .)
+    $end            reduce using rule 5 (statement -> IF expression DO expression ELSE expression .)
     PLUS            shift and go to state 33
     MINUS           shift and go to state 36
     MULTIPLY        shift and go to state 34
