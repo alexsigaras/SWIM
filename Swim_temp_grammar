@@ -1,0 +1,87 @@
+function: 'fun' ID params suite
+
+params: '(' [variableargumentlist] ')'
+
+variableargumentlist: ((funparam ['=' test] ',')*
+              ('*' ID [',' '**' ID] | '**' ID) |
+              funparam ['=' test] (',' funparam ['=' test])* [','])
+funparam: ID | '(' fplist ')'
+fplist: funparam (',' funparam)* [',']
+
+statement: simple_statement 
+       | compound_statement
+
+simple_statement: small_statement (';' small_statement)* ';'
+small_statement: (expression_statement | print_statement  |  flow_statement |
+             import_statement | global_statement | exec_statement | assert_statement)
+expression_statement: testlist (augassign (yield_expression|testlist) |
+                     ('=' (yield_expression|testlist))*)
+augassign: '+=' | '-=' | '*=' | '/=' | '^=' 
+
+# For normal assignments, additional restrictions enforced by the interpreter
+print_statement: 'print' ( [ test (',' test)* [','] ] |
+                      '>>' test [ (',' test)+ [','] ] )
+flow_statement: break_statement | return_statement 
+break_statement: 'break'
+return_statement: 'return' [testlist]
+
+import_statement: import_name | import_from
+import_from: ('from' ('.'* dotted_name | '.'+)
+dotted_as_names: dotted_as_name (',' dotted_as_name)*
+dotted_name: ID ('.' ID)*
+exec_statement: 'exec' expression ['in' test [',' test]]
+assert_statement: 'assert' test [',' test]
+
+compound_statement: if_statement 
+     | while_statement 
+     | for_statement 
+     | funcdef
+
+if_statement: 'if' test 'do' ('elif' test )* ['else''] ‘end’
+while_statement: 'while' test 'do’ ['else' 'end']
+for_statement: 'for' expressionlist 'in' testlist 'do' suite ['else' 'end' suite]
+
+
+
+test: or_test ['if' or_test 'else' test] | lambdef
+or_test: and_test ('or' and_test)*
+and_test: not_test ('and' not_test)*
+not_test: 'not' not_test | comparison
+comparison: expression (comp_op expression)*
+comp_op: '<'|'>'|'=='|'>='|'<='|'<>'|'!='|'in'|'not' 'in'|'is'|'is' 'not'
+expression: xor_expression ('|' xor_expression)*
+xor_expression: and_expression ('^' and_expression)*
+and_expression: shift_expression ('&' shift_expression)*
+shift_expression: arith_expression (('<<'|'>>') arith_expression)*
+arith_expression: term (('+'|'-') term)*
+term: factor (('*'|'/'|'%'|'//') factor)*
+factor: ('+'|'-'|'~') factor | power
+power: atom trailer* ['**' factor]
+atom: ('(' [yield_expression|testlist_comp] ')' |
+       '[' [listmaker] ']' |
+       '{' [dictorsetmaker] '}' |
+       '`' testlist1 '`' |
+       NAME | NUMBER | STRING+)
+listmaker: test ( list_for | (',' test)* [','] )
+testlist_comp: test ( comp_for | (',' test)* [','] )
+trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
+subscriptlist: subscript (',' subscript)* [',']
+subscript: '.' '.' '.' | test | [test] ':' [test]
+expressionlist: expression (',' expression)* [',']
+testlist: test (',' test)* [',']
+dictorsetmaker: ( (test ':' test (comp_for | (',' test ':' test)* [','])) |
+                  (test (comp_for | (',' test)* [','])) )
+
+
+arglist: (argument ',')* (argument [',']
+                         |'*' test (',' argument)* [',' '**' test] 
+                         |'**' test)
+argument: test [comp_for] | test '=' test
+
+
+comp_iter: comp_for | comp_if
+comp_for: 'for' expressionlist 'in' or_test [comp_iter]
+comp_if: 'if' old_test [comp_iter]
+
+testlist1: test (',' test)*
+
