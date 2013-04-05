@@ -24,17 +24,46 @@
 #                            1. Library Import                                #
 #-----------------------------------------------------------------------------#
 
-import sys
-sys.path.insert(0,"..")
+import sys, os
+import re
+sys.path.insert(0,os.path.join("..", "include"))
 
 if sys.version_info[0] >= 3:
     raw_input = input
 
+# Parsing
+from pyquery import PyQuery as pq
+import urllib, getpass
+
+# PDF
+from fpdf import fpdf as pdf
+
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                           2. Token Declaration                              #
+#                           2.  External Functions                            #
 #-----------------------------------------------------------------------------#
+
+def stripe_quotation(string):
+    result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
+    return result
+
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                           3. Token Declaration                              #
+#-----------------------------------------------------------------------------#
+
+# Reserved Tokens
+reserved = {
+    'if'       : 'IF',
+    'else'     : 'ELSE',
+    'do'       : 'DO',
+    'True'     : 'TRUE',
+    'False'    : 'FALSE',
+    'while'    : 'WHILE',
+    'for_each' : 'FOREACH',
+}
 
 # Declare tokens table
 
@@ -149,7 +178,7 @@ def t_error(t):
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                                 3. Lex                                      #
+#                                 4. Lex                                      #
 #-----------------------------------------------------------------------------#
     
 import ply.lex as lex
@@ -162,7 +191,7 @@ def t_error(t):
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                            4. Parsing Rules                                 #
+#                            5. Parsing Rules                                 #
 #-----------------------------------------------------------------------------#
 
 precedence = (
@@ -286,7 +315,7 @@ def p_statement_false(t):
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                                5. Yacc                                      #
+#                                6. Yacc                                      #
 #-----------------------------------------------------------------------------#
 
 import ply.yacc as yacc
@@ -295,19 +324,34 @@ mode = 2
 if mode == 1:
     s = raw_input("SWIM REPL> ")
     lex.input(s)
-while 1:
-    if mode == 1:
-        tok = lex.token()
-        print tok
-        if not tok:
-            break
-    else:
-        try:
-            s = raw_input('SWIM REPL> ')
-        except EOFError:
-            break
-        yacc.parse(s)
-
-
-
+    
+if len(sys.argv) > 1:
+    fn = open(sys.argv[1])
+    for line in fn.readlines():
+        if line == "\n": continue
+        if mode == 1:
+            lex.input(line)
+            while 1:
+                tok = lex.token()
+                print tok
+                if not tok:
+                    break
+        else:
+            yacc.parse(line)
+    fn.close()  
+else:
+    while 1:
+        if mode == 1:
+            tok = lex.token()
+            print tok
+            if not tok:
+                break
+        else:
+            try:
+                s = raw_input('SWIM REPL> ')
+    
+            except EOFError:
+                break
+            yacc.parse(s)
+    
 #-----------------------------------------------------------------------------#
