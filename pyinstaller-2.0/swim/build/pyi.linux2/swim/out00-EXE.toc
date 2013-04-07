@@ -1,0 +1,10 @@
+('/home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim/dist/swim',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ True,
+ 0,
+ 1365301908)
