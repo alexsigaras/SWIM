@@ -10,9 +10,9 @@ Grammar
 
 Rule 0     S' -> start
 Rule 1     start -> statement
-Rule 2     expression -> ID LPAREN expression RPAREN
-Rule 3     statement -> ID ASSIGN expression
-Rule 4     statement -> IF expression DO expression ELSE expression
+Rule 2     expression -> ID LPAREN expression RPAREN SEMICOLON
+Rule 3     statement -> ID ASSIGN expression SEMICOLON
+Rule 4     statement -> IF expression DO expression ELSE expression END
 Rule 5     statement -> expression
 Rule 6     expression -> expression PLUS expression
 Rule 7     expression -> expression MINUS expression
@@ -45,6 +45,7 @@ COMMA                : 21
 DIVIDE               : 9
 DO                   : 4
 ELSE                 : 4
+END                  : 4
 EQUALS               : 15
 FALSE                : 18
 FOR                  : 
@@ -62,6 +63,7 @@ PLUS                 : 6
 POW                  : 10
 RPAREN               : 2 20 22
 SELECTOR             : 22
+SEMICOLON            : 2 3
 STRING1              : 25
 STRING2              : 26
 TRUE                 : 17
@@ -81,10 +83,10 @@ state 0
 
     (0) S' -> . start
     (1) start -> . statement
-    (3) statement -> . ID ASSIGN expression
-    (4) statement -> . IF expression DO expression ELSE expression
+    (3) statement -> . ID ASSIGN expression SEMICOLON
+    (4) statement -> . IF expression DO expression ELSE expression END
     (5) statement -> . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -142,7 +144,9 @@ state 1
     $end            reduce using rule 23 (expression -> NUMBER .)
     RPAREN          reduce using rule 23 (expression -> NUMBER .)
     DO              reduce using rule 23 (expression -> NUMBER .)
+    SEMICOLON       reduce using rule 23 (expression -> NUMBER .)
     ELSE            reduce using rule 23 (expression -> NUMBER .)
+    END             reduce using rule 23 (expression -> NUMBER .)
 
 
 state 2
@@ -170,13 +174,15 @@ state 3
     $end            reduce using rule 17 (expression -> TRUE .)
     RPAREN          reduce using rule 17 (expression -> TRUE .)
     DO              reduce using rule 17 (expression -> TRUE .)
+    SEMICOLON       reduce using rule 17 (expression -> TRUE .)
     ELSE            reduce using rule 17 (expression -> TRUE .)
+    END             reduce using rule 17 (expression -> TRUE .)
 
 
 state 4
 
     (19) expression -> MINUS . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -244,7 +250,9 @@ state 7
     $end            reduce using rule 26 (expression -> STRING2 .)
     RPAREN          reduce using rule 26 (expression -> STRING2 .)
     DO              reduce using rule 26 (expression -> STRING2 .)
+    SEMICOLON       reduce using rule 26 (expression -> STRING2 .)
     ELSE            reduce using rule 26 (expression -> STRING2 .)
+    END             reduce using rule 26 (expression -> STRING2 .)
 
 
 state 8
@@ -265,13 +273,15 @@ state 8
     $end            reduce using rule 25 (expression -> STRING1 .)
     RPAREN          reduce using rule 25 (expression -> STRING1 .)
     DO              reduce using rule 25 (expression -> STRING1 .)
+    SEMICOLON       reduce using rule 25 (expression -> STRING1 .)
     ELSE            reduce using rule 25 (expression -> STRING1 .)
+    END             reduce using rule 25 (expression -> STRING1 .)
 
 
 state 9
 
     (20) expression -> LPAREN . expression RPAREN
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -310,11 +320,11 @@ state 9
 
 state 10
 
-    (3) statement -> ID . ASSIGN expression
-    (2) expression -> ID . LPAREN expression RPAREN
+    (3) statement -> ID . ASSIGN expression SEMICOLON
+    (2) expression -> ID . LPAREN expression RPAREN SEMICOLON
     (24) expression -> ID .
     (27) expression -> ID . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -368,8 +378,8 @@ state 10
 
 state 11
 
-    (4) statement -> IF . expression DO expression ELSE expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (4) statement -> IF . expression DO expression ELSE expression END
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -424,13 +434,15 @@ state 12
     $end            reduce using rule 18 (expression -> FALSE .)
     RPAREN          reduce using rule 18 (expression -> FALSE .)
     DO              reduce using rule 18 (expression -> FALSE .)
+    SEMICOLON       reduce using rule 18 (expression -> FALSE .)
     ELSE            reduce using rule 18 (expression -> FALSE .)
+    END             reduce using rule 18 (expression -> FALSE .)
 
 
 state 13
 
     (16) expression -> NOT . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -499,7 +511,7 @@ state 14
 state 15
 
     (22) expression -> SELECTOR LPAREN . expression RPAREN
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -538,10 +550,10 @@ state 15
 
 state 16
 
-    (2) expression -> ID . LPAREN expression RPAREN
+    (2) expression -> ID . LPAREN expression RPAREN SEMICOLON
     (24) expression -> ID .
     (27) expression -> ID . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -580,7 +592,9 @@ state 16
     $end            reduce using rule 24 (expression -> ID .)
     RPAREN          reduce using rule 24 (expression -> ID .)
     DO              reduce using rule 24 (expression -> ID .)
+    SEMICOLON       reduce using rule 24 (expression -> ID .)
     ELSE            reduce using rule 24 (expression -> ID .)
+    END             reduce using rule 24 (expression -> ID .)
     ID              shift and go to state 16
     NOT             shift and go to state 13
     TRUE            shift and go to state 3
@@ -620,7 +634,9 @@ state 17
     $end            reduce using rule 19 (expression -> MINUS expression .)
     RPAREN          reduce using rule 19 (expression -> MINUS expression .)
     DO              reduce using rule 19 (expression -> MINUS expression .)
+    SEMICOLON       reduce using rule 19 (expression -> MINUS expression .)
     ELSE            reduce using rule 19 (expression -> MINUS expression .)
+    END             reduce using rule 19 (expression -> MINUS expression .)
     MULTIPLY        shift and go to state 31
     DIVIDE          shift and go to state 26
     POW             shift and go to state 27
@@ -670,8 +686,8 @@ state 18
 
 state 19
 
-    (3) statement -> ID ASSIGN . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (3) statement -> ID ASSIGN . expression SEMICOLON
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -710,9 +726,9 @@ state 19
 
 state 20
 
-    (2) expression -> ID LPAREN . expression RPAREN
+    (2) expression -> ID LPAREN . expression RPAREN SEMICOLON
     (20) expression -> LPAREN . expression RPAREN
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -778,7 +794,9 @@ state 21
     $end            reduce using rule 27 (expression -> ID expression .)
     RPAREN          reduce using rule 27 (expression -> ID expression .)
     DO              reduce using rule 27 (expression -> ID expression .)
+    SEMICOLON       reduce using rule 27 (expression -> ID expression .)
     ELSE            reduce using rule 27 (expression -> ID expression .)
+    END             reduce using rule 27 (expression -> ID expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -806,7 +824,7 @@ state 21
 
 state 22
 
-    (4) statement -> IF expression . DO expression ELSE expression
+    (4) statement -> IF expression . DO expression ELSE expression END
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
     (8) expression -> expression . MULTIPLY expression
@@ -862,7 +880,9 @@ state 23
     $end            reduce using rule 16 (expression -> NOT expression .)
     RPAREN          reduce using rule 16 (expression -> NOT expression .)
     DO              reduce using rule 16 (expression -> NOT expression .)
+    SEMICOLON       reduce using rule 16 (expression -> NOT expression .)
     ELSE            reduce using rule 16 (expression -> NOT expression .)
+    END             reduce using rule 16 (expression -> NOT expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -891,7 +911,7 @@ state 23
 state 24
 
     (12) expression -> expression AND . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -931,7 +951,7 @@ state 24
 state 25
 
     (14) expression -> expression XOR . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -971,7 +991,7 @@ state 25
 state 26
 
     (9) expression -> expression DIVIDE . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1011,7 +1031,7 @@ state 26
 state 27
 
     (10) expression -> expression POW . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1051,7 +1071,7 @@ state 27
 state 28
 
     (15) expression -> expression EQUALS . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1091,7 +1111,7 @@ state 28
 state 29
 
     (13) expression -> expression OR . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1131,7 +1151,7 @@ state 29
 state 30
 
     (6) expression -> expression PLUS . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1171,7 +1191,7 @@ state 30
 state 31
 
     (8) expression -> expression MULTIPLY . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1211,7 +1231,7 @@ state 31
 state 32
 
     (21) expression -> expression COMMA . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1251,7 +1271,7 @@ state 32
 state 33
 
     (7) expression -> expression MINUS . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1291,7 +1311,7 @@ state 33
 state 34
 
     (11) expression -> expression MOD . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1375,12 +1395,14 @@ state 36
     $end            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
     RPAREN          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
     DO              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 20 (expression -> LPAREN expression RPAREN .)
     ELSE            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    END             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
 
 
 state 37
 
-    (3) statement -> ID ASSIGN expression .
+    (3) statement -> ID ASSIGN expression . SEMICOLON
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
     (8) expression -> expression . MULTIPLY expression
@@ -1393,7 +1415,7 @@ state 37
     (15) expression -> expression . EQUALS expression
     (21) expression -> expression . COMMA expression
 
-    $end            reduce using rule 3 (statement -> ID ASSIGN expression .)
+    SEMICOLON       shift and go to state 52
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1409,7 +1431,7 @@ state 37
 
 state 38
 
-    (2) expression -> ID LPAREN expression . RPAREN
+    (2) expression -> ID LPAREN expression . RPAREN SEMICOLON
     (20) expression -> LPAREN expression . RPAREN
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
@@ -1423,7 +1445,7 @@ state 38
     (15) expression -> expression . EQUALS expression
     (21) expression -> expression . COMMA expression
 
-    RPAREN          shift and go to state 52
+    RPAREN          shift and go to state 53
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1439,8 +1461,8 @@ state 38
 
 state 39
 
-    (4) statement -> IF expression DO . expression ELSE expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (4) statement -> IF expression DO . expression ELSE expression END
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -1475,7 +1497,7 @@ state 39
     STRING1         shift and go to state 8
     STRING2         shift and go to state 7
 
-    expression                     shift and go to state 53
+    expression                     shift and go to state 54
 
 state 40
 
@@ -1506,7 +1528,9 @@ state 40
     $end            reduce using rule 12 (expression -> expression AND expression .)
     RPAREN          reduce using rule 12 (expression -> expression AND expression .)
     DO              reduce using rule 12 (expression -> expression AND expression .)
+    SEMICOLON       reduce using rule 12 (expression -> expression AND expression .)
     ELSE            reduce using rule 12 (expression -> expression AND expression .)
+    END             reduce using rule 12 (expression -> expression AND expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1561,7 +1585,9 @@ state 41
     $end            reduce using rule 14 (expression -> expression XOR expression .)
     RPAREN          reduce using rule 14 (expression -> expression XOR expression .)
     DO              reduce using rule 14 (expression -> expression XOR expression .)
+    SEMICOLON       reduce using rule 14 (expression -> expression XOR expression .)
     ELSE            reduce using rule 14 (expression -> expression XOR expression .)
+    END             reduce using rule 14 (expression -> expression XOR expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1615,7 +1641,9 @@ state 42
     $end            reduce using rule 9 (expression -> expression DIVIDE expression .)
     RPAREN          reduce using rule 9 (expression -> expression DIVIDE expression .)
     DO              reduce using rule 9 (expression -> expression DIVIDE expression .)
+    SEMICOLON       reduce using rule 9 (expression -> expression DIVIDE expression .)
     ELSE            reduce using rule 9 (expression -> expression DIVIDE expression .)
+    END             reduce using rule 9 (expression -> expression DIVIDE expression .)
     POW             shift and go to state 27
 
   ! POW             [ reduce using rule 9 (expression -> expression DIVIDE expression .) ]
@@ -1659,7 +1687,9 @@ state 43
     $end            reduce using rule 10 (expression -> expression POW expression .)
     RPAREN          reduce using rule 10 (expression -> expression POW expression .)
     DO              reduce using rule 10 (expression -> expression POW expression .)
+    SEMICOLON       reduce using rule 10 (expression -> expression POW expression .)
     ELSE            reduce using rule 10 (expression -> expression POW expression .)
+    END             reduce using rule 10 (expression -> expression POW expression .)
     POW             shift and go to state 27
 
   ! POW             [ reduce using rule 10 (expression -> expression POW expression .) ]
@@ -1704,7 +1734,9 @@ state 44
     $end            reduce using rule 15 (expression -> expression EQUALS expression .)
     RPAREN          reduce using rule 15 (expression -> expression EQUALS expression .)
     DO              reduce using rule 15 (expression -> expression EQUALS expression .)
+    SEMICOLON       reduce using rule 15 (expression -> expression EQUALS expression .)
     ELSE            reduce using rule 15 (expression -> expression EQUALS expression .)
+    END             reduce using rule 15 (expression -> expression EQUALS expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1759,7 +1791,9 @@ state 45
     $end            reduce using rule 13 (expression -> expression OR expression .)
     RPAREN          reduce using rule 13 (expression -> expression OR expression .)
     DO              reduce using rule 13 (expression -> expression OR expression .)
+    SEMICOLON       reduce using rule 13 (expression -> expression OR expression .)
     ELSE            reduce using rule 13 (expression -> expression OR expression .)
+    END             reduce using rule 13 (expression -> expression OR expression .)
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -1810,7 +1844,9 @@ state 46
     $end            reduce using rule 6 (expression -> expression PLUS expression .)
     RPAREN          reduce using rule 6 (expression -> expression PLUS expression .)
     DO              reduce using rule 6 (expression -> expression PLUS expression .)
+    SEMICOLON       reduce using rule 6 (expression -> expression PLUS expression .)
     ELSE            reduce using rule 6 (expression -> expression PLUS expression .)
+    END             reduce using rule 6 (expression -> expression PLUS expression .)
     MULTIPLY        shift and go to state 31
     DIVIDE          shift and go to state 26
     POW             shift and go to state 27
@@ -1857,7 +1893,9 @@ state 47
     $end            reduce using rule 8 (expression -> expression MULTIPLY expression .)
     RPAREN          reduce using rule 8 (expression -> expression MULTIPLY expression .)
     DO              reduce using rule 8 (expression -> expression MULTIPLY expression .)
+    SEMICOLON       reduce using rule 8 (expression -> expression MULTIPLY expression .)
     ELSE            reduce using rule 8 (expression -> expression MULTIPLY expression .)
+    END             reduce using rule 8 (expression -> expression MULTIPLY expression .)
     POW             shift and go to state 27
 
   ! POW             [ reduce using rule 8 (expression -> expression MULTIPLY expression .) ]
@@ -1898,7 +1936,9 @@ state 48
     $end            reduce using rule 21 (expression -> expression COMMA expression .)
     RPAREN          reduce using rule 21 (expression -> expression COMMA expression .)
     DO              reduce using rule 21 (expression -> expression COMMA expression .)
+    SEMICOLON       reduce using rule 21 (expression -> expression COMMA expression .)
     ELSE            reduce using rule 21 (expression -> expression COMMA expression .)
+    END             reduce using rule 21 (expression -> expression COMMA expression .)
     MULTIPLY        shift and go to state 31
     DIVIDE          shift and go to state 26
     POW             shift and go to state 27
@@ -1942,7 +1982,9 @@ state 49
     $end            reduce using rule 7 (expression -> expression MINUS expression .)
     RPAREN          reduce using rule 7 (expression -> expression MINUS expression .)
     DO              reduce using rule 7 (expression -> expression MINUS expression .)
+    SEMICOLON       reduce using rule 7 (expression -> expression MINUS expression .)
     ELSE            reduce using rule 7 (expression -> expression MINUS expression .)
+    END             reduce using rule 7 (expression -> expression MINUS expression .)
     MULTIPLY        shift and go to state 31
     DIVIDE          shift and go to state 26
     POW             shift and go to state 27
@@ -1989,7 +2031,9 @@ state 50
     $end            reduce using rule 11 (expression -> expression MOD expression .)
     RPAREN          reduce using rule 11 (expression -> expression MOD expression .)
     DO              reduce using rule 11 (expression -> expression MOD expression .)
+    SEMICOLON       reduce using rule 11 (expression -> expression MOD expression .)
     ELSE            reduce using rule 11 (expression -> expression MOD expression .)
+    END             reduce using rule 11 (expression -> expression MOD expression .)
     POW             shift and go to state 27
 
   ! POW             [ reduce using rule 11 (expression -> expression MOD expression .) ]
@@ -2023,65 +2067,48 @@ state 51
     $end            reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
     RPAREN          reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
     DO              reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
+    SEMICOLON       reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
     ELSE            reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
+    END             reduce using rule 22 (expression -> SELECTOR LPAREN expression RPAREN .)
 
 
 state 52
 
-    (2) expression -> ID LPAREN expression RPAREN .
-    (20) expression -> LPAREN expression RPAREN .
+    (3) statement -> ID ASSIGN expression SEMICOLON .
 
-  ! reduce/reduce conflict for PLUS resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for MINUS resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for MULTIPLY resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for DIVIDE resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for POW resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for MOD resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for AND resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for OR resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for XOR resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for EQUALS resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for COMMA resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for $end resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for RPAREN resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for DO resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-  ! reduce/reduce conflict for ELSE resolved using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    PLUS            reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    MINUS           reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    MULTIPLY        reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    POW             reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    MOD             reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    AND             reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    OR              reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    XOR             reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    EQUALS          reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    COMMA           reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    $end            reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    DO              reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-    ELSE            reduce using rule 2 (expression -> ID LPAREN expression RPAREN .)
-
-  ! PLUS            [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! MINUS           [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! MULTIPLY        [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! DIVIDE          [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! POW             [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! MOD             [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! AND             [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! OR              [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! XOR             [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! EQUALS          [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! COMMA           [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! $end            [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! RPAREN          [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! DO              [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
-  ! ELSE            [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
+    $end            reduce using rule 3 (statement -> ID ASSIGN expression SEMICOLON .)
 
 
 state 53
 
-    (4) statement -> IF expression DO expression . ELSE expression
+    (2) expression -> ID LPAREN expression RPAREN . SEMICOLON
+    (20) expression -> LPAREN expression RPAREN .
+
+  ! shift/reduce conflict for SEMICOLON resolved as shift
+    SEMICOLON       shift and go to state 55
+    PLUS            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MULTIPLY        reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    POW             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    MOD             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    AND             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    OR              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    XOR             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    EQUALS          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    COMMA           reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    $end            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    DO              reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    ELSE            reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+    END             reduce using rule 20 (expression -> LPAREN expression RPAREN .)
+
+  ! SEMICOLON       [ reduce using rule 20 (expression -> LPAREN expression RPAREN .) ]
+
+
+state 54
+
+    (4) statement -> IF expression DO expression . ELSE expression END
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
     (8) expression -> expression . MULTIPLY expression
@@ -2094,7 +2121,7 @@ state 53
     (15) expression -> expression . EQUALS expression
     (21) expression -> expression . COMMA expression
 
-    ELSE            shift and go to state 54
+    ELSE            shift and go to state 56
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -2108,10 +2135,33 @@ state 53
     COMMA           shift and go to state 32
 
 
-state 54
+state 55
 
-    (4) statement -> IF expression DO expression ELSE . expression
-    (2) expression -> . ID LPAREN expression RPAREN
+    (2) expression -> ID LPAREN expression RPAREN SEMICOLON .
+
+    PLUS            reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    MINUS           reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    MULTIPLY        reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    DIVIDE          reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    POW             reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    MOD             reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    AND             reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    OR              reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    XOR             reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    EQUALS          reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    COMMA           reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    $end            reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    RPAREN          reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    DO              reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    SEMICOLON       reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    ELSE            reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+    END             reduce using rule 2 (expression -> ID LPAREN expression RPAREN SEMICOLON .)
+
+
+state 56
+
+    (4) statement -> IF expression DO expression ELSE . expression END
+    (2) expression -> . ID LPAREN expression RPAREN SEMICOLON
     (6) expression -> . expression PLUS expression
     (7) expression -> . expression MINUS expression
     (8) expression -> . expression MULTIPLY expression
@@ -2146,11 +2196,11 @@ state 54
     STRING1         shift and go to state 8
     STRING2         shift and go to state 7
 
-    expression                     shift and go to state 55
+    expression                     shift and go to state 57
 
-state 55
+state 57
 
-    (4) statement -> IF expression DO expression ELSE expression .
+    (4) statement -> IF expression DO expression ELSE expression . END
     (6) expression -> expression . PLUS expression
     (7) expression -> expression . MINUS expression
     (8) expression -> expression . MULTIPLY expression
@@ -2163,7 +2213,7 @@ state 55
     (15) expression -> expression . EQUALS expression
     (21) expression -> expression . COMMA expression
 
-    $end            reduce using rule 4 (statement -> IF expression DO expression ELSE expression .)
+    END             shift and go to state 58
     PLUS            shift and go to state 30
     MINUS           shift and go to state 33
     MULTIPLY        shift and go to state 31
@@ -2175,6 +2225,13 @@ state 55
     XOR             shift and go to state 25
     EQUALS          shift and go to state 28
     COMMA           shift and go to state 32
+
+
+state 58
+
+    (4) statement -> IF expression DO expression ELSE expression END .
+
+    $end            reduce using rule 4 (statement -> IF expression DO expression ELSE expression END .)
 
 WARNING: 
 WARNING: Conflicts:
@@ -2247,5 +2304,4 @@ WARNING: shift/reduce conflict for OR in state 45 resolved as shift
 WARNING: shift/reduce conflict for XOR in state 45 resolved as shift
 WARNING: shift/reduce conflict for EQUALS in state 45 resolved as shift
 WARNING: shift/reduce conflict for COMMA in state 45 resolved as shift
-WARNING: reduce/reduce conflict in state 52 resolved using rule (expression -> ID LPAREN expression RPAREN)
-WARNING: rejected rule (expression -> LPAREN expression RPAREN) in state 52
+WARNING: shift/reduce conflict for SEMICOLON in state 53 resolved as shift
