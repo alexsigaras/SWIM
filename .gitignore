@@ -3,7 +3,7 @@ SAMPLE-PROGRAMS/tutorial.pages
 
 *.pyc
 
-alex_demo/parsetab.py
-
-alex_demo/parser.out
+swim/parsetab.py
+swim/lextab.py
+swim/parser.out
 
