@@ -1,3 +1,9 @@
 
 SAMPLE-PROGRAMS/tutorial.pages
 include/*
+
+*.pyc
+
+alex_demo/parsetab.py
+
+alex_demo/parser.out
