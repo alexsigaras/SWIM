@@ -2,9 +2,14 @@ Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
+    LESS_THAN_OR_EQUAL
     WHILE
+    LESS_THAN
+    NOT_EQUALS
     FOR
     FOREACH
+    GREATER_THAN
+    GREATER_THAN_OR_EQUAL
 
 Grammar
 
@@ -50,13 +55,18 @@ EQUALS               : 15
 FALSE                : 18
 FOR                  : 
 FOREACH              : 
+GREATER_THAN         : 
+GREATER_THAN_OR_EQUAL : 
 ID                   : 2 3 24 27
 IF                   : 4
+LESS_THAN            : 
+LESS_THAN_OR_EQUAL   : 
 LPAREN               : 2 20 22
 MINUS                : 7 19
 MOD                  : 11
 MULTIPLY             : 8
 NOT                  : 16
+NOT_EQUALS           : 
 NUMBER               : 23
 OR                   : 13
 PLUS                 : 6

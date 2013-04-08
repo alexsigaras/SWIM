@@ -48,115 +48,22 @@ from fpdf import fpdf as pdf
 # Abstract Syntax Tree
 from AST import Node
 
+# Import Lexical Analyzer
+from swim_lex import *
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                             External Functions                              #
+#                                    Parser                                      #
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
 def stripe_quotation(string):
     result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
     return result
 #-----------------------------------------------------------------------------#
 
-#-----------------------------------------------------------------------------#
-#                               Declare tokens                                #
-#-----------------------------------------------------------------------------#
-
-reserved = {
-    'if'       : 'IF',
-    'else'     : 'ELSE',
-    'do'       : 'DO',
-    'True'     : 'TRUE',
-    'False'    : 'FALSE',
-    'while'    : 'WHILE',
-    'for'      : 'FOR',
-    'foreach'  : 'FOREACH',
-    'and'      : 'AND',
-    'or'       : 'OR',
-    'xor'      : 'XOR',
-    'not'      : 'NOT',
-    'end'      : 'END',
-}
-
-tokens = [
-    'STRING1', 'STRING2', 'SELECTOR', 'ID','NUMBER', 'AND', 'OR', 'XOR', 'NOT', 'COMMA', 'SEMICOLON',
-    'PLUS','MINUS','MULTIPLY','DIVIDE','ASSIGN', 'EQUALS','POW','MOD',
-    'LPAREN','RPAREN'
-    ] + list(reserved.values())
-
-# Tokens
-
-# Operator Tokens
-
-t_AND     = r'&&'
-t_OR      = r'\|\|'
-t_NOT     = r'!'
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
-t_MULTIPLY   = r'\*'
-t_DIVIDE  = r'/'
-t_ASSIGN  = r'='
-t_EQUALS  = r'=='
-t_POW     = r'\^'
-t_MOD     = r'\%'
-t_LPAREN  = r'\('
-t_RPAREN  = r'\)'
-
-
-# Keywords
-'''
-t_WHILE   = r'while'
-t_FOR     = r'for'
-t_FOREACH = r'foreach'
-'''
-
-t_STRING1 = r'u?"\\?[^"]*"'
-t_STRING2 = r"u?'\\?[^']*'"
-t_SEMICOLON = r';'
-t_SELECTOR = r'@'
-t_COMMA   = r','
-
-def t_NUMBER(t):
-    r'[0-9]*\.?[0-9]+'
-    try:
-        t.value = float(t.value)
-    except ValueError:
-        print("Float value too large %s" % t.value)
-        t.value = 0
-    return t
-    
-def t_ID(t):
-    r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'ID')    # Check for reserved words
-    return t
-
-
-t_ignore = " \t"
-
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += t.value.count("\n")
-
-def t_COMMENT(t):
-    r'\#.*|//.*|/\*(.*|\n|\r)*\*/'
-    pass
-    # No return value. Token Discarded
-    
-def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
-
-#-----------------------------------------------------------------------------#
-
-
-#-----------------------------------------------------------------------------#
-#                                    Lex                                      #
-#-----------------------------------------------------------------------------#
-    
-import ply.lex as lex
-lex.lex(optimize=1)
-
-#-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 #                               Parsing Rules                                 #
