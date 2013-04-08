@@ -20,6 +20,11 @@
 #                                                                             #
 #-----------------------------------------------------------------------------#
 
+#-----------------------------------------------------------------------------#
+# File: AST.py 		                                                          #
+# Description: Abstract Syntax Tree                                           #
+#-----------------------------------------------------------------------------#
+
 class Node:
 	'Simple Node'
 	
@@ -65,6 +70,6 @@ class Node:
 				childTree = self.children.traverse()
 			else:
 				childTree = self.children
-		#return str([self.type, self.leaf, childTree])
-		return [self.leaf, childTree]		
-		#print str([self.type, self.leaf]
+		return [self.leaf, childTree]
+
+#-----------------------------------------------------------------------------#		

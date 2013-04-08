@@ -82,10 +82,10 @@ t_SEMICOLON = r';'
 #---------------------------------#
 
 # Logical Operators
-t_AND       = r'&&'
-t_OR        = r'\|\|'
-t_NOT       = r'!'
-t_ASSIGN    = r'='
+t_AND                   = r'&&'
+t_OR                    = r'\|\|'
+t_NOT                   = r'!'
+t_ASSIGN                = r'='
 
 # Comparison Operators
 t_EQUALS                = r'=='
@@ -96,12 +96,12 @@ t_LESS_THAN_OR_EQUAL    = r'<='
 t_GREATER_THAN_OR_EQUAL = r'<='
 
 # Arithmetic Operators
-t_PLUS      = r'\+'
-t_MINUS     = r'-'
-t_MULTIPLY  = r'\*'
-t_DIVIDE    = r'/'
-t_POW       = r'\^'
-t_MOD       = r'\%'
+t_PLUS                  = r'\+'
+t_MINUS                 = r'-'
+t_MULTIPLY              = r'\*'
+t_DIVIDE                = r'/'
+t_POW                   = r'\^'
+t_MOD                   = r'\%'
 
 #---------------------------------#
 
@@ -146,13 +146,11 @@ def t_error(t):
 #---------------------------------#
 
 #---------------------------------#
-#       4.3 Comment Tokens        #
+#       1.7 Comment Tokens        #
 #---------------------------------#
 
 def t_COMMENT(t):
-    # r'\#.*|//.*|/\*(.*|\n|\r)*\*/'
-    # r'*|//.*|/\*(.*|\n|\r)*\*/'
-    r'\#.*|//.*|/\*.*\*/'
+    r'\#.*|//.*|/\*(.*[^\*/]|\n|\t)*\*/'
     pass
     # No return value. Token Discarded
 

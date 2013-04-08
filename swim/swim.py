@@ -21,393 +21,83 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
+# File: swim.py                                                               #
+# Description: Swim Main File                                                 #
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
 #                            1. Library Import                                #
 #-----------------------------------------------------------------------------#
 
 import sys, os
 import re
 import types
-from types import MethodType
 
 sys.path.insert(0,os.path.join("..", "include"))
 
 if sys.version_info[0] >= 3:
     raw_input = input
 
-# Parsing
-from pyquery import PyQuery as pq
-import urllib, getpass
-
-# PDF
-from fpdf import fpdf as pdf
-
-#-----------------------------------------------------------------------------#
-#                          2. Interpreter Imports                             #
-#-----------------------------------------------------------------------------#
-
-# Abstract Syntax Tree
-from AST import Node
-
 # Import Lexical Analyzer
 from swim_lex import *
-#-----------------------------------------------------------------------------#
 
-#-----------------------------------------------------------------------------#
-#                                    Parser                                      #
-#-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
-#                          3.  External Functions                             #
-#-----------------------------------------------------------------------------#
-def stripe_quotation(string):
-    result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
-    return result
-#-----------------------------------------------------------------------------#
-
-
-#-----------------------------------------------------------------------------#
-#                               Parsing Rules                                 #
-#-----------------------------------------------------------------------------#
-
-precedence = (
-    ('left','PLUS','MINUS', 'COMMA'),
-    ('left','MULTIPLY','DIVIDE', 'MOD'),
-    ('right', 'POW'),
-    )
-
-# dictionary of names
-names = { } 
+# Import Parse Analyzer
+from swim_parse import *
 
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                                    Grammar                                  #
-#-----------------------------------------------------------------------------# 
-def p_start(t):
-    '''start : statement'''
-    
-    # Normal mode
-    showNodeTree = False
-    if(showNodeTree):
-        print(t[1].traverse())
-    else:
-        result = t[1].do()
-        if result is not None:
-            print(result)
-    
-    # Saving mode for function and class definition
-    ''' TO DO '''
-   
-def p_function(t):
-    '''expression : ID LPAREN expression RPAREN SEMICOLON'''
-    t[0] = Node("function", t[3], t[1])
-
-    def do(self):   
-        result = self.children.do() 
-        if self.leaf == "print" :
-            
-            # Escaped sequence handling
-            escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-            
-            for seq in escaped_sequences:
-                if result.find(seq) != -1:      
-                    result = result.decode('string-escape')
-                
-            # string containing ""              
-            # 2 byte unicode with unicode characters
-            if re.match(r'u"\\u', result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r'^u"', result):
-                result =  result.replace('"','')[1:].decode("utf-8")
-                
-            # string containing ''          
-            elif re.match(r"u'\\u", result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r"^u'", result):
-                result = result.replace("'",'')[1:].decode("utf-8")         
-            else:
-                result = result.replace("'",'')            
-
-            return result               
-     
-        elif self.leaf == "pdf":
-            try:
-                #print stripe_quotation(t[3][0])
-                f = pdf.FPDF()
-                f.add_page()
-                f.set_font('Arial','B',16)          
-                f.multi_cell(w=200,h=5,txt = stripe_quotation(self.children.do()[0])) 
-                
-                # for our user test
-                filename = stripe_quotation(self.children.do()[1])
-                filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-                
-                f.output(os.path.join("..","doc",filename),'F')
-            except:
-                print("Mismatch grammar for pdf output!")
-                raise Exception     
-        
-    t[0].do = MethodType(do, t[0], Node)     
-    
-def p_statement_assign(t):
-    'statement : ID ASSIGN expression SEMICOLON'
-    
-    t[0] = Node("assign", [t[1], t[3]], t[2])
-    def do(self):
-        ''' Need to check ID !'''       
-        names[self.children[0]] = self.children[1].do()
-    t[0].do = MethodType(do, t[0], Node) 
-    
-
-def p_statement_if_else(t):
-    'statement : IF expression DO expression ELSE expression END'
-    
-    t[0] = Node("ifelse", [t[2], t[4], t[6]], t[1])
-
-    def do(self):
-        if self.children[0].do():
-            return self.children[1].do()
-        else:
-            return self.children[2].do()
-            
-    t[0].do = MethodType(do, t[0], Node)  
-       
-def p_statement_expr(t):
-    'statement : expression'
-    
-    t[0] = Node("expr", t[1], 'expr')
-    def do(self):
-        return self.children.do()
-    t[0].do = MethodType(do, t[0], Node) 
-    
-    #print t[1]
-
-def p_expression_binop(t):
-    '''expression : expression PLUS expression 
-                  | expression MINUS expression 
-                  | expression MULTIPLY expression 
-                  | expression DIVIDE expression
-                  | expression POW expression 
-                  | expression MOD expression 
-                  | expression AND expression
-                  | expression OR expression
-                  | expression XOR expression
-                  | expression EQUALS expression'''
-    
-    t[0] = Node("binop", [t[1], t[3]], t[2])
-                    
-    if t[2] == '+':
-        #t[0] = t[1] + t[3]  # add
-        def do(self):
-            return self.children[0].do() + self.children[1].do()
-    elif t[2] == '-':
-        #t[0] = t[1] - t[3]  # subtract
-        def do(self):
-            return self.children[0].do() - self.children[1].do()        
-    elif t[2] == '*':
-        #t[0] = t[1] * t[3]  # multiply
-        def do(self):
-            return self.children[0].do() * self.children[1].do()        
-    elif t[2] == '/':
-        #t[0] = t[1] / t[3]  # divide
-        def do(self):
-            return self.children[0].do() / self.children[1].do()        
-    elif t[2] == '^': 
-        #t[0] = t[1] ** t[3] # power
-        def do(self):
-            return self.children[0].do() ** self.children[1].do()        
-    elif t[2] == '%': 
-        #t[0] = t[1] % t[3]  # remainder3
-        def do(self):
-            return self.children[0].do() % self.children[1].do()        
-    elif (t[2] == 'and' or t[2] =='&&'):
-        #t[0] = t[1] and t[3]
-        def do(self):
-            return self.children[0].do() and self.children[1].do()        
-    elif (t[2] == 'or' or t[2] =='||'):
-        #t[0] = t[1] or t[3]
-        def do(self):
-            return self.children[0].do() or self.children[1].do()        
-    elif t[2] == 'xor':
-        #t[0] = (t[1] and not t[3]) or (not t[1] and t[3])
-        def do(self):
-            return (self.children[0].do() and not self.children[1].do()) or (not self.children[0].do() and tself.children[1].do())
-    elif t[2] == '==':
-        #t[0] = t[1] == t[3] # equal?
-        def do(self):
-            return self.children[0].do() == self.children[1].do()               
-    
-    t[0].do = MethodType(do, t[0], Node) 
-          
-def p_expression_notop(t):
-    '''expression : NOT expression'''
-    
-    t[0] = Node("logop", t[2], t[1])
-    def do(self):
-        return not self.children.do()
-        
-    t[0].do = MethodType(do, t[0], Node)    
-    
-def p_expression_boolean(t):
-    '''expression : TRUE
-                  | FALSE'''
-                  
-    t[0] = Node("boolean", t[1], 'boolean')
-    
-    if t[1] == "True":
-        def do(self):
-            return True
-    elif t[1] == "False":
-        def do(self):
-            return False
-    t[0].do = MethodType(do, t[0], Node)
-                        
-def p_expression_uminus(t):
-    'expression : MINUS expression'
-    
-    t[0] = Node("uminus", t[2], 'uminus')
-    def do(self):
-        try:
-            return -self.children.do()
-        except:
-            raise Exception
-        
-    t[0].do = MethodType(do, t[0], Node) 
-
-def p_expression_group(t):
-    'expression : LPAREN expression RPAREN'
-    
-    t[0] = Node("group", t[2], 'group')
-    def do(self):
-        return self.children.do()    
-        
-    t[0].do = MethodType(do, t[0], Node)  
-        
-def p_expression_parameters(t):
-    'expression : expression COMMA expression'  
-    
-    # Stacking the parameters to the right as list
-    t[0] = Node("comma", [t[1], t[3]], 'comma')
-    def do(self):
-        return [self.children[0].do(), self.children[1].do()]    
-        
-    t[0].do = MethodType(do, t[0], Node)    
-
-def p_expression_parse_text(t):
-    'expression : SELECTOR LPAREN expression RPAREN'
-    
-    t[0] = Node("selector", t[3], t[1])
-    def do(self):
-        try:
-            raw_selector = self.children.do()[0]
-            selector = stripe_quotation(raw_selector)
-            raw_url = self.children.do()[1]
-
-            if type(raw_url) == str:
-                url = stripe_quotation(raw_url)
-                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-                return d(selector)
-            else:
-                return raw_url(selector)
-        except Exception:
-            print("Mismatch grammar for parsing!")
-            raise Exception
-                
-    t[0].do = MethodType(do, t[0], Node)      
-        
-def p_expression_number(t):
-    'expression : NUMBER'
-
-    t[0] = Node("number", t[1], 'number')
-    def do(self):
-        return self.children
-    t[0].do = MethodType(do, t[0], Node) 
-
-def p_expression_name(t):
-    'expression : ID'
-    
-    t[0] = Node("name", str(t[1]), 'name')
-    def do(self):
-        try:
-            return names[self.children]
-        except LookupError:
-            print("Undefined name '%s'" % self.children)
-            raise Exception      
-
-    t[0].do = MethodType(do, t[0], Node)     
-    
-def p_expression_string(t):
-    '''expression : STRING1
-                  | STRING2''' 
-    t[0] = Node("string", t[1], 'string')
-    def do(self):
-        return self.children
-    t[0].do = MethodType(do, t[0], Node)     
-
-def p_expression_unistring(t):
-    'expression : ID expression'
-    
-    t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
-    def do(self):
-        try:
-            # u is ID, not node
-            if self.children[0] == 'u':
-                return self.children[0] + self.children[1].do()
-            else:
-                raise Exception()
-        except LookupError:
-            print("Undefined name '%s'" % self.children[0])
-            raise Exception
-            
-    t[0].do = MethodType(do, t[0], Node)        
-    
-def p_error(t):
-    if t:
-        print("Syntax error at '%s'" % t.value)
-    else:
-        print("Syntax error at EOF")
-
-#-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
-#                                    Yacc                                     #
+#                                 2. Yacc                                     #
 #-----------------------------------------------------------------------------#
 
 import ply.yacc as yacc
 yacc.yacc(optimize=0)
 mode = 2
 if mode == 1:
-    s = raw_input("SWIM REPL> ")
+    s = raw_input("SWIM REPL> ")   
     lex.input(s)
-    
-if len(sys.argv) > 1:
-    fn = open(sys.argv[1])
-    for line in fn.readlines():
-        if line == "\n": continue
-        if mode == 1:
-            lex.input(line)
-            while 1:
+if mode == 3:
+    s = 'print("good");/* comment; 1 \n bullshit + - hahaha */'
+    #yacc.parse(s)
+    lex.input(s)
+    while 1:
+        tok = lex.token()
+        print tok
+        if not tok:
+            break
+else:
+
+    if len(sys.argv) > 1:
+        fn = open(sys.argv[1])
+        # for line in fn.readlines():
+        #     if line == "\n": continue
+        #     if mode == 1:
+        #         lex.input(line)
+        #         while 1:
+        #             tok = lex.token()
+        #             print tok
+        #             if not tok:
+        #                 break
+        #     else:
+        #         yacc.parse(line)
+        s = fn.read()
+        s = s.replace('\n','')
+        #print s
+        yacc.parse(s)
+        fn.close()  
+    else:
+        while 1:
+            if mode == 1:
                 tok = lex.token()
                 print tok
                 if not tok:
                     break
-        else:
-            yacc.parse(line)
-    fn.close()  
-else:
-    while 1:
-        if mode == 1:
-            tok = lex.token()
-            print tok
-            if not tok:
-                break
-        else:
-            try:
-                s = raw_input('SWIM REPL> ')
+            else:
+                try:
+                    s = raw_input('SWIM REPL> ')
+                    
+                except EOFError:
+                    break
+                yacc.parse(s)
     
-            except EOFError:
-                break
-            yacc.parse(s)
-    
+#-----------------------------------------------------------------------------#
