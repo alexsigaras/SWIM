@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                               Library Import                                #
+#                            1. Library Import                                #
 #-----------------------------------------------------------------------------#
 
 import sys, os
@@ -42,9 +42,10 @@ import urllib, getpass
 from fpdf import fpdf as pdf
 
 #-----------------------------------------------------------------------------#
-#                             Interpreter Imports                             #
+#                          2. Interpreter Imports                             #
 #-----------------------------------------------------------------------------#
 
+# Abstract Syntax Tree
 from AST import Node
 
 #-----------------------------------------------------------------------------#
@@ -137,7 +138,7 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
 
 def t_COMMENT(t):
-    r'\#.*|//.*|/\*.*\*/'
+    r'\#.*|//.*|/\*(.*|\n|\r)*\*/'
     pass
     # No return value. Token Discarded
     
@@ -277,12 +278,12 @@ def p_statement_expr(t):
     #print t[1]
 
 def p_expression_binop(t):
-    '''expression : expression PLUS expression
-                  | expression MINUS expression
-                  | expression MULTIPLY expression
+    '''expression : expression PLUS expression 
+                  | expression MINUS expression 
+                  | expression MULTIPLY expression 
                   | expression DIVIDE expression
-                  | expression POW expression
-                  | expression MOD expression
+                  | expression POW expression 
+                  | expression MOD expression 
                   | expression AND expression
                   | expression OR expression
                   | expression XOR expression
