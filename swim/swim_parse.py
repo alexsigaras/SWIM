@@ -183,7 +183,11 @@ def p_expression_binop(t):
                   | expression AND expression
                   | expression OR expression
                   | expression XOR expression
-                  | expression EQUALS expression'''
+                  | expression EQUALS expression
+                  | expression GREATER_THAN expression
+                  | expression LESS_THAN expression
+                  | expression GREATER_THAN_OR_EQUAL expression
+                  | expression LESS_THAN_OR_EQUAL expression'''
     
     t[0] = Node("binop", [t[1], t[3]], t[2])
                     
@@ -208,7 +212,7 @@ def p_expression_binop(t):
         def do(self):
             return self.children[0].do() ** self.children[1].do()        
     elif t[2] == '%': 
-        #t[0] = t[1] % t[3]  # remainder3
+        #t[0] = t[1] % t[3]  # remainder
         def do(self):
             return self.children[0].do() % self.children[1].do()        
     elif (t[2] == 'and' or t[2] =='&&'):
@@ -226,8 +230,24 @@ def p_expression_binop(t):
     elif t[2] == '==':
         #t[0] = t[1] == t[3] # equal?
         def do(self):
-            return self.children[0].do() == self.children[1].do()               
-    
+            return self.children[0].do() == self.children[1].do()
+    elif t[2] == '>':
+        #t[0] = t[1] > t[3] # greater than?
+        def do(self):
+            return self.children[0].do() > self.children[1].do()
+    elif t[2] == '<':
+        #t[0] = t[1] < t[3] # less than?
+        def do(self):
+            return self.children[0].do() < self.children[1].do()                              
+    elif t[2] == '>=':
+        #t[0] = t[1] >= t[3] # greater than or equal?
+        def do(self):
+            return self.children[0].do() >= self.children[1].do()
+    elif t[2] == '<=':
+        #t[0] = t[1] <= t[3] # less than or equal?
+        def do(self):
+            return self.children[0].do() <= self.children[1].do()
+
     t[0].do = MethodType(do, t[0], Node) 
           
 def p_expression_notop(t):

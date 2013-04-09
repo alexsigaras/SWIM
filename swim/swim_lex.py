@@ -93,7 +93,7 @@ t_NOT_EQUALS            = r'!='
 t_LESS_THAN             = r'<'
 t_GREATER_THAN          = r'>'
 t_LESS_THAN_OR_EQUAL    = r'<='
-t_GREATER_THAN_OR_EQUAL = r'<='
+t_GREATER_THAN_OR_EQUAL = r'>='
 
 # Arithmetic Operators
 t_PLUS                  = r'\+'
