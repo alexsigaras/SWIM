@@ -1,0 +1,26 @@
+Stage 1
+
+To Do:
+1) type checking, error handling
+2) function definitions and class definitions
+3) data structures (dictionary, list)
+4) grammar rules for control flow (for loop, if..else, foreach) + additional grammar + multiple statements
+5) making exe file 
+6) namespace/scoping
+
+
+--------------------------------------------------------------------
+
+Morris: 	- 1
+Lev:		- 3, 2
+Seungwoo:	- 5
+Michal:		- 6
+Alex:		- 4
+
+
+
+Stage 2
+
+1) file import, import statements (from)
+2) Connection to SNS Twitter (future)
+3) Image
