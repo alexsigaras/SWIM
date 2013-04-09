@@ -1,8 +1,4 @@
-
-SAMPLE-PROGRAMS/tutorial.pages
-
 *.pyc
-
 swim/parsetab.py
 swim/lextab.py
 swim/parser.out
