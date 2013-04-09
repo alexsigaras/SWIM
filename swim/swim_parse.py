@@ -294,6 +294,18 @@ def p_expression_uminus(t):
         
     t[0].do = MethodType(do, t[0], Node) 
 
+def p_expression_uplus(t):
+    'expression : PLUS expression %prec PLUS'
+    
+    t[0] = Node("uplus", t[2], 'uplus')
+    def do(self):
+        try:
+            return self.children.do()
+        except:
+            raise Exception
+        
+    t[0].do = MethodType(do, t[0], Node) 
+
 def p_expression_group(t):
     'expression : LPAREN expression RPAREN'
     
