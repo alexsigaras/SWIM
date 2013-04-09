@@ -1,5 +1,4 @@
 *.pyc
 swim/parsetab.py
-swim/lextab.py
 swim/parser.out
-
+swim/lextab.py
