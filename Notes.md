@@ -1,5 +1,39 @@
-Type check/inference
+Semantic Analysis
+----------------
+AST + Symbol Table -> semantic consistency/errors, type information
+
+>Type checking is an important part of semantic analysis. During type checking the compiler checks that each operator has compatible operands.
+
+>Uses made of semantic information for a variable x:
+
+>What kind of value is stored in x?
+
+>How big is x?
+
+>Who is responsible for allocating space for x?
+
+>Who is responsible for initializing x?
+
+>How long must the value of x be kept?
+
+>If x is a procedure, what kinds of arguments does it take and what kind of return value does it have?
+
+>Storage layout for local names
+
+
+
+
+Type system/check/inference
 --------------------
+### equivalence
++ name
++ structural
+
+### compatibility
++ type checker must check for type compatibility
+
+### inference
+
 
 1. Type Inference Templates:
 
