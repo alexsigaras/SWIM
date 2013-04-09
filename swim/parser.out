@@ -708,6 +708,10 @@ state 17
 
     PLUS            reduce using rule 23 (expression -> MINUS expression .)
     MINUS           reduce using rule 23 (expression -> MINUS expression .)
+    MULTIPLY        reduce using rule 23 (expression -> MINUS expression .)
+    DIVIDE          reduce using rule 23 (expression -> MINUS expression .)
+    POW             reduce using rule 23 (expression -> MINUS expression .)
+    MOD             reduce using rule 23 (expression -> MINUS expression .)
     AND             reduce using rule 23 (expression -> MINUS expression .)
     OR              reduce using rule 23 (expression -> MINUS expression .)
     XOR             reduce using rule 23 (expression -> MINUS expression .)
@@ -723,17 +727,13 @@ state 17
     SEMICOLON       reduce using rule 23 (expression -> MINUS expression .)
     ELSE            reduce using rule 23 (expression -> MINUS expression .)
     END             reduce using rule 23 (expression -> MINUS expression .)
-    MULTIPLY        shift and go to state 34
-    DIVIDE          shift and go to state 26
-    POW             shift and go to state 28
-    MOD             shift and go to state 38
 
-  ! MULTIPLY        [ reduce using rule 23 (expression -> MINUS expression .) ]
-  ! DIVIDE          [ reduce using rule 23 (expression -> MINUS expression .) ]
-  ! POW             [ reduce using rule 23 (expression -> MINUS expression .) ]
-  ! MOD             [ reduce using rule 23 (expression -> MINUS expression .) ]
   ! PLUS            [ shift and go to state 33 ]
   ! MINUS           [ shift and go to state 37 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 26 ]
+  ! POW             [ shift and go to state 28 ]
+  ! MOD             [ shift and go to state 38 ]
   ! AND             [ shift and go to state 24 ]
   ! OR              [ shift and go to state 31 ]
   ! XOR             [ shift and go to state 25 ]
@@ -1000,58 +1000,43 @@ state 23
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    PLUS            reduce using rule 20 (expression -> NOT expression .)
+    MINUS           reduce using rule 20 (expression -> NOT expression .)
+    MULTIPLY        reduce using rule 20 (expression -> NOT expression .)
+    DIVIDE          reduce using rule 20 (expression -> NOT expression .)
+    MOD             reduce using rule 20 (expression -> NOT expression .)
+    AND             reduce using rule 20 (expression -> NOT expression .)
+    OR              reduce using rule 20 (expression -> NOT expression .)
+    XOR             reduce using rule 20 (expression -> NOT expression .)
+    EQUALS          reduce using rule 20 (expression -> NOT expression .)
+    GREATER_THAN    reduce using rule 20 (expression -> NOT expression .)
+    LESS_THAN       reduce using rule 20 (expression -> NOT expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 20 (expression -> NOT expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 20 (expression -> NOT expression .)
+    COMMA           reduce using rule 20 (expression -> NOT expression .)
     $end            reduce using rule 20 (expression -> NOT expression .)
     RPAREN          reduce using rule 20 (expression -> NOT expression .)
     DO              reduce using rule 20 (expression -> NOT expression .)
     SEMICOLON       reduce using rule 20 (expression -> NOT expression .)
     ELSE            reduce using rule 20 (expression -> NOT expression .)
     END             reduce using rule 20 (expression -> NOT expression .)
-    PLUS            shift and go to state 33
-    MINUS           shift and go to state 37
-    MULTIPLY        shift and go to state 34
-    DIVIDE          shift and go to state 26
     POW             shift and go to state 28
-    MOD             shift and go to state 38
-    AND             shift and go to state 24
-    OR              shift and go to state 31
-    XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
-    COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! MINUS           [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! MULTIPLY        [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! DIVIDE          [ reduce using rule 20 (expression -> NOT expression .) ]
   ! POW             [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! MOD             [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! AND             [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! OR              [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! XOR             [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! EQUALS          [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! GREATER_THAN    [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! LESS_THAN       [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 20 (expression -> NOT expression .) ]
-  ! COMMA           [ reduce using rule 20 (expression -> NOT expression .) ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 37 ]
+  ! MULTIPLY        [ shift and go to state 34 ]
+  ! DIVIDE          [ shift and go to state 26 ]
+  ! MOD             [ shift and go to state 38 ]
+  ! AND             [ shift and go to state 24 ]
+  ! OR              [ shift and go to state 31 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
+  ! COMMA           [ shift and go to state 35 ]
 
 
 state 24
@@ -1916,58 +1901,43 @@ state 44
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    PLUS            reduce using rule 12 (expression -> expression AND expression .)
+    MINUS           reduce using rule 12 (expression -> expression AND expression .)
+    AND             reduce using rule 12 (expression -> expression AND expression .)
+    OR              reduce using rule 12 (expression -> expression AND expression .)
+    XOR             reduce using rule 12 (expression -> expression AND expression .)
+    EQUALS          reduce using rule 12 (expression -> expression AND expression .)
+    GREATER_THAN    reduce using rule 12 (expression -> expression AND expression .)
+    LESS_THAN       reduce using rule 12 (expression -> expression AND expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 12 (expression -> expression AND expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 12 (expression -> expression AND expression .)
+    COMMA           reduce using rule 12 (expression -> expression AND expression .)
     $end            reduce using rule 12 (expression -> expression AND expression .)
     RPAREN          reduce using rule 12 (expression -> expression AND expression .)
     DO              reduce using rule 12 (expression -> expression AND expression .)
     SEMICOLON       reduce using rule 12 (expression -> expression AND expression .)
     ELSE            reduce using rule 12 (expression -> expression AND expression .)
     END             reduce using rule 12 (expression -> expression AND expression .)
-    PLUS            shift and go to state 33
-    MINUS           shift and go to state 37
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 26
     POW             shift and go to state 28
     MOD             shift and go to state 38
-    AND             shift and go to state 24
-    OR              shift and go to state 31
-    XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
-    COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! MINUS           [ reduce using rule 12 (expression -> expression AND expression .) ]
   ! MULTIPLY        [ reduce using rule 12 (expression -> expression AND expression .) ]
   ! DIVIDE          [ reduce using rule 12 (expression -> expression AND expression .) ]
   ! POW             [ reduce using rule 12 (expression -> expression AND expression .) ]
   ! MOD             [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! AND             [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! OR              [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! XOR             [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! EQUALS          [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! GREATER_THAN    [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! LESS_THAN       [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 12 (expression -> expression AND expression .) ]
-  ! COMMA           [ reduce using rule 12 (expression -> expression AND expression .) ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 24 ]
+  ! OR              [ shift and go to state 31 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
+  ! COMMA           [ shift and go to state 35 ]
 
 
 state 45
@@ -1989,58 +1959,43 @@ state 45
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    PLUS            reduce using rule 14 (expression -> expression XOR expression .)
+    MINUS           reduce using rule 14 (expression -> expression XOR expression .)
+    AND             reduce using rule 14 (expression -> expression XOR expression .)
+    OR              reduce using rule 14 (expression -> expression XOR expression .)
+    XOR             reduce using rule 14 (expression -> expression XOR expression .)
+    EQUALS          reduce using rule 14 (expression -> expression XOR expression .)
+    GREATER_THAN    reduce using rule 14 (expression -> expression XOR expression .)
+    LESS_THAN       reduce using rule 14 (expression -> expression XOR expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 14 (expression -> expression XOR expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 14 (expression -> expression XOR expression .)
+    COMMA           reduce using rule 14 (expression -> expression XOR expression .)
     $end            reduce using rule 14 (expression -> expression XOR expression .)
     RPAREN          reduce using rule 14 (expression -> expression XOR expression .)
     DO              reduce using rule 14 (expression -> expression XOR expression .)
     SEMICOLON       reduce using rule 14 (expression -> expression XOR expression .)
     ELSE            reduce using rule 14 (expression -> expression XOR expression .)
     END             reduce using rule 14 (expression -> expression XOR expression .)
-    PLUS            shift and go to state 33
-    MINUS           shift and go to state 37
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 26
     POW             shift and go to state 28
     MOD             shift and go to state 38
-    AND             shift and go to state 24
-    OR              shift and go to state 31
-    XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
-    COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! MINUS           [ reduce using rule 14 (expression -> expression XOR expression .) ]
   ! MULTIPLY        [ reduce using rule 14 (expression -> expression XOR expression .) ]
   ! DIVIDE          [ reduce using rule 14 (expression -> expression XOR expression .) ]
   ! POW             [ reduce using rule 14 (expression -> expression XOR expression .) ]
   ! MOD             [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! AND             [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! OR              [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! XOR             [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! EQUALS          [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! GREATER_THAN    [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! LESS_THAN       [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 14 (expression -> expression XOR expression .) ]
-  ! COMMA           [ reduce using rule 14 (expression -> expression XOR expression .) ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 24 ]
+  ! OR              [ shift and go to state 31 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
+  ! COMMA           [ shift and go to state 35 ]
 
 
 state 46
@@ -2120,21 +2075,11 @@ state 47
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    EQUALS          reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
+    GREATER_THAN    reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
+    LESS_THAN       reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
     $end            reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
     RPAREN          reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
     DO              reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .)
@@ -2150,11 +2095,6 @@ state 47
     AND             shift and go to state 24
     OR              shift and go to state 31
     XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
     COMMA           shift and go to state 35
 
   ! PLUS            [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
@@ -2166,12 +2106,12 @@ state 47
   ! AND             [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
   ! OR              [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
   ! XOR             [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
-  ! EQUALS          [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
-  ! GREATER_THAN    [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
-  ! LESS_THAN       [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
   ! COMMA           [ reduce using rule 18 (expression -> expression GREATER_THAN_OR_EQUAL expression .) ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
 
 
 state 48
@@ -2251,21 +2191,11 @@ state 49
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    EQUALS          reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
+    GREATER_THAN    reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
+    LESS_THAN       reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
     $end            reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
     RPAREN          reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
     DO              reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .)
@@ -2281,11 +2211,6 @@ state 49
     AND             shift and go to state 24
     OR              shift and go to state 31
     XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
     COMMA           shift and go to state 35
 
   ! PLUS            [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
@@ -2297,12 +2222,12 @@ state 49
   ! AND             [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
   ! OR              [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
   ! XOR             [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
-  ! EQUALS          [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
-  ! GREATER_THAN    [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
-  ! LESS_THAN       [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
   ! COMMA           [ reduce using rule 19 (expression -> expression LESS_THAN_OR_EQUAL expression .) ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
 
 
 state 50
@@ -2324,21 +2249,11 @@ state 50
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    EQUALS          reduce using rule 15 (expression -> expression EQUALS expression .)
+    GREATER_THAN    reduce using rule 15 (expression -> expression EQUALS expression .)
+    LESS_THAN       reduce using rule 15 (expression -> expression EQUALS expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 15 (expression -> expression EQUALS expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 15 (expression -> expression EQUALS expression .)
     $end            reduce using rule 15 (expression -> expression EQUALS expression .)
     RPAREN          reduce using rule 15 (expression -> expression EQUALS expression .)
     DO              reduce using rule 15 (expression -> expression EQUALS expression .)
@@ -2354,11 +2269,6 @@ state 50
     AND             shift and go to state 24
     OR              shift and go to state 31
     XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
     COMMA           shift and go to state 35
 
   ! PLUS            [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
@@ -2370,12 +2280,12 @@ state 50
   ! AND             [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
   ! OR              [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
   ! XOR             [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
-  ! EQUALS          [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
-  ! GREATER_THAN    [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
-  ! LESS_THAN       [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
   ! COMMA           [ reduce using rule 15 (expression -> expression EQUALS expression .) ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
 
 
 state 51
@@ -2397,58 +2307,43 @@ state 51
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    PLUS            reduce using rule 13 (expression -> expression OR expression .)
+    MINUS           reduce using rule 13 (expression -> expression OR expression .)
+    AND             reduce using rule 13 (expression -> expression OR expression .)
+    OR              reduce using rule 13 (expression -> expression OR expression .)
+    XOR             reduce using rule 13 (expression -> expression OR expression .)
+    EQUALS          reduce using rule 13 (expression -> expression OR expression .)
+    GREATER_THAN    reduce using rule 13 (expression -> expression OR expression .)
+    LESS_THAN       reduce using rule 13 (expression -> expression OR expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 13 (expression -> expression OR expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 13 (expression -> expression OR expression .)
+    COMMA           reduce using rule 13 (expression -> expression OR expression .)
     $end            reduce using rule 13 (expression -> expression OR expression .)
     RPAREN          reduce using rule 13 (expression -> expression OR expression .)
     DO              reduce using rule 13 (expression -> expression OR expression .)
     SEMICOLON       reduce using rule 13 (expression -> expression OR expression .)
     ELSE            reduce using rule 13 (expression -> expression OR expression .)
     END             reduce using rule 13 (expression -> expression OR expression .)
-    PLUS            shift and go to state 33
-    MINUS           shift and go to state 37
     MULTIPLY        shift and go to state 34
     DIVIDE          shift and go to state 26
     POW             shift and go to state 28
     MOD             shift and go to state 38
-    AND             shift and go to state 24
-    OR              shift and go to state 31
-    XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
-    COMMA           shift and go to state 35
 
-  ! PLUS            [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! MINUS           [ reduce using rule 13 (expression -> expression OR expression .) ]
   ! MULTIPLY        [ reduce using rule 13 (expression -> expression OR expression .) ]
   ! DIVIDE          [ reduce using rule 13 (expression -> expression OR expression .) ]
   ! POW             [ reduce using rule 13 (expression -> expression OR expression .) ]
   ! MOD             [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! AND             [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! OR              [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! XOR             [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! EQUALS          [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! GREATER_THAN    [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! LESS_THAN       [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 13 (expression -> expression OR expression .) ]
-  ! COMMA           [ reduce using rule 13 (expression -> expression OR expression .) ]
+  ! PLUS            [ shift and go to state 33 ]
+  ! MINUS           [ shift and go to state 37 ]
+  ! AND             [ shift and go to state 24 ]
+  ! OR              [ shift and go to state 31 ]
+  ! XOR             [ shift and go to state 25 ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
+  ! COMMA           [ shift and go to state 35 ]
 
 
 state 52
@@ -2470,21 +2365,11 @@ state 52
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    EQUALS          reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    GREATER_THAN    reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    LESS_THAN       reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 16 (expression -> expression GREATER_THAN expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 16 (expression -> expression GREATER_THAN expression .)
     $end            reduce using rule 16 (expression -> expression GREATER_THAN expression .)
     RPAREN          reduce using rule 16 (expression -> expression GREATER_THAN expression .)
     DO              reduce using rule 16 (expression -> expression GREATER_THAN expression .)
@@ -2500,11 +2385,6 @@ state 52
     AND             shift and go to state 24
     OR              shift and go to state 31
     XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
     COMMA           shift and go to state 35
 
   ! PLUS            [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
@@ -2516,12 +2396,12 @@ state 52
   ! AND             [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
   ! OR              [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
   ! XOR             [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
-  ! EQUALS          [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
-  ! GREATER_THAN    [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
-  ! LESS_THAN       [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
   ! COMMA           [ reduce using rule 16 (expression -> expression GREATER_THAN expression .) ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
 
 
 state 53
@@ -2717,21 +2597,11 @@ state 56
     (19) expression -> expression . LESS_THAN_OR_EQUAL expression
     (25) expression -> expression . COMMA expression
 
-  ! shift/reduce conflict for PLUS resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for MULTIPLY resolved as shift
-  ! shift/reduce conflict for DIVIDE resolved as shift
-  ! shift/reduce conflict for POW resolved as shift
-  ! shift/reduce conflict for MOD resolved as shift
-  ! shift/reduce conflict for AND resolved as shift
-  ! shift/reduce conflict for OR resolved as shift
-  ! shift/reduce conflict for XOR resolved as shift
-  ! shift/reduce conflict for EQUALS resolved as shift
-  ! shift/reduce conflict for GREATER_THAN resolved as shift
-  ! shift/reduce conflict for LESS_THAN resolved as shift
-  ! shift/reduce conflict for GREATER_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for LESS_THAN_OR_EQUAL resolved as shift
-  ! shift/reduce conflict for COMMA resolved as shift
+    EQUALS          reduce using rule 17 (expression -> expression LESS_THAN expression .)
+    GREATER_THAN    reduce using rule 17 (expression -> expression LESS_THAN expression .)
+    LESS_THAN       reduce using rule 17 (expression -> expression LESS_THAN expression .)
+    GREATER_THAN_OR_EQUAL reduce using rule 17 (expression -> expression LESS_THAN expression .)
+    LESS_THAN_OR_EQUAL reduce using rule 17 (expression -> expression LESS_THAN expression .)
     $end            reduce using rule 17 (expression -> expression LESS_THAN expression .)
     RPAREN          reduce using rule 17 (expression -> expression LESS_THAN expression .)
     DO              reduce using rule 17 (expression -> expression LESS_THAN expression .)
@@ -2747,11 +2617,6 @@ state 56
     AND             shift and go to state 24
     OR              shift and go to state 31
     XOR             shift and go to state 25
-    EQUALS          shift and go to state 30
-    GREATER_THAN    shift and go to state 32
-    LESS_THAN       shift and go to state 36
-    GREATER_THAN_OR_EQUAL shift and go to state 27
-    LESS_THAN_OR_EQUAL shift and go to state 29
     COMMA           shift and go to state 35
 
   ! PLUS            [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
@@ -2763,12 +2628,12 @@ state 56
   ! AND             [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
   ! OR              [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
   ! XOR             [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
-  ! EQUALS          [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
-  ! GREATER_THAN    [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
-  ! LESS_THAN       [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
-  ! GREATER_THAN_OR_EQUAL [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
-  ! LESS_THAN_OR_EQUAL [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
   ! COMMA           [ reduce using rule 17 (expression -> expression LESS_THAN expression .) ]
+  ! EQUALS          [ shift and go to state 30 ]
+  ! GREATER_THAN    [ shift and go to state 32 ]
+  ! LESS_THAN       [ shift and go to state 36 ]
+  ! GREATER_THAN_OR_EQUAL [ shift and go to state 27 ]
+  ! LESS_THAN_OR_EQUAL [ shift and go to state 29 ]
 
 
 state 57
@@ -3123,139 +2988,4 @@ WARNING: shift/reduce conflict for LESS_THAN in state 21 resolved as shift
 WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 21 resolved as shift
 WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 21 resolved as shift
 WARNING: shift/reduce conflict for COMMA in state 21 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 23 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 23 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 23 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 23 resolved as shift
-WARNING: shift/reduce conflict for POW in state 23 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 23 resolved as shift
-WARNING: shift/reduce conflict for AND in state 23 resolved as shift
-WARNING: shift/reduce conflict for OR in state 23 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 23 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 23 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 23 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 23 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 23 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 23 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 23 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 44 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 44 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 44 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 44 resolved as shift
-WARNING: shift/reduce conflict for POW in state 44 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 44 resolved as shift
-WARNING: shift/reduce conflict for AND in state 44 resolved as shift
-WARNING: shift/reduce conflict for OR in state 44 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 44 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 44 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 44 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 44 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 44 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 44 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 44 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 45 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 45 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 45 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 45 resolved as shift
-WARNING: shift/reduce conflict for POW in state 45 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 45 resolved as shift
-WARNING: shift/reduce conflict for AND in state 45 resolved as shift
-WARNING: shift/reduce conflict for OR in state 45 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 45 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 45 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 45 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 45 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 45 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 45 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 45 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 47 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 47 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 47 resolved as shift
-WARNING: shift/reduce conflict for POW in state 47 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 47 resolved as shift
-WARNING: shift/reduce conflict for AND in state 47 resolved as shift
-WARNING: shift/reduce conflict for OR in state 47 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 47 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 47 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 47 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 47 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 47 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 47 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 47 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 49 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 49 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 49 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 49 resolved as shift
-WARNING: shift/reduce conflict for POW in state 49 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 49 resolved as shift
-WARNING: shift/reduce conflict for AND in state 49 resolved as shift
-WARNING: shift/reduce conflict for OR in state 49 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 49 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 49 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 49 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 49 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 49 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 49 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 49 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 50 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 50 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 50 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 50 resolved as shift
-WARNING: shift/reduce conflict for POW in state 50 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 50 resolved as shift
-WARNING: shift/reduce conflict for AND in state 50 resolved as shift
-WARNING: shift/reduce conflict for OR in state 50 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 50 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 50 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 50 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 50 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 50 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 50 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 50 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 51 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 51 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 51 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 51 resolved as shift
-WARNING: shift/reduce conflict for POW in state 51 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 51 resolved as shift
-WARNING: shift/reduce conflict for AND in state 51 resolved as shift
-WARNING: shift/reduce conflict for OR in state 51 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 51 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 51 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 51 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 51 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 51 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 51 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 51 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 52 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 52 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 52 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 52 resolved as shift
-WARNING: shift/reduce conflict for POW in state 52 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 52 resolved as shift
-WARNING: shift/reduce conflict for AND in state 52 resolved as shift
-WARNING: shift/reduce conflict for OR in state 52 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 52 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 52 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 52 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 52 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 52 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 52 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 52 resolved as shift
-WARNING: shift/reduce conflict for PLUS in state 56 resolved as shift
-WARNING: shift/reduce conflict for MINUS in state 56 resolved as shift
-WARNING: shift/reduce conflict for MULTIPLY in state 56 resolved as shift
-WARNING: shift/reduce conflict for DIVIDE in state 56 resolved as shift
-WARNING: shift/reduce conflict for POW in state 56 resolved as shift
-WARNING: shift/reduce conflict for MOD in state 56 resolved as shift
-WARNING: shift/reduce conflict for AND in state 56 resolved as shift
-WARNING: shift/reduce conflict for OR in state 56 resolved as shift
-WARNING: shift/reduce conflict for XOR in state 56 resolved as shift
-WARNING: shift/reduce conflict for EQUALS in state 56 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN in state 56 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN in state 56 resolved as shift
-WARNING: shift/reduce conflict for GREATER_THAN_OR_EQUAL in state 56 resolved as shift
-WARNING: shift/reduce conflict for LESS_THAN_OR_EQUAL in state 56 resolved as shift
-WARNING: shift/reduce conflict for COMMA in state 56 resolved as shift
 WARNING: shift/reduce conflict for SEMICOLON in state 61 resolved as shift

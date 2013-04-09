@@ -59,9 +59,12 @@ def stripe_quotation(string):
 #-----------------------------------------------------------------------------#
 
 precedence = (
-    ('left','PLUS','MINUS', 'COMMA'),
-    ('left','MULTIPLY','DIVIDE', 'MOD'),
+    ('nonassoc', 'LESS_THAN','LESS_THAN_OR_EQUAL','EQUALS','NOT_EQUALS','GREATER_THAN','GREATER_THAN_OR_EQUAL',),
+    ('left', 'PLUS','MINUS','COMMA','AND','OR','XOR'),
+    ('left', 'MULTIPLY','DIVIDE','MOD'),
+    ('right', 'NOT'),
     ('right', 'POW'),
+    ('right', 'UMINUS'),
     )
 
 # dictionary of names
@@ -72,6 +75,7 @@ names = { }
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
 #-----------------------------------------------------------------------------# 
+
 def p_start(t):
     '''start : statement'''
     
@@ -274,7 +278,7 @@ def p_expression_boolean(t):
     t[0].do = MethodType(do, t[0], Node)
                         
 def p_expression_uminus(t):
-    'expression : MINUS expression'
+    'expression : MINUS expression %prec UMINUS'
     
     t[0] = Node("uminus", t[2], 'uminus')
     def do(self):
