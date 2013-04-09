@@ -188,6 +188,7 @@ def p_expression_binop(t):
                   | expression OR expression
                   | expression XOR expression
                   | expression EQUALS expression
+                  | expression NOT_EQUALS expression
                   | expression GREATER_THAN expression
                   | expression LESS_THAN expression
                   | expression GREATER_THAN_OR_EQUAL expression
@@ -235,6 +236,10 @@ def p_expression_binop(t):
         #t[0] = t[1] == t[3] # equal?
         def do(self):
             return self.children[0].do() == self.children[1].do()
+    elif t[2] == '!=':
+        #t[0] = t[1] != t[3] # not equal?
+        def do(self):
+            return self.children[0].do() != self.children[1].do()
     elif t[2] == '>':
         #t[0] = t[1] > t[3] # greater than?
         def do(self):
