@@ -50,3 +50,26 @@ Type system/check/inference
 
 2. Symbol Table:
 
+
+
+Procedures:
+-----------
+
+
++ choice of parameter-passing mechanism
++ storage allocation for local variables: static or dynamic
++ can procedure declarations nest
++ can procedures be passed as parameters, returned as values
++ can procedure names be overloaded
++ generic procedures, ones whose computations can be done on different types
++ does language have closures (encapsulations of procedures with their runtime context)
+
+1. Parameter-Passing Mechanisms
+
++ call by value
++ call by reference
+
+2. Evaluation Strategies for the Arguments of a Procedure
+
++ applicative-order evaluation
++ normal-order evaluation
