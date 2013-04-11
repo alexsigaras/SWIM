@@ -1,7 +1,7 @@
 class Namespace:
 	'''Namespaces implemented as a stack of hash tables
-		use push() on entrance into new scope
-		use pop() on exit out of the scope'''
+		use scope_in() on entrance into new scope
+		use scope_out() on exit out of the scope'''
 	
 
 	def __init__(self, globl = {}):
@@ -33,17 +33,24 @@ class Namespace:
 			if table.has_key(var):
 				del table[var]
 
-	def push(self):
+	def scope_in(self):
 		'pushes a new namespace on top of the stack'
 		self.stack.append({})
 
-	def pop(self):
+	def scope_out(self):
 		'removes the top namespace from the stack'
 		try:
+			if len(self.stack) <= 1:
+				raise ScopeError('Attempted to drop global scope')
 			self.stack.pop()
-		except IndexError:
-			print "stack is empty, no namespace to pop" 
+		except ScopeError as e:
+			print e.msg
 
 	def assign_global(self, var, val):
 		'assign variable to global scope'
 		self.stack[0][var] = val
+
+
+class ScopeError(Exception):
+	def __init__(self, msg):
+		self.msg = 'ScopeError: ' + msg

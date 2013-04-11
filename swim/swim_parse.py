@@ -67,7 +67,7 @@ precedence = (
     ('right', 'UMINUS'),
     )
 
-# Namaspace tables
+# Namaspace stack
 identifiers = Namespace() 
 
 #-----------------------------------------------------------------------------#
