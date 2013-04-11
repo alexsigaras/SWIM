@@ -30,7 +30,7 @@
 #-----------------------------------------------------------------------------#
 
 from core import *
-
+from namespace import Namespace
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -67,8 +67,8 @@ precedence = (
     ('right', 'UMINUS'),
     )
 
-# dictionary of names
-names = { } 
+# Namaspace tables
+identifiers = Namespace() 
 
 #-----------------------------------------------------------------------------#
 
@@ -150,7 +150,7 @@ def p_statement_assign(t):
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self):
         ''' Need to check ID !'''       
-        names[self.children[0]] = self.children[1].do()
+        identifiers[self.children[0]] = self.children[1].do()
     t[0].do = MethodType(do, t[0], Node) 
     
 
@@ -361,7 +361,7 @@ def p_expression_name(t):
     t[0] = Node("name", str(t[1]), 'name')
     def do(self):
         try:
-            return names[self.children]
+            return identifiers[self.children]
         except LookupError:
             print("Undefined name '%s'" % self.children)
             raise Exception      
