@@ -44,6 +44,9 @@ import re
 
 # PDF
 from fpdf import fpdf as pdf
+
+# Error handling
+from swim_exception import *
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -84,9 +87,14 @@ def p_start(t):
     if(showNodeTree):
         print(t[1].traverse())
     else:
-        result = t[1].do()
-        if result is not None:
-            print(result)
+        try:
+	        result = t[1].do()
+	        if result is not None:
+	        	print(result)
+        except Error as e:
+        	#print 1
+        	print e
+        	#print "[Line :" + str(e.lineno) + "] " + e.msg 
     
     # Saving mode for function and class definition
     ''' TO DO '''
@@ -199,64 +207,110 @@ def p_expression_binop(t):
     if t[2] == '+':
         #t[0] = t[1] + t[3]  # add
         def do(self):
-            return self.children[0].do() + self.children[1].do()
+	    	try:        
+	            return self.children[0].do() + self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do())) 
     elif t[2] == '-':
         #t[0] = t[1] - t[3]  # subtract
-        def do(self):
-            return self.children[0].do() - self.children[1].do()        
+        
+	    def do(self):
+	    	try:
+	    		return self.children[0].do() - self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '*':
         #t[0] = t[1] * t[3]  # multiply
         def do(self):
-            return self.children[0].do() * self.children[1].do()        
+        	try:
+	            return self.children[0].do() * self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '/':
         #t[0] = t[1] / t[3]  # divide
         def do(self):
-            return self.children[0].do() / self.children[1].do()        
+        	try:
+	            return self.children[0].do() / self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '^': 
         #t[0] = t[1] ** t[3] # power
         def do(self):
-            return self.children[0].do() ** self.children[1].do()        
+        	try:
+	            return self.children[0].do() ** self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '%': 
         #t[0] = t[1] % t[3]  # remainder
         def do(self):
-            return self.children[0].do() % self.children[1].do()        
+        	try:
+	            return self.children[0].do() % self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif (t[2] == 'and' or t[2] =='&&'):
         #t[0] = t[1] and t[3]
         def do(self):
-            return self.children[0].do() and self.children[1].do()        
+        	try:
+	            return self.children[0].do() and self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif (t[2] == 'or' or t[2] =='||'):
         #t[0] = t[1] or t[3]
         def do(self):
-            return self.children[0].do() or self.children[1].do()        
+        	try:
+	            return self.children[0].do() or self.children[1].do()        
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == 'xor':
         #t[0] = (t[1] and not t[3]) or (not t[1] and t[3])
         def do(self):
-            return (self.children[0].do() and not self.children[1].do()) or (not self.children[0].do() and tself.children[1].do())
+        	try:
+	            return (self.children[0].do() and not self.children[1].do()) or (not self.children[0].do() and tself.children[1].do())
+	    	except:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '==':
         #t[0] = t[1] == t[3] # equal?
         def do(self):
-            return self.children[0].do() == self.children[1].do()
+        	try:
+	            return self.children[0].do() == self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '!=':
         #t[0] = t[1] != t[3] # not equal?
         def do(self):
-            return self.children[0].do() != self.children[1].do()
+        	try:
+	            return self.children[0].do() != self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '>':
         #t[0] = t[1] > t[3] # greater than?
         def do(self):
-            return self.children[0].do() > self.children[1].do()
+        	try:
+	            return self.children[0].do() > self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '<':
         #t[0] = t[1] < t[3] # less than?
         def do(self):
-            return self.children[0].do() < self.children[1].do()                              
+        	try:
+	            return self.children[0].do() < self.children[1].do()                              
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '>=':
         #t[0] = t[1] >= t[3] # greater than or equal?
         def do(self):
-            return self.children[0].do() >= self.children[1].do()
+        	try:
+	            return self.children[0].do() >= self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
     elif t[2] == '<=':
         #t[0] = t[1] <= t[3] # less than or equal?
         def do(self):
-            return self.children[0].do() <= self.children[1].do()
-
+        	try:
+	            return self.children[0].do() <= self.children[1].do()
+	    	except TypeError:
+	    		raise TypeException(t.lexer.lineno, str(self.children[0].do()) + " " + self.leaf + " " + str(self.children[1].do()))
+	            	
     t[0].do = MethodType(do, t[0], Node) 
           
 def p_expression_notop(t):
@@ -363,9 +417,7 @@ def p_expression_name(t):
         try:
             return identifiers[self.children]
         except LookupError:
-            print("Undefined name '%s'" % self.children)
-            raise Exception      
-
+        	raise NameException(t.lexer.lineno, str(self.children))
     t[0].do = MethodType(do, t[0], Node)     
     
 def p_expression_string(t):
