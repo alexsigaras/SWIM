@@ -1,0 +1,12 @@
+('/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/calc/build/pyi.darwin/calc/out00-PKG.pkg',
+ {'BINARY': 1,
+  'DATA': 1,
+  'EXECUTABLE': 1,
+  'EXTENSION': 1,
+  'PYMODULE': 1,
+  'PYSOURCE': 1},
+ [('out00-PYZ.pyz', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/calc/build/pyi.darwin/calc/out00-PYZ.pyz', 'PYZ'), ('_struct', '/System/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/lib-dynload/_struct.so', 'EXTENSION'), ('iu', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/PyInstaller/loader/iu.pyc', 'PYMODULE'), ('struct', '/System/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/struct.pyc', 'PYMODULE'), ('archive', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/PyInstaller/loader/archive.pyc', 'PYMODULE'), ('_pyi_bootstrap', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/support/_pyi_bootstrap.py', 'PYSOURCE'), ('carchive', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/PyInstaller/loader/carchive.py', 'PYSOURCE'), ('pyi_rth_encodings', '/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/support/rthooks/pyi_rth_encodings.py', 'PYSOURCE'), ('calc', 'test/calc.py', 'PYSOURCE')],
+ 1,
+ None,
+ True,
+ 0)

@@ -1,0 +1,10 @@
+('/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/calc/build/pyi.darwin/calc/calc',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ True,
+ 0,
+ 1365812679)

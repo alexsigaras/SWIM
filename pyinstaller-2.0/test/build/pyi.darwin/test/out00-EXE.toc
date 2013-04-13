@@ -1,0 +1,10 @@
+('/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/pyinstaller-2.0/test/build/pyi.darwin/test/test',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ True,
+ 0,
+ 1365809280)
