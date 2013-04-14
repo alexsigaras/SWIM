@@ -162,6 +162,15 @@ def p_statement_assign(t):
     t[0].do = MethodType(do, t[0], Node) 
     
 
+def p_statement_if(t):
+    'statement : IF expression DO expression END'
+    t[0] = Node("if", [t[2], t[4], t[1]])
+    def do(self):
+        if self.children[0].do():
+            return self.children[1].do()
+    t[0].do = MethodType(do, t[0], Node)
+
+
 def p_statement_if_else(t):
     'statement : IF expression DO expression ELSE expression END'
     
