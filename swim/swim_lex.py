@@ -36,6 +36,7 @@
 reserved = {
     'if'       : 'IF',
     'else'     : 'ELSE',
+    'elif'     : 'ELIF',
     'do'       : 'DO',
     'True'     : 'TRUE',
     'False'    : 'FALSE',
