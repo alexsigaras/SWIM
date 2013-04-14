@@ -164,10 +164,13 @@ def p_statement_assign(t):
 
 def p_statement_if(t):
     'statement : IF expression DO expression END'
+    
     t[0] = Node("if", [t[2], t[4], t[1]])
+    
     def do(self):
         if self.children[0].do():
             return self.children[1].do()
+    
     t[0].do = MethodType(do, t[0], Node)
 
 
@@ -182,7 +185,18 @@ def p_statement_if_else(t):
         else:
             return self.children[2].do()
             
-    t[0].do = MethodType(do, t[0], Node)  
+    t[0].do = MethodType(do, t[0], Node) 
+
+def p_statement_while(t):
+    'statement : WHILE expression DO statement END'
+
+    t[0] = Node("while", [t[2],t[4],t[1]])
+
+    def do(self):
+        while self.children[0].do(): 
+            self.children[1].do()
+            do(self)
+    t[0].do = MethodType(do, t[0], Node)
        
 def p_statement_expr(t):
     'statement : expression'
@@ -437,22 +451,22 @@ def p_expression_string(t):
         return self.children
     t[0].do = MethodType(do, t[0], Node)     
 
-def p_expression_unistring(t):
-    'expression : ID expression'
+# def p_expression_unistring(t):
+#     'expression : ID expression'
     
-    t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
-    def do(self):
-        try:
-            # u is ID, not node
-            if self.children[0] == 'u':
-                return self.children[0] + self.children[1].do()
-            else:
-                raise Exception()
-        except LookupError:
-            print("Undefined name '%s'" % self.children[0])
-            raise Exception
+#     t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
+#     def do(self):
+#         try:
+#             # u is ID, not node
+#             if self.children[0] == 'u':
+#                 return self.children[0] + self.children[1].do()
+#             else:
+#                 raise Exception()
+#         except LookupError:
+#             print("Undefined name '%s'" % self.children[0])
+#             raise Exception
             
-    t[0].do = MethodType(do, t[0], Node)        
+#     t[0].do = MethodType(do, t[0], Node)        
     
 def p_error(t):
     if t:
