@@ -59,12 +59,12 @@ reserved = {
 tokens = [
     'LPAREN','RPAREN', 'SELECTOR', 'COMMA', 'SEMICOLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
-    'AND', 'OR', 'NOT', 'XOR', 'ASSIGN',
+    'ASSIGN',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
 
-#---------------------------------#
+#---------------------------------# 'AND', 'OR', 'NOT', 'XOR', 
 
 #---------------------------------#
 #     1.3 Identifier Tokens       #
