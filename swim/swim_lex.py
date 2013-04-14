@@ -42,7 +42,8 @@ reserved = {
     'False'    : 'FALSE',
     'while'    : 'WHILE',
     'for'      : 'FOR',
-    'foreach'  : 'FOREACH',
+    'each'     : 'EACH',
+    'return'   : 'RETURN',
     'and'      : 'AND',
     'or'       : 'OR',
     'xor'      : 'XOR',
@@ -64,7 +65,7 @@ tokens = [
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
 
-#---------------------------------# 'AND', 'OR', 'NOT', 'XOR', 
+#---------------------------------#
 
 #---------------------------------#
 #     1.3 Identifier Tokens       #
@@ -125,7 +126,7 @@ def t_NUMBER(t):
     
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'ID')    # Check for reserved words
+    t.typeh = reserved.get(t.value,'ID')    # Check for reserved words
     return t
 
 #---------------------------------#
