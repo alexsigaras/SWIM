@@ -49,7 +49,7 @@ class Node:
 		if children:
 			self.children = children
 		else:
-			self.children = []
+			self.children = 0.0
 			
 		self.leaf = leaf
 	

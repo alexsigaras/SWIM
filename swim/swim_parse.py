@@ -31,6 +31,7 @@
 
 from core import *
 from namespace import Namespace
+from types import *
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -104,38 +105,40 @@ def p_start(t):
     ''' TO DO '''
    
 def p_function(t):
-    '''expression : ID LPAREN expression RPAREN SEMICOLON'''
+    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
 
     def do(self):   
         result = self.children.do() 
         if self.leaf == "print" :
-            
-            # Escaped sequence handling
-            escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-            
-            for seq in escaped_sequences:
-                if result.find(seq) != -1:      
-                    result = result.decode('string-escape')
+            if isinstance(result, StringType):
+                # Escaped sequence handling
+                escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
                 
-            # string containing ""              
-            # 2 byte unicode with unicode characters
-            if re.match(r'u"\\u', result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r'^u"', result):
-                result =  result.replace('"','')[1:].decode("utf-8")
-                
-            # string containing ''          
-            elif re.match(r"u'\\u", result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r"^u'", result):
-                result = result.replace("'",'')[1:].decode("utf-8")         
-            else:
-                result = result.replace("'",'')            
+                for seq in escaped_sequences:
+                    if result.find(seq) != -1:      
+                        result = result.decode('string-escape')
+                    
+                # string containing ""              
+                # 2 byte unicode with unicode characters
+                if re.match(r'u"\\u', result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r'^u"', result):
+                    result =  result.replace('"','')[1:].decode("utf-8")
+                    
+                # string containing ''          
+                elif re.match(r"u'\\u", result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r"^u'", result):
+                    result = result.replace("'",'')[1:].decode("utf-8")         
+                else:
+                    result = result.replace("'",'')            
 
-            return result               
+                print result       
+            else:
+                print result        
      
         elif self.leaf == "pdf":
             try:
@@ -163,6 +166,7 @@ def p_statement_assign(t):
     def do(self):
         ''' Need to check ID !'''       
         identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node) 
     
 
@@ -203,7 +207,7 @@ def p_statement_while(t):
     def do(self):
         while self.children[0].do(): 
             self.children[1].do()
-            do(self)
+            self.do()
     t[0].do = MethodType(do, t[0], Node)
        
 def p_statement_expr(t):

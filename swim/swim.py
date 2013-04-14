@@ -57,7 +57,7 @@ if mode == 1:
     s = raw_input("SWIM REPL> ")   
     lex.input(s)
 if mode == 3:
-    s = 'print("good");/* comment; 1 \n bullshit + - hahaha */'
+    s = 'print("good");/* comment; 1 \n bullsh + - hahaha */'
     #yacc.parse(s)
     lex.input(s)
     while 1:
