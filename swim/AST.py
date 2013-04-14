@@ -24,6 +24,7 @@
 # File: AST.py 		                                                          #
 # Description: Abstract Syntax Tree                                           #
 #-----------------------------------------------------------------------------#
+import types
 
 class Node:
 	'Simple Node'

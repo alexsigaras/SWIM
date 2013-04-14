@@ -42,6 +42,8 @@ from pyquery import PyQuery as pq
 import urllib, getpass
 import re
 
+
+
 # PDF
 from fpdf import fpdf as pdf
 
@@ -93,7 +95,9 @@ def p_start(t):
 	        	print(result)
         except Error as e:
         	#print 1
-        	print e
+        	#print e
+            print(t[1].traverse())
+            pass
         	#print "[Line :" + str(e.lineno) + "] " + e.msg 
     
     # Saving mode for function and class definition
@@ -168,9 +172,13 @@ def p_statement_if(t):
     t[0] = Node("if", [t[2], t[4], t[1]])
     
     def do(self):
-        if self.children[0].do():
-            return self.children[1].do()
-    
+        try:
+            if self.children[0].do():
+                return self.children[1].do()
+        except Exception as e:
+            print("Make sure the expression provided to if can be evaluated as a boolean.\n")
+            raise e
+             
     t[0].do = MethodType(do, t[0], Node)
 
 
@@ -440,7 +448,8 @@ def p_expression_name(t):
         try:
             return identifiers[self.children]
         except LookupError:
-        	raise NameException(t.lexer.lineno, str(self.children))
+            print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
+            raise NameException(t.lexer.lineno, str(self.children))
     t[0].do = MethodType(do, t[0], Node)     
     
 def p_expression_string(t):
