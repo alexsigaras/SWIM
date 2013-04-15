@@ -1,0 +1,1 @@
+../../../../../../../../share/pyshared/lxml/isoschematron/resources/xsl/iso-schematron-xslt1/readme.txt

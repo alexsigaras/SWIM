@@ -1,0 +1,1 @@
+../../../../../../../share/pyshared/lxml/isoschematron/resources/xsl/XSD2Schtrn.xsl
