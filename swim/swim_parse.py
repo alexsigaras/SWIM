@@ -421,6 +421,15 @@ def p_expression_parse_text(t):
             raise Exception
                 
     t[0].do = MethodType(do, t[0], Node)      
+
+def p_expression_list(t):
+    'expression : LBRACKET elements RBRACKET'
+
+    t[0] = Node("list", t[2], "list")
+
+    def do(self):
+        return list( self.children.do() )
+    t[0].do = MethodType(do, t[0], Node)
         
 def p_expression_number(t):
     'expression : NUMBER'
