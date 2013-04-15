@@ -43,6 +43,7 @@ reserved = {
     'while'    : 'WHILE',
     'for'      : 'FOR',
     'each'     : 'EACH',
+    'in'       : 'IN',
     'return'   : 'RETURN',
     'and'      : 'AND',
     'or'       : 'OR',
@@ -58,7 +59,7 @@ reserved = {
 #---------------------------------#
 
 tokens = [
-    'LPAREN','RPAREN', 'SELECTOR', 'COMMA', 'SEMICOLON',
+    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'SELECTOR', 'COMMA', 'SEMICOLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
     'ASSIGN',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
@@ -73,6 +74,8 @@ tokens = [
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
+t_LBRACKET  = r'\['
+t_RBRACKET  = r'\]'
 t_SELECTOR  = r'@'
 t_COMMA     = r','
 t_SEMICOLON = r';'

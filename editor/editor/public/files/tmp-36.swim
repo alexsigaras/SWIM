@@ -1,0 +1,6 @@
+i = 1;
+a = [1];
+while(i<10) do 
+a = a + [i];
+end
+print(a);
