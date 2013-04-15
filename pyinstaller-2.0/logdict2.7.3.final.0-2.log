@@ -469,7 +469,7 @@ nt: None -> None
   DEL nt
 __main__: <PyScript '__main__' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/PyInstaller/loader/iu.py imports=[('sys', 0, 0, -1), ('imp', 0, 0, -1), ('marshal', 0, 0, -1), ('zipimport', 0, 0, -1), ('__builtin__', 1, 0, -1), ('posix', 1, 1, -1), ('posix.stat', 1, 1, -1), ('posix.getcwd', 1, 1, -1), ('posix.environ', 1, 1, -1), ('posix.listdir', 1, 1, -1), ('nt', 1, 1, -1), ('nt.stat', 1, 1, -1), ('nt.getcwd', 1, 1, -1), ('nt.environ', 1, 1, -1), ('nt.listdir', 1, 1, -1)] binaries=[] datas=[]> -> <PyScript '__main__' swim2/swim.py imports=[('sys', 0, 0, -1), ('os', 0, 0, -1), ('re', 0, 0, -1), ('types', 0, 0, -1), ('swim_lex', 0, 0, -1), ('swim_lex.*', 0, 0, -1), ('swim_parse', 0, 0, -1), ('swim_parse.*', 0, 0, -1), ('ply.yacc', 0, 0, -1)] binaries=[] datas=[]>
 swim_lex: None -> <PyModule 'swim_lex' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/swim_lex.pyc imports=[('ply.lex', 0, 0, -1)] binaries=[] datas=[]>
-swim_parse: None -> <PyModule 'swim_parse' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/swim_parse.pyc imports=[('core', 0, 0, -1), ('core.*', 0, 0, -1), ('namespace', 0, 0, -1), ('namespace.Namespace', 0, 0, -1), ('pyquery', 0, 0, -1), ('pyquery.PyQuery', 0, 0, -1), ('urllib', 0, 0, -1), ('getpass', 0, 0, -1), ('re', 0, 0, -1), ('fpdf', 0, 0, -1), ('fpdf.fpdf', 0, 0, -1), ('swim_exception', 0, 0, -1), ('swim_exception.*', 0, 0, -1)] binaries=[] datas=[]>
+swim_parse: None -> <PyModule 'swim_parse' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/swim_parse.pyc imports=[('core', 0, 0, -1), ('core.*', 0, 0, -1), ('namespace', 0, 0, -1), ('namespace.Namespace', 0, 0, -1), ('types', 0, 0, -1), ('types.*', 0, 0, -1), ('pyquery', 0, 0, -1), ('pyquery.PyQuery', 0, 0, -1), ('urllib', 0, 0, -1), ('getpass', 0, 0, -1), ('re', 0, 0, -1), ('fpdf', 0, 0, -1), ('fpdf.fpdf', 0, 0, -1), ('swim_exception', 0, 0, -1), ('swim_exception.*', 0, 0, -1)] binaries=[] datas=[]>
 ply: None -> <PkgModule 'ply' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/ply/__init__.pyc imports=[] binaries=[] datas=[]>
 ply.yacc: None -> <PyModule 'ply.yacc' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/ply/yacc.pyc imports=[('re', 0, 0, -1), ('types', 0, 0, -1), ('sys', 0, 0, -1), ('os.path', 0, 0, -1), ('re', 0, 0, -1), ('lex', 1, 1, -1), ('ply.lex', 1, 1, -1), ('cPickle', 1, 0, -1), ('pickle', 1, 1, -1), ('cPickle', 1, 0, -1), ('pickle', 1, 1, -1), ('hashlib', 1, 0, -1), ('hashlib.md5', 1, 0, -1), ('md5', 1, 1, -1), ('md5.md5', 1, 1, -1)] binaries=[] datas=[]>
 _emx_link: None -> None
@@ -538,7 +538,7 @@ getpass: None -> <PyModule 'getpass' /usr/lib/python2.7/getpass.pyc imports=[('o
 fpdf: None -> <PkgModule 'fpdf' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/fpdf/__init__.pyc imports=[('fpdf', 0, 0, -1), ('fpdf.*', 0, 0, -1), ('html', 0, 0, -1), ('html.HTMLMixin', 0, 0, -1), ('warnings', 0, 1, -1), ('template', 0, 0, -1), ('template.Template', 0, 0, -1)] binaries=[] datas=[]>
 fpdf.fpdf: None -> <PyModule 'fpdf.fpdf' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/fpdf/fpdf.pyc imports=[('datetime', 0, 0, -1), ('datetime.datetime', 0, 0, -1), ('math', 0, 0, -1), ('errno', 0, 0, -1), ('os', 0, 0, -1), ('sys', 0, 0, -1), ('zlib', 0, 0, -1), ('struct', 0, 0, -1), ('re', 0, 0, -1), ('tempfile', 0, 0, -1), ('struct', 0, 0, -1), ('cPickle', 0, 0, -1), ('pickle', 0, 1, -1), ('Image', 0, 0, -1), ('ttfonts', 0, 0, -1), ('ttfonts.TTFontFile', 0, 0, -1), ('fonts', 0, 0, -1), ('fonts.fpdf_charwidths', 0, 0, -1), ('php', 0, 0, -1), ('php.substr', 0, 0, -1), ('php.sprintf', 0, 0, -1), ('php.print_r', 0, 0, -1), ('php.UTF8ToUTF16BE', 0, 0, -1), ('php.UTF8StringToArray', 0, 0, -1), ('locale', 1, 1, -1), ('urllib', 1, 0, -1)] binaries=[] datas=[]>
 swim_exception: None -> <PyModule 'swim_exception' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/swim_exception.pyc imports=[] binaries=[] datas=[]>
-AST: None -> <PyModule 'AST' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/AST.pyc imports=[] binaries=[] datas=[]>
+AST: None -> <PyModule 'AST' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/AST.pyc imports=[('types', 0, 0, -1)] binaries=[] datas=[]>
 pyquery.webob: None -> None
 webob: None -> None
   DEL webob
@@ -551,15 +551,15 @@ pyquery.cssselectpatch: None -> <PyModule 'pyquery.cssselectpatch' /home/swim/Do
 pyquery.openers: None -> <PyModule 'pyquery.openers' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/pyquery/openers.pyc imports=[('sys', 0, 0, -1), ('urllib.request', 0, 1, -1), ('urllib.request.urlopen', 0, 1, -1), ('urllib.parse', 0, 1, -1), ('urllib.parse.urlencode', 0, 1, -1), ('urllib.parse', 0, 1, -1), ('urllib.parse.urljoin', 0, 1, -1), ('urllib2', 0, 1, -1), ('urllib2.urlopen', 0, 1, -1), ('urllib', 0, 1, -1), ('urllib.urlencode', 0, 1, -1), ('urlparse', 0, 1, -1), ('urlparse.urljoin', 0, 1, -1), ('requests', 0, 0, -1)] binaries=[] datas=[]>
 pyquery.copy: None -> None
 pyquery.lxml: None -> None
-lxml: None -> <PkgModule 'lxml' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/__init__.pyc imports=[('os', 1, 0, -1)] binaries=[] datas=[]>
-lxml.etree: None -> <ExtensionModule 'lxml.etree' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/etree.so imports=[('_elementpath', 0, 0, -1), ('gzip', 0, 0, -1)] binaries=[] datas=[]>
-lxml.html: None -> <PkgModule 'lxml.html' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/html/__init__.pyc imports=[('sys', 0, 0, -1), ('re', 0, 0, -1), ('urlparse', 0, 0, -1), ('urlparse.urljoin', 0, 0, -1), ('urllib.parse', 0, 1, -1), ('urllib.parse.urljoin', 0, 1, -1), ('copy', 0, 0, -1), ('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('lxml.html', 0, 0, -1), ('lxml.html.defs', 0, 0, -1), ('lxml.html._setmixin', 0, 0, -1), ('lxml.html._setmixin.SetMixin', 0, 0, -1), ('collections', 0, 0, -1), ('collections.MutableMapping', 0, 0, -1), ('UserDict', 0, 1, -1), ('UserDict.DictMixin', 0, 1, -1), ('sets', 0, 1, -1), ('sets.Set', 0, 1, -1), ('sys', 1, 0, -1), ('lxml.cssselect', 1, 0, -1), ('lxml.cssselect.CSSSelector', 1, 0, -1), ('urllib', 1, 0, -1), ('urllib.urlencode', 1, 0, -1), ('urllib.urlopen', 1, 0, -1), ('urllib.request', 1, 1, -1), ('urllib.request.urlopen', 1, 1, -1), ('urllib.parse', 1, 1, -1), ('urllib.parse.urlencode', 1, 1, -1), ('os', 1, 0, -1), ('webbrowser', 1, 0, -1), ('tempfile', 1, 0, -1)] binaries=[] datas=[]>
+lxml: None -> <PkgModule 'lxml' /usr/lib/python2.7/dist-packages/lxml/__init__.pyc imports=[('os', 0, 0, -1)] binaries=[] datas=[]>
+lxml.etree: None -> <ExtensionModule 'lxml.etree' /usr/lib/python2.7/dist-packages/lxml/etree.so imports=[('_elementpath', 0, 0, -1), ('gzip', 0, 0, -1)] binaries=[] datas=[]>
+lxml.html: None -> <PkgModule 'lxml.html' /usr/lib/python2.7/dist-packages/lxml/html/__init__.pyc imports=[('threading', 0, 0, -1), ('re', 0, 0, -1), ('urlparse', 0, 0, -1), ('urlparse.urljoin', 0, 0, -1), ('urllib.parse', 0, 1, -1), ('urllib.parse.urljoin', 0, 1, -1), ('copy', 0, 0, -1), ('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('lxml.html', 0, 0, -1), ('lxml.html.defs', 0, 0, -1), ('lxml', 0, 0, -1), ('lxml.cssselect', 0, 0, -1), ('lxml.html._setmixin', 0, 0, -1), ('lxml.html._setmixin.SetMixin', 0, 0, -1), ('UserDict', 0, 0, -1), ('UserDict.DictMixin', 0, 0, -1), ('lxml.html._dictmixin', 0, 1, -1), ('lxml.html._dictmixin.DictMixin', 0, 1, -1), ('sets', 0, 1, -1), ('sets.Set', 0, 1, -1), ('sys', 1, 0, -1), ('urllib', 1, 0, -1), ('urllib.urlencode', 1, 0, -1), ('urllib.urlopen', 1, 0, -1), ('urllib.request', 1, 1, -1), ('urllib.request.urlopen', 1, 1, -1), ('urllib.parse', 1, 1, -1), ('urllib.parse.urlencode', 1, 1, -1), ('os', 1, 0, -1), ('webbrowser', 1, 0, -1), ('tempfile', 1, 0, -1)] binaries=[] datas=[]>
 pyquery.inspect: None -> None
 pyquery.sys: None -> None
 pyquery.urllib: None -> None
 pyquery.urlparse: None -> None
 urlparse: None -> <PyModule 'urlparse' /usr/lib/python2.7/urlparse.pyc imports=[('collections', 0, 0, -1), ('collections.namedtuple', 0, 0, -1)] binaries=[] datas=[]>
-lxml.html.soupparser: None -> <PyModule 'lxml.html.soupparser' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/html/soupparser.pyc imports=[('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('lxml.html', 0, 0, -1), ('BeautifulSoup', 0, 0, -1), ('BeautifulSoup.BeautifulSoup', 0, 0, -1), ('BeautifulSoup.Tag', 0, 0, -1), ('BeautifulSoup.Comment', 0, 0, -1), ('BeautifulSoup.ProcessingInstruction', 0, 0, -1), ('BeautifulSoup.NavigableString', 0, 0, -1), ('html.entities', 0, 0, -1), ('html.entities.name2codepoint', 0, 0, -1), ('htmlentitydefs', 0, 1, -1), ('htmlentitydefs.name2codepoint', 0, 1, -1), ('re', 0, 0, -1)] binaries=[] datas=[]>
+lxml.html.soupparser: None -> <PyModule 'lxml.html.soupparser' /usr/lib/python2.7/dist-packages/lxml/html/soupparser.pyc imports=[('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('lxml.html', 0, 0, -1), ('BeautifulSoup', 0, 0, -1), ('BeautifulSoup.BeautifulSoup', 0, 0, -1), ('BeautifulSoup.Tag', 0, 0, -1), ('BeautifulSoup.Comment', 0, 0, -1), ('BeautifulSoup.ProcessingInstruction', 0, 0, -1), ('BeautifulSoup.NavigableString', 0, 0, -1), ('html.entities', 0, 0, -1), ('html.entities.name2codepoint', 0, 0, -1), ('htmlentitydefs', 0, 1, -1), ('htmlentitydefs.name2codepoint', 0, 1, -1), ('re', 0, 0, -1)] binaries=[] datas=[]>
 pyquery.external_cssselect: None -> None
 external_cssselect: None -> <PkgModule 'external_cssselect' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/external_cssselect/__init__.pyc imports=[('external_cssselect.parser', 0, 0, -1), ('external_cssselect.parser.parse', 0, 0, -1), ('external_cssselect.parser.Selector', 0, 0, -1), ('external_cssselect.parser.SelectorError', 0, 0, -1), ('external_cssselect.parser.SelectorSyntaxError', 0, 0, -1), ('external_cssselect.xpath', 0, 0, -1), ('external_cssselect.xpath.GenericTranslator', 0, 0, -1), ('external_cssselect.xpath.HTMLTranslator', 0, 0, -1), ('external_cssselect.xpath.ExpressionError', 0, 0, -1)] binaries=[] datas=[]>
 external_cssselect.xpath: None -> <PyModule 'external_cssselect.xpath' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/external_cssselect/xpath.pyc imports=[('sys', 0, 0, -1), ('re', 0, 0, -1), ('external_cssselect.parser', 0, 0, -1), ('external_cssselect.parser.parse', 0, 0, -1), ('external_cssselect.parser.parse_series', 0, 0, -1), ('external_cssselect.parser.SelectorError', 0, 0, -1)] binaries=[] datas=[]>
@@ -685,32 +685,32 @@ _dummy_threading: None -> None
 _dummy_threading: None -> None
   DEL _dummy_threading
 lxml.os: None -> None
-lxml._elementpath: None -> <PyModule 'lxml._elementpath' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/_elementpath.pyc imports=[('re', 0, 0, -1)] binaries=[] datas=[]>
+lxml._elementpath: None -> <PyModule 'lxml._elementpath' /usr/lib/python2.7/dist-packages/lxml/_elementpath.pyc imports=[('re', 0, 0, -1)] binaries=[] datas=[]>
 lxml.gzip: None -> None
 gzip: None -> <PyModule 'gzip' /usr/lib/python2.7/gzip.pyc imports=[('struct', 0, 0, -1), ('sys', 0, 0, -1), ('time', 0, 0, -1), ('os', 0, 0, -1), ('zlib', 0, 0, -1), ('io', 0, 0, -1), ('__builtin__', 0, 0, -1), ('warnings', 1, 0, -1), ('errno', 1, 1, -1), ('errno', 1, 1, -1)] binaries=[] datas=[]>
 lxml.re: None -> None
 io: None -> <PyModule 'io' /usr/lib/python2.7/io.pyc imports=[('_io', 0, 0, -1), ('abc', 0, 0, -1), ('_io', 0, 0, -1), ('_io.DEFAULT_BUFFER_SIZE', 0, 0, -1), ('_io.BlockingIOError', 0, 0, -1), ('_io.UnsupportedOperation', 0, 0, -1), ('_io.open', 0, 0, -1), ('_io.FileIO', 0, 0, -1), ('_io.BytesIO', 0, 0, -1), ('_io.StringIO', 0, 0, -1), ('_io.BufferedReader', 0, 0, -1), ('_io.BufferedWriter', 0, 0, -1), ('_io.BufferedRWPair', 0, 0, -1), ('_io.BufferedRandom', 0, 0, -1), ('_io.IncrementalNewlineDecoder', 0, 0, -1), ('_io.TextIOWrapper', 0, 0, -1)] binaries=[] datas=[]>
 _io: None -> <ExtensionModule '_io' /usr/lib/python2.7/lib-dynload/_io.so imports=[] binaries=[] datas=[]>
-lxml.html.sys: None -> None
+lxml.html.threading: None -> None
 lxml.html.re: None -> None
 lxml.html.urlparse: None -> None
 lxml.html.urllib: None -> None
 lxml.html.copy: None -> None
 lxml.html.lxml: None -> None
-lxml.html.defs: None -> <PyModule 'lxml.html.defs' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/html/defs.pyc imports=[('sets', 0, 1, -1), ('sets.Set', 0, 1, -1)] binaries=[] datas=[]>
-lxml.html._setmixin: None -> <PyModule 'lxml.html._setmixin' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/html/_setmixin.pyc imports=[] binaries=[] datas=[]>
-lxml.html.collections: None -> None
+lxml.html.defs: None -> <PyModule 'lxml.html.defs' /usr/lib/python2.7/dist-packages/lxml/html/defs.pyc imports=[('sets', 0, 1, -1), ('sets.Set', 0, 1, -1)] binaries=[] datas=[]>
+lxml.cssselect: None -> <PyModule 'lxml.cssselect' /usr/lib/python2.7/dist-packages/lxml/cssselect.pyc imports=[('re', 0, 0, -1), ('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('sys', 1, 1, -1), ('sys', 1, 1, -1)] binaries=[] datas=[]>
+lxml.html._setmixin: None -> <PyModule 'lxml.html._setmixin' /usr/lib/python2.7/dist-packages/lxml/html/_setmixin.pyc imports=[] binaries=[] datas=[]>
 lxml.html.UserDict: None -> None
+lxml.html._dictmixin: None -> <PyModule 'lxml.html._dictmixin' /usr/lib/python2.7/dist-packages/lxml/html/_dictmixin.pyc imports=[('UserDict', 0, 0, -1), ('UserDict.DictMixin', 0, 0, -1)] binaries=[] datas=[]>
 lxml.html.sets: None -> None
 sets: None -> <PyModule 'sets' /usr/lib/python2.7/sets.pyc imports=[('itertools', 0, 0, -1), ('itertools.ifilter', 0, 0, -1), ('itertools.ifilterfalse', 0, 0, -1), ('warnings', 0, 0, -1), ('copy', 1, 0, -1), ('copy.deepcopy', 1, 0, -1)] binaries=[] datas=[]>
-lxml.cssselect: None -> <PyModule 'lxml.cssselect' /home/swim/Documents/PLT-SLAMM/pyinstaller-2.0/swim2/lxml/cssselect.pyc imports=[('sys', 0, 0, -1), ('lxml', 0, 0, -1), ('lxml.etree', 0, 0, -1), ('external_cssselect', 0, 0, -1)] binaries=[] datas=[]>
+lxml.html.sys: None -> None
 lxml.html.os: None -> None
 lxml.html.webbrowser: None -> None
 webbrowser: None -> <PyModule 'webbrowser' /usr/lib/python2.7/webbrowser.pyc imports=[('os', 0, 0, -1), ('shlex', 0, 0, -1), ('sys', 0, 0, -1), ('stat', 0, 0, -1), ('subprocess', 0, 0, -1), ('time', 0, 0, -1), ('copy', 1, 1, -1), ('glob', 1, 0, -1), ('pwd', 1, 0, -1), ('socket', 1, 0, -1), ('tempfile', 1, 0, -1), ('getopt', 1, 0, -1)] binaries=[] datas=[]>
 lxml.html.tempfile: None -> None
-lxml.sys: None -> None
 lxml.lxml: None -> None
-lxml.external_cssselect: None -> None
+lxml.sys: None -> None
 lxml.html.BeautifulSoup: None -> None
 BeautifulSoup: None -> None
   DEL BeautifulSoup

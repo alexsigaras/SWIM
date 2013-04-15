@@ -170,34 +170,102 @@ def p_statement_assign(t):
     t[0].do = MethodType(do, t[0], Node) 
     
 
-def p_statement_if(t):
-    'statement : IF expression DO expression END'
+# def p_statement_if(t):
+#     'statement : IF expression DO statement END'
     
-    t[0] = Node("if", [t[2], t[4], t[1]])
+#     t[0] = Node("if", [t[2], t[4], t[1]])
     
-    def do(self):
-        try:
-            if self.children[0].do():
-                return self.children[1].do()
-        except Exception as e:
-            print("Make sure the expression provided to if can be evaluated as a boolean.\n")
-            raise e
+#     def do(self):
+#         try:
+#             if self.children[0].do():
+#                 return self.children[1].do()
+#         except Exception as e:
+#             print("Make sure the expression provided to if can be evaluated as a boolean.\n")
+#             raise e
              
-    t[0].do = MethodType(do, t[0], Node)
+#     t[0].do = MethodType(do, t[0], Node)
 
 
-def p_statement_if_else(t):
-    'statement : IF expression DO expression ELSE expression END'
+# def p_statement_if_else(t):
+#     'statement : IF expression DO statement ELSE statement END'
     
-    t[0] = Node("ifelse", [t[2], t[4], t[6]], t[1])
+#     t[0] = Node("ifelse", [t[2], t[4], t[6]], t[1])
+
+#     def do(self):
+#         if self.children[0].do():
+#             return self.children[1].do()
+#         else:
+#             return self.children[2].do()
+            
+#     t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_if(t):
+    'statement : IF expression DO statement elif_blocks END'
+
+    t[0] = Node ("if", [t[2],t[4],t[5]])
 
     def do(self):
         if self.children[0].do():
             return self.children[1].do()
         else:
             return self.children[2].do()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_elif_blocks(t):
+    '''elif_blocks : elif_block elif_blocks
+                   | else_block 
+                   | '''
+    try:     
+        t[0] = Node ("elifs", [t[1], t[2]], "elifs")
+
+        def do(self):
+            if self.children[0].do():
+                return self.children[0].do()
+            else:
+                return self.children[1].do()
+
+    except:
+        t[0] = Node ("else", t[1], "else")
+
+        def do(self):
+            return self.children[0].do()
+
+    t[0].do = MethodType(do, t[0], Node)                   
+
+def p_statement_elif_block(t):
+    'elif_block : ELIF expression DO statement'
+
+    t[0] = Node ("elif", [t[2], t[4]])
+
+    def do(self):
+        if self.children[1].do:
+            return self.children[2].do
+        else:
+            return False
+        t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_else_block(t):
+    'else_block : ELSE statement'
+
+    t[0] = Node ("else", t[1])
+
+    def do(self):
+        return self.children[1].do
+
+    t[0].do = MethodType(do, t[0], Node)
+
+
+# IF_ELSE_CONDITION :IF expression DO statement ELIF_BLOCKS END
+
+# ELIF_BLOCKS : ELIF_BLOCK ELIF_BLOCKS
+#             | ELSE_BLOCK
+#             | empty string
+
+# ELIF_BLOCK : ELIF expression DO statement
             
-    t[0].do = MethodType(do, t[0], Node) 
+# ELSE_BLOCK : ELSE statement
+ 
 
 def p_statement_while(t):
     'statement : WHILE expression DO statement END'

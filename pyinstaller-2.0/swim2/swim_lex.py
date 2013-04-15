@@ -36,12 +36,14 @@
 reserved = {
     'if'       : 'IF',
     'else'     : 'ELSE',
+    'elif'     : 'ELIF',
     'do'       : 'DO',
     'True'     : 'TRUE',
     'False'    : 'FALSE',
     'while'    : 'WHILE',
     'for'      : 'FOR',
-    'foreach'  : 'FOREACH',
+    'each'     : 'EACH',
+    'return'   : 'RETURN',
     'and'      : 'AND',
     'or'       : 'OR',
     'xor'      : 'XOR',
@@ -58,7 +60,7 @@ reserved = {
 tokens = [
     'LPAREN','RPAREN', 'SELECTOR', 'COMMA', 'SEMICOLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
-    'AND', 'OR', 'NOT', 'XOR', 'ASSIGN',
+    'ASSIGN',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
@@ -124,7 +126,7 @@ def t_NUMBER(t):
     
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z_0-9]*'
-    t.type = reserved.get(t.value,'ID')    # Check for reserved words
+    t.typeh = reserved.get(t.value,'ID')    # Check for reserved words
     return t
 
 #---------------------------------#

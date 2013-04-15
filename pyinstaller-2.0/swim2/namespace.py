@@ -1,7 +1,7 @@
 class Namespace:
 	'''Namespaces implemented as a stack of hash tables
-		use scope_in() on entrance into new scope
-		use scope_out() on exit out of the scope'''
+		add "@namespace.scope" before function definition to automatically
+		scope in before the procedure and scope out after'''
 	
 
 	def __init__(self, globl = {}):
@@ -45,6 +45,13 @@ class Namespace:
 			self.stack.pop()
 		except ScopeError as e:
 			print e.msg
+
+	def scope(self, func):
+		def decorated(*args, **kwargs):
+			self.scope_in()
+			func(*args, **kwargs)
+			self.scope_out()
+		return decorated
 
 	def assign_global(self, var, val):
 		'assign variable to global scope'

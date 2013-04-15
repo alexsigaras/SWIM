@@ -37,6 +37,8 @@ class Error(Exception):
 	def __str__(self):
 		return "[Line :" + str(self.lineno) + "] " + self.msg 
 	
+	def addMsg(self, newMsg):
+		self.msg += newMsg
 
 class TypeException(Error):
 	''' Unsupported value type'''
@@ -50,4 +52,9 @@ class NameException(Error):
 	def __init__(self, lineno, msg):
 		self.msg = "Undefined name is used in expression, " + msg
 		self.lineno = lineno
-			
+	
+class BooleanException(Error):
+	''' Boolean Problem'''
+	def __init__(self, lineno, msg):
+		self.msg = "Boolean is needed in expression, " + msg
+		self.lineno = lineno

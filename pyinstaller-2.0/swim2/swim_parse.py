@@ -31,6 +31,7 @@
 
 from core import *
 from namespace import Namespace
+from types import *
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -41,6 +42,8 @@ from namespace import Namespace
 from pyquery import PyQuery as pq
 import urllib, getpass
 import re
+
+
 
 # PDF
 from fpdf import fpdf as pdf
@@ -93,45 +96,49 @@ def p_start(t):
 	        	print(result)
         except Error as e:
         	#print 1
-        	print e
+        	#print e
+            print(t[1].traverse())
+            pass
         	#print "[Line :" + str(e.lineno) + "] " + e.msg 
     
     # Saving mode for function and class definition
     ''' TO DO '''
    
 def p_function(t):
-    '''expression : ID LPAREN expression RPAREN SEMICOLON'''
+    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
 
     def do(self):   
         result = self.children.do() 
         if self.leaf == "print" :
-            
-            # Escaped sequence handling
-            escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-            
-            for seq in escaped_sequences:
-                if result.find(seq) != -1:      
-                    result = result.decode('string-escape')
+            if isinstance(result, StringType):
+                # Escaped sequence handling
+                escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
                 
-            # string containing ""              
-            # 2 byte unicode with unicode characters
-            if re.match(r'u"\\u', result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r'^u"', result):
-                result =  result.replace('"','')[1:].decode("utf-8")
-                
-            # string containing ''          
-            elif re.match(r"u'\\u", result):
-                result = unichr(int(result[4:8], 16))
-            # 2 byte unicode with strings
-            elif re.match(r"^u'", result):
-                result = result.replace("'",'')[1:].decode("utf-8")         
-            else:
-                result = result.replace("'",'')            
+                for seq in escaped_sequences:
+                    if result.find(seq) != -1:      
+                        result = result.decode('string-escape')
+                    
+                # string containing ""              
+                # 2 byte unicode with unicode characters
+                if re.match(r'u"\\u', result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r'^u"', result):
+                    result =  result.replace('"','')[1:].decode("utf-8")
+                    
+                # string containing ''          
+                elif re.match(r"u'\\u", result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r"^u'", result):
+                    result = result.replace("'",'')[1:].decode("utf-8")         
+                else:
+                    result = result.replace("'",'')            
 
-            return result               
+                print result       
+            else:
+                print result        
      
         elif self.leaf == "pdf":
             try:
@@ -159,8 +166,25 @@ def p_statement_assign(t):
     def do(self):
         ''' Need to check ID !'''       
         identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node) 
     
+
+def p_statement_if(t):
+    'statement : IF expression DO expression END'
+    
+    t[0] = Node("if", [t[2], t[4], t[1]])
+    
+    def do(self):
+        try:
+            if self.children[0].do():
+                return self.children[1].do()
+        except Exception as e:
+            print("Make sure the expression provided to if can be evaluated as a boolean.\n")
+            raise e
+             
+    t[0].do = MethodType(do, t[0], Node)
+
 
 def p_statement_if_else(t):
     'statement : IF expression DO expression ELSE expression END'
@@ -173,7 +197,18 @@ def p_statement_if_else(t):
         else:
             return self.children[2].do()
             
-    t[0].do = MethodType(do, t[0], Node)  
+    t[0].do = MethodType(do, t[0], Node) 
+
+def p_statement_while(t):
+    'statement : WHILE expression DO statement END'
+
+    t[0] = Node("while", [t[2],t[4],t[1]])
+
+    def do(self):
+        while self.children[0].do(): 
+            self.children[1].do()
+            self.do()
+    t[0].do = MethodType(do, t[0], Node)
        
 def p_statement_expr(t):
     'statement : expression'
@@ -417,7 +452,8 @@ def p_expression_name(t):
         try:
             return identifiers[self.children]
         except LookupError:
-        	raise NameException(t.lexer.lineno, str(self.children))
+            print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
+            raise NameException(t.lexer.lineno, str(self.children))
     t[0].do = MethodType(do, t[0], Node)     
     
 def p_expression_string(t):
@@ -428,22 +464,22 @@ def p_expression_string(t):
         return self.children
     t[0].do = MethodType(do, t[0], Node)     
 
-def p_expression_unistring(t):
-    'expression : ID expression'
+# def p_expression_unistring(t):
+#     'expression : ID expression'
     
-    t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
-    def do(self):
-        try:
-            # u is ID, not node
-            if self.children[0] == 'u':
-                return self.children[0] + self.children[1].do()
-            else:
-                raise Exception()
-        except LookupError:
-            print("Undefined name '%s'" % self.children[0])
-            raise Exception
+#     t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
+#     def do(self):
+#         try:
+#             # u is ID, not node
+#             if self.children[0] == 'u':
+#                 return self.children[0] + self.children[1].do()
+#             else:
+#                 raise Exception()
+#         except LookupError:
+#             print("Undefined name '%s'" % self.children[0])
+#             raise Exception
             
-    t[0].do = MethodType(do, t[0], Node)        
+#     t[0].do = MethodType(do, t[0], Node)        
     
 def p_error(t):
     if t:
