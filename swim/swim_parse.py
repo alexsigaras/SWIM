@@ -81,7 +81,7 @@ identifiers = Namespace()
 #-----------------------------------------------------------------------------# 
 
 def p_start(t):
-    '''start : statement'''
+    '''start : statements'''
     
     # Normal mode
     showNodeTree = False
@@ -102,11 +102,24 @@ def p_start(t):
     # Saving mode for function and class definition
     ''' TO DO '''
 
-    # def p_statements(t):
-    # statements : statement statements
-    #            | statement
-    # t[0] = Node ("statements", [t[1], t[2]])
-   
+def p_statements(t):
+    '''statements : statement statements
+                  | statement'''
+
+    try:
+        t[0] = Node ("statements", [t[1], t[2]], "statements")    
+
+        def do(self):
+            self.children[0].do()
+            self.children[1].do()
+
+    except:
+        t[0] = Node ("statement", t[1], "statement")
+
+        def do(self):
+            self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
 
 def p_function(t):
     '''expression : ID LPAREN statement RPAREN SEMICOLON'''
