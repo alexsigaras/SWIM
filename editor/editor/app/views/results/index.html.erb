@@ -1,0 +1,11 @@
+
+<div class="content">
+	<%= render 'results/rdrawer' %>
+		<div class="offset1 span14">
+			<h2>Results</h2>
+			<article id="resultContent">
+				<%= @retval.html_safe %> 
+			</article>
+		</div>
+	</div>
+<%= javascript_include_tag "drawer" %>
