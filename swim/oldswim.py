@@ -42,8 +42,7 @@ reserved = {
     'False'    : 'FALSE',
     'while'    : 'WHILE',
     'for'      : 'FOR',
-    'each'     : 'EACH',
-    'return'   : 'RETURN',
+    'foreach'  : 'FOREACH',
     'and'      : 'AND',
     'or'       : 'OR',
     'xor'      : 'XOR',
@@ -65,7 +64,7 @@ tokens = [
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
 
-#---------------------------------#
+#---------------------------------# 'AND', 'OR', 'NOT', 'XOR', 
 
 #---------------------------------#
 #     1.3 Identifier Tokens       #

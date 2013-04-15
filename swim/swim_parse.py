@@ -43,8 +43,6 @@ from pyquery import PyQuery as pq
 import urllib, getpass
 import re
 
-
-
 # PDF
 from fpdf import fpdf as pdf
 
@@ -103,7 +101,13 @@ def p_start(t):
     
     # Saving mode for function and class definition
     ''' TO DO '''
+
+    # def p_statements(t):
+    # statements : statement statements
+    #            | statement
+    # t[0] = Node ("statements", [t[1], t[2]])
    
+
 def p_function(t):
     '''expression : ID LPAREN statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
@@ -169,6 +173,7 @@ def p_statement_assign(t):
         return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node) 
     
+#
 
 # def p_statement_if(t):
 #     'statement : IF expression DO statement END'
@@ -226,11 +231,15 @@ def p_statement_elif_blocks(t):
                 return self.children[1].do()
 
     except:
-        t[0] = Node ("else", t[1], "else")
+        try:
+            t[0] = Node ("else", t[1], "else")
 
-        def do(self):
-            return self.children[0].do()
-
+            def do(self):
+                return self.children.do()
+        except:
+            t[0] = Node ("else", None, "else")
+            def do(self):
+                return None
     t[0].do = MethodType(do, t[0], Node)                   
 
 def p_statement_elif_block(t):
@@ -239,19 +248,20 @@ def p_statement_elif_block(t):
     t[0] = Node ("elif", [t[2], t[4]])
 
     def do(self):
-        if self.children[1].do:
-            return self.children[2].do
+        if self.children[0].do():
+            return self.children[1].do
         else:
             return False
-        t[0].do = MethodType(do, t[0], Node)
+    
+    t[0].do = MethodType(do, t[0], Node)
 
 def p_statement_else_block(t):
     'else_block : ELSE statement'
 
-    t[0] = Node ("else", t[1])
+    t[0] = Node ("else", t[2])
 
     def do(self):
-        return self.children[1].do
+        return self.children.do()
 
     t[0].do = MethodType(do, t[0], Node)
 
