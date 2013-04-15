@@ -1,1 +1,3 @@
-../../../../share/pyshared/lxml/pyclasslookup.py
+# dummy module for backwards compatibility
+
+from etree import PythonElementClassLookup
