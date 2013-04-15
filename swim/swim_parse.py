@@ -560,6 +560,7 @@ def p_statement_while(t):
  # def p_statement_for(t):
 #     'statement : FOR LPAREN statement expression statement RPAREN'
      # 'statement : FOR EACH ID IN ID DO statements'
+     # t[0]
 
 
 #----------------------------------------------------#
