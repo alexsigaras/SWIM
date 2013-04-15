@@ -474,7 +474,7 @@ def p_expression_string(t):
 #----------------------------------------------------#
 
 def p_statement_if(t):
-    'statement : IF expression DO statement elif_blocks END'
+    'statement : IF expression DO statements elif_blocks END'
 
     t[0] = Node ("if", [t[2],t[4],t[5]])
 
@@ -512,7 +512,7 @@ def p_statement_elif_blocks(t):
     t[0].do = MethodType(do, t[0], Node)                   
 
 def p_statement_elif_block(t):
-    'elif_block : ELIF expression DO statement'
+    'elif_block : ELIF expression DO statements'
 
     t[0] = Node ("elif", [t[2], t[4]])
 
@@ -525,7 +525,7 @@ def p_statement_elif_block(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_statement_else_block(t):
-    'else_block : ELSE statement'
+    'else_block : ELSE statements'
 
     t[0] = Node ("else", t[2])
 
@@ -541,7 +541,7 @@ def p_statement_else_block(t):
 #----------------------------------------------------#
 
 def p_statement_while(t):
-    'statement : WHILE expression DO statement END'
+    'statement : WHILE expression DO statements END'
 
     t[0] = Node("while", [t[2],t[4],t[1]])
 
@@ -557,8 +557,9 @@ def p_statement_while(t):
 #                 5.6 For Statement                  #
 #----------------------------------------------------#
 
-# def p_statement_for(t):
+ # def p_statement_for(t):
 #     'statement : FOR LPAREN statement expression statement RPAREN'
+     # 'statement : FOR EACH ID IN ID DO statements'
 
 
 #----------------------------------------------------#

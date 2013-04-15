@@ -43,6 +43,7 @@ reserved = {
     'while'    : 'WHILE',
     'for'      : 'FOR',
     'each'     : 'EACH',
+    'in'       : 'IN',
     'return'   : 'RETURN',
     'and'      : 'AND',
     'or'       : 'OR',
