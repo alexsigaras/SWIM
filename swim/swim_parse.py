@@ -186,36 +186,9 @@ def p_statement_assign(t):
         return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node) 
     
-#
-
-# def p_statement_if(t):
-#     'statement : IF expression DO statement END'
-    
-#     t[0] = Node("if", [t[2], t[4], t[1]])
-    
-#     def do(self):
-#         try:
-#             if self.children[0].do():
-#                 return self.children[1].do()
-#         except Exception as e:
-#             print("Make sure the expression provided to if can be evaluated as a boolean.\n")
-#             raise e
-             
-#     t[0].do = MethodType(do, t[0], Node)
-
-
-# def p_statement_if_else(t):
-#     'statement : IF expression DO statement ELSE statement END'
-    
-#     t[0] = Node("ifelse", [t[2], t[4], t[6]], t[1])
-
-#     def do(self):
-#         if self.children[0].do():
-#             return self.children[1].do()
-#         else:
-#             return self.children[2].do()
-            
-#     t[0].do = MethodType(do, t[0], Node)
+#-----------------------------------------------------------------------------#
+#                                 If Statement                                #
+#-----------------------------------------------------------------------------#
 
 def p_statement_if(t):
     'statement : IF expression DO statement elif_blocks END'
@@ -278,17 +251,11 @@ def p_statement_else_block(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
+#-----------------------------------------------------------------------------#
 
-# IF_ELSE_CONDITION :IF expression DO statement ELIF_BLOCKS END
-
-# ELIF_BLOCKS : ELIF_BLOCK ELIF_BLOCKS
-#             | ELSE_BLOCK
-#             | empty string
-
-# ELIF_BLOCK : ELIF expression DO statement
-            
-# ELSE_BLOCK : ELSE statement
- 
+#-----------------------------------------------------------------------------#
+#                              While Statement                                #
+#-----------------------------------------------------------------------------#
 
 def p_statement_while(t):
     'statement : WHILE expression DO statement END'
@@ -300,6 +267,20 @@ def p_statement_while(t):
             self.children[1].do()
             self.do()
     t[0].do = MethodType(do, t[0], Node)
+
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+#                                For Statement                                #
+#-----------------------------------------------------------------------------#
+
+
+
+
+
+
+
+#-----------------------------------------------------------------------------#
        
 def p_statement_expr(t):
     'statement : expression'
