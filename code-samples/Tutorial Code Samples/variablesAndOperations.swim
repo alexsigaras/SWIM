@@ -1,0 +1,57 @@
+#-----------------------------------------------------------------------------#
+#                                                                             #
+#           COLUMBIA UNIVERSITY - FU FOUNDATION SCHOOL OF ENGINEERING         #
+#                             COMPUTER SCIENCE DEPARTMENT                     #
+#                                                                             #
+# COMS W4115 - PROGRAMMING LANGUAGES AND TRANSLATORS                          #
+# Professor A. Aho                                                            #
+#                                                                             #
+# Team 3 Final Project: "SWIM"                                                #
+# Team Mentor: A. Aho                                                         #
+#                                                                             #
+# Team members:                                                               #
+#                                                                             #
+#    Name                    Role                         UNI                 #
+# Morris Hopkins        Project Manager                 mah2250               #
+# Seungwoo Lee          Language Guru                   sl3492                #
+# Lev Brie              System Architect                ldb2001               #
+# Alexandros Sigaras    System Integrator               as4161                #
+# Michal Wolski         Verification and Validation     mtw2135               #
+#                                                                             #
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+# File: variablesAndOperations.swim                                           #
+# Description: Variables and Operations example                               #
+#-----------------------------------------------------------------------------#
+
+// Variables and Arithmetic Operations Program
+
+// Arithmetic declaration
+a = 3;
+b = 5;
+
+// Basic Arithmetic Operations
+sum_result = a + b; 	// Adding variables
+sub_result = a - b; 	// Subtracting variables
+prod_result = a * b; 	// Multiplying variables
+div_result = a / b; 	// Getting the quotient of the division
+mod_result = a % b; 	// Getting the remainder of the division
+pow_result = a ^ b; 	// Exponentiation of variables
+
+// Basic Conditional Operators
+
+// Simple Operator
+if(a < b) do 								// if a is less than b then execute statements in the scope
+	print("It is smaller\n");				// print the line: It is smaller
+end											// end if statement
+
+// Multi-Conditional Operator
+if (a <= b -2) do 							// if a is less than or equal to b - 2 then execute statements in this scope
+	print("Less than or equal\n");			// print the line: Less than or equal
+elif (a < b) do 							// else if a is smaller than b then execute statements in this scope
+	print("Lessa than b");					// print the sentence: Less than b
+	print(", but greater than b - 2\n");	// print the line: , but greater than b - 2
+else										// execute the statements in this scope if no other condition is true
+	print("Greate than or equal\n")			// print the line: Greater than or equal
+end 										// end multi-conditional if statement

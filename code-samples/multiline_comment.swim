@@ -1,0 +1,3 @@
+print("multiline comment"); /* This is a multiline comment
+with more than one line of comments
+			still comments here */

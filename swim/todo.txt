@@ -4,7 +4,7 @@ To Do:
 1) type checking, error handling
 2) function definitions and class definitions
 3) data structures (dictionary, list)
-4) grammar rules for control flow (for loop, if..else, foreach) + additional grammar + multiple statements
+4) grammar rules for control flow (for loop, if..else, foreach) + additional grammar + multiple statements 
 5) making exe file 
 6) namespace/scoping
 
@@ -17,7 +17,23 @@ Seungwoo:	- 5
 Michal:		- 6
 Alex:		- 4
 
+Results:
 
+Alex:
+
+Completed:
+- Reduced Shift/Reduce errors from 23-> 4.
+- Added if...,if...else, if...elif....else conditional statement
+- Added while loop
+- Added grammar supporting multiple statements
+- Added auto increment (i++;) and auto decrement (i--;)
+Pending:
+- For, Foreach
+
+Seungwoo:
+
+Completed:
+- Making the exe file
 
 Stage 2
 
