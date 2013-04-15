@@ -141,7 +141,7 @@ def p_statements(t):
 
 
 def p_function(t):
-    '''expression : ID LPAREN param_statement RPAREN SEMICOLON'''
+    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
 
     def do(self):   
