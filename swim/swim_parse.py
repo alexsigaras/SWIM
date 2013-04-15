@@ -32,6 +32,7 @@
 from core import *
 from namespace import Namespace
 from types import *
+
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -48,14 +49,17 @@ from fpdf import fpdf as pdf
 
 # Error handling
 from swim_exception import *
+
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
+
 def stripe_quotation(string):
     result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
     return result
+
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
@@ -68,7 +72,7 @@ precedence = (
     ('left', 'MULTIPLY','DIVIDE','MOD'),
     ('right', 'NOT'),
     ('right', 'POW'),
-    ('right', 'UMINUS'),
+    ('right', 'UMINUS', 'UPLUS'),
     )
 
 # Namaspace stack
@@ -79,6 +83,10 @@ identifiers = Namespace()
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
 #-----------------------------------------------------------------------------# 
+
+#----------------------------------------------------#
+#                   5.1 Starting                     #
+#----------------------------------------------------#
 
 def p_start(t):
     '''start : statements'''
@@ -102,10 +110,15 @@ def p_start(t):
     # Saving mode for function and class definition
     ''' TO DO '''
 
+#----------------------------------------------------#
+
+#----------------------------------------------------#
+#                  5.2 Statements                    #
+#----------------------------------------------------#
+
 def p_statements(t):
     '''statements : statement statements
                   | statement'''
-
     try:
         t[0] = Node ("statements", [t[1], t[2]], "statements")    
 
@@ -119,6 +132,12 @@ def p_statements(t):
         def do(self):
             self.children.do()
     t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+
+#----------------------------------------------------#
+#                  5.3 Functions                     #
+#----------------------------------------------------#
 
 
 def p_function(t):
@@ -175,20 +194,53 @@ def p_function(t):
                 raise Exception     
         
     t[0].do = MethodType(do, t[0], Node)     
+
+#----------------------------------------------------#
+
+#----------------------------------------------------#
+#                  5.4 Assignment                    #
+#----------------------------------------------------#
     
 def p_statement_assign(t):
     'statement : ID ASSIGN expression SEMICOLON'
-    
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self):
         ''' Need to check ID !'''       
         identifiers[self.children[0]] = self.children[1].do()
         return identifiers[self.children[0]]
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+
+#----------------------------------------------------#
+#                5.5 Auto Increment                  #
+#----------------------------------------------------# 
+
+def p_statement_increment(t):
+    'statement : expression PLUS PLUS SEMICOLON'
+    t[0] = Node("increment", t[1], "++")
+    def do(self):
+        identifiers[self.children.children] = self.children.do() + 1
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+
+#----------------------------------------------------#
+#                5.6 Auto Decrement                  #
+#----------------------------------------------------# 
+
+def p_statement_decrement(t):
+    'statement : expression MINUS MINUS SEMICOLON'
+    t[0] = Node("decrement", t[1], "--")
+    def do(self):
+        identifiers[self.children.children] = self.children.do() - 1
     t[0].do = MethodType(do, t[0], Node) 
+
+#----------------------------------------------------#
     
-#-----------------------------------------------------------------------------#
-#                                 If Statement                                #
-#-----------------------------------------------------------------------------#
+#----------------------------------------------------#
+#               5.7  If Statement                    #
+#----------------------------------------------------#
 
 def p_statement_if(t):
     'statement : IF expression DO statement elif_blocks END'
@@ -251,11 +303,11 @@ def p_statement_else_block(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-#-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
-#                              While Statement                                #
-#-----------------------------------------------------------------------------#
+#----------------------------------------------------#
+    
+#----------------------------------------------------#
+#                 5.8 While Statement                #
+#----------------------------------------------------#
 
 def p_statement_while(t):
     'statement : WHILE expression DO statement END'
@@ -268,19 +320,20 @@ def p_statement_while(t):
             self.do()
     t[0].do = MethodType(do, t[0], Node)
 
-#-----------------------------------------------------------------------------#
+#----------------------------------------------------#
 
-#-----------------------------------------------------------------------------#
-#                                For Statement                                #
-#-----------------------------------------------------------------------------#
+#----------------------------------------------------#
+#                 5.9 For Statement                  #
+#----------------------------------------------------#
 
-
-
-
-
+# def p_statement_for(t):
+#     'statement : FOR statement COMMA expression COMMA statement'
 
 
-#-----------------------------------------------------------------------------#
+
+
+
+#----------------------------------------------------#
        
 def p_statement_expr(t):
     'statement : expression'
@@ -456,7 +509,7 @@ def p_expression_uminus(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 def p_expression_uplus(t):
-    'expression : PLUS expression %prec PLUS'
+    'expression : PLUS expression %prec UPLUS'
     
     t[0] = Node("uplus", t[2], 'uplus')
     def do(self):
