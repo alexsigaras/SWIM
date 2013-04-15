@@ -40,3 +40,9 @@ Stage 2
 1) file import, import statements (from)
 2) Connection to SNS Twitter (future)
 3) Image
+
+Seungwoo : Function Definition
+Michal: Testing
+Lev: Class Definition
+Morris:
+Alex: Data structures
