@@ -141,7 +141,7 @@ def p_statements(t):
 
 
 def p_function(t):
-    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
+    '''expression : ID LPAREN param_statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
 
     def do(self):   
@@ -327,13 +327,23 @@ def p_statement_while(t):
 #----------------------------------------------------#
 
 # def p_statement_for(t):
-#     'statement : FOR statement COMMA expression COMMA statement'
+#     'statement : FOR LPAREN statement expression statement RPAREN'
 
 
 
 
 
 #----------------------------------------------------#
+
+def p_param_statement(t):
+    'param_statement : ID ASSIGN expression'
+    t[0] = Node("param_statement", [t[1], t[3]], t[2])
+    def do(self):
+        ''' Need to check ID !'''       
+        identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
+    t[0].do = MethodType(do, t[0], Node)
+
        
 def p_statement_expr(t):
     'statement : expression'
