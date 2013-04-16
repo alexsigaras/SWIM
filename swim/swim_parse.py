@@ -620,10 +620,54 @@ def p_element(t):
 #                  5.8 Dictionary                    #
 #----------------------------------------------------#
 
-# def p_function(t):
-    # '''statement: ID ASSIGN LCBRACKET .... RCBRACKET SEMICOLON'''
 # tel = {'jack': 4098, 'sape': 4139}
+def p_dictionary(t):
+    '''statement : ID ASSIGN LCBRACKET dictionary_objects RCBRACKET SEMICOLON'''
+    t[0] = Node("dictionary", [t[1],t[4]], "dictionary")
+    def do(self):
+        ''' Need to check ID !'''       
+        identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
+    t[0].do = MethodType(do, t[0], Node)
 
+
+def p_dictionary_objects(t):
+    '''dictionary_objects : dictionary_object COMMA dictionary_objects
+                          | dictionary_object'''
+    try:
+        t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
+
+        def do(self):
+            return list([self.children[0].do()] + self.children[1].do())
+
+    except:
+        t[0] = Node ("dictionary_object", t[1], "dictionary_object")
+
+        def do(self):
+            return [self.children.do()]
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_object(t):
+    'dictionary_object : key COLON value'
+    t[0] = Node("dictionary_object", [t[1], t[2]], "dictionary_object")
+    def do(self):
+        return [self.children.do()]
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_key(t):
+    '''key : STRING1
+           | STRING2'''
+    t[0] = Node("key", stripe_quotation(t[1]), 'key')
+    def do(self):
+        return self.children
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_value(t):
+    'value : expression'
+    t[0] = Node("value", t[1], 'value')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
 
