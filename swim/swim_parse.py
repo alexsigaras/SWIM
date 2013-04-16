@@ -566,10 +566,15 @@ def p_statement_while(t):
 #                 5.6 For Statement                  #
 #----------------------------------------------------#
 
- # def p_statement_for(t):
-#     'statement : FOR LPAREN statement expression statement RPAREN'
-     # 'statement : FOR EACH ID IN ID DO statements'
-     # t[0]
+def p_statement_for(t):
+    #'statement : FOR LPAREN statement expression statement RPAREN'
+    'statement : FOR EACH ID IN elements DO statements END'
+    t[0] = Node("for", [t[3], t[5], t[8]] , "for")
+    def do(self):
+        for temp in self.children[0]:
+            self.children[1].do()
+            self.do()
+    t[0].do = MethodType(do, t[0], Node)
 
 
 #----------------------------------------------------#
