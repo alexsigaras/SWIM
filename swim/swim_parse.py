@@ -63,19 +63,19 @@ def stripe_quotation(string):
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-#                           4.  Parsing Rules                                 #
+#                           4.  Precedence                                    #
 #-----------------------------------------------------------------------------#
 
 precedence = (
-    ('nonassoc', 'LESS_THAN','LESS_THAN_OR_EQUAL','EQUALS','NOT_EQUALS','GREATER_THAN','GREATER_THAN_OR_EQUAL',),
-    ('left', 'PLUS','MINUS','COMMA','AND','OR','XOR'),
-    ('left', 'MULTIPLY','DIVIDE','MOD'),
+    ('nonassoc', 'LESS_THAN', 'LESS_THAN_OR_EQUAL', 'EQUALS', 'NOT_EQUALS', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL'),
+    ('left', 'PLUS', 'MINUS', 'COMMA', 'AND', 'OR', 'XOR'),
+    ('left', 'MULTIPLY', 'DIVIDE', 'MOD'),
     ('right', 'NOT'),
     ('right', 'POW'),
-    ('right', 'UMINUS', 'UPLUS'),
-    )
+    ('left', 'UPLUS', 'UMINUS'),
+)
 
-# Namaspace stack
+# Namespace stack
 identifiers = Namespace() 
 
 #-----------------------------------------------------------------------------#
@@ -134,8 +134,22 @@ def p_statements(t):
     t[0].do = MethodType(do, t[0], Node)
 
 # def p_statement(t):
-#     '''statement : ___statement
-#                  | ___statement
+#     '''statement :
+
+# Single Statement
+#                  | statement_expression
+#                  | statement_assign
+#                  | statement_increment
+#                  | statement_decrement
+#                  | statement_list
+#                  | statement_dictionary
+
+# Compound Statement
+#                  | statement_if
+#                  | statement_while
+#                  | statement_for
+#                  | statement_function
+
 
 #----------------------------------------------------#
 
@@ -457,7 +471,32 @@ def p_expression_string(t):
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self):
         return self.children
-    t[0].do = MethodType(do, t[0], Node)     
+    t[0].do = MethodType(do, t[0], Node)
+
+# def p_expression(t):
+#     '''expression :
+
+# Unary Expression
+#                  | expression_boolean
+#                  | expression_number
+#                  | expression_id
+#                  | expression_string
+#                  | expression_list
+#                  | expression_parse_text
+#                  | expression_group
+#                  | expression_uplus
+#                  | expression_uminus
+#                  | expression_not_op
+#                  | expression_string
+#                  | expression_string
+#                  | expression_string
+
+# Binary Expression
+#                  | expression_arithmetic_op
+#                  | expression_cond_op
+
+#---------------------------------------------------------#
+
 
 # def p_expression_unistring(t):
 #     'expression : ID expression'
@@ -675,9 +714,8 @@ def p_dictionary_value(t):
 #                  5.9 Functions                     #
 #----------------------------------------------------#
 
-
 def p_function(t):
-    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
+    '''statement : ID LPAREN statement RPAREN SEMICOLON'''
     t[0] = Node("function", t[3], t[1])
 
     def do(self):   
