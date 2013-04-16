@@ -814,9 +814,7 @@ def p_expression_cond_op(t):
 #         except LookupError:
 #             print("Undefined name '%s'" % self.children[0])
 #             raise Exception
-            
 #     t[0].do = MethodType(do, t[0], Node)  
-
 #----------------------------------------------------#
 #                     5.4 Error                      #
 #----------------------------------------------------#
