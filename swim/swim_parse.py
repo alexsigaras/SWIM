@@ -160,6 +160,10 @@ def p_compound_stmt(t):
 #                 5.2.1 Simple Statements                      #
 #--------------------------------------------------------------#
 
+#----------------------------------------------------#
+#               5.2.1.1 Expression                   #
+#----------------------------------------------------#
+
 def p_statement_expr(t):
     'expression_stmt : expression'
     
@@ -169,7 +173,7 @@ def p_statement_expr(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#               5.2.1.1 Assignment                   #
+#               5.2.1.2 Assignment                   #
 #----------------------------------------------------#
     
 def p_statement_assign(t):
@@ -182,7 +186,7 @@ def p_statement_assign(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                5.2.1.2 Auto Increment              #
+#                5.2.1.3 Auto Increment              #
 #----------------------------------------------------# 
 
 def p_statement_increment(t):
@@ -193,7 +197,7 @@ def p_statement_increment(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                5.2.1.3 Auto Decrement              #
+#                5.2.1.4 Auto Decrement              #
 #----------------------------------------------------# 
 
 def p_statement_decrement(t):
@@ -204,7 +208,7 @@ def p_statement_decrement(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
-#                  5.2.1.4 List                      #
+#                  5.2.1.5 List                      #
 #----------------------------------------------------#
 
 def p_list(t):
@@ -242,7 +246,7 @@ def p_element(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
-#                 5.2.1.5 Dictionary                 #
+#                 5.2.1.6 Dictionary                 #
 #----------------------------------------------------#
 
 def p_dictionary(t):
@@ -454,16 +458,16 @@ def p_function(t):
 #--------------------------------------------------------------#
 
 def p_expression(t):
-    '''expression : simple_expr
-                  | compound_expr'''
+    '''expression : unary_expr
+                  | binary_expr'''
     
     t[0] = Node("expr", t[1], 'expr')
     def do(self):
         return self.children.do()
     t[0].do = MethodType(do, t[0], Node)
 
-def p_simple_expr(t):
-    '''simple_expr : boolean_expr
+def p_unary_expr(t):
+    '''unary_expr : boolean_expr
                    | not_expr
                    | number_expr
                    | id_expr
@@ -479,9 +483,9 @@ def p_simple_expr(t):
         return self.children.do()
     t[0].do = MethodType(do, t[0], Node)
 
-def p_compound_expr(t):
-    '''compound_expr : arithmetic_expr
-                     | conditional_expr'''
+def p_binary_expr(t):
+    '''binary_expr : arithmetic_expr
+                   | conditional_expr'''
     
     t[0] = Node("expr", t[1], 'expr')
     def do(self):
