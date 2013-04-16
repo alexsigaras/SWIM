@@ -368,8 +368,8 @@ def p_expression_not_op(t):
     t[0].do = MethodType(do, t[0], Node)    
     
 def p_expression_boolean(t):
-    '''expression : TRUE
-                  | FALSE'''
+    '''expression_boolean : TRUE
+                          | FALSE'''
                   
     t[0] = Node("boolean", t[1], 'boolean')
     
@@ -473,27 +473,43 @@ def p_expression_string(t):
         return self.children
     t[0].do = MethodType(do, t[0], Node)
 
-# def p_expression(t):
-#     '''expression :
+#-----------------------------------------------------#
+def p_expression(t):
+    '''expression : simple_expr
+                  '''
+                  # | compound_expr
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
 
-# Unary Expression
-#                  | expression_boolean
-#                  | expression_number
-#                  | expression_id
-#                  | expression_string
-#                  | expression_list
-#                  | expression_parse_text
-#                  | expression_group
-#                  | expression_uplus
-#                  | expression_uminus
-#                  | expression_not_op
-#                  | expression_string
-#                  | expression_string
-#                  | expression_string
+def p_simple_expr(t):
+    '''simple_expr : expression_boolean
+                   '''
 
-# Binary Expression
-#                  | expression_arithmetic_op
-#                  | expression_cond_op
+                   # | expression_number
+                   # | expression_id
+                   # | expression_string
+                   # | expression_list
+                   # | expression_parse_text
+                   # | expression_group
+                   # | expression_uplus
+                   # | expression_uminus
+                   # | expression_not_op
+
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+# def p_compound_expr(t):
+#     '''compound_expr : expression_arithmetic_op
+#                      | expression_cond_op'''
+    
+#     t[0] = Node("expr", t[1], 'expr')
+#     def do(self):
+#         return self.children.do()
+#     t[0].do = MethodType(do, t[0], Node)
 
 #---------------------------------------------------------#
 
@@ -659,7 +675,6 @@ def p_element(t):
 #                  5.8 Dictionary                    #
 #----------------------------------------------------#
 
-# tel = {'jack': 4098, 'sape': 4139}
 def p_dictionary(t):
     '''statement : ID ASSIGN LCBRACKET dictionary_objects RCBRACKET SEMICOLON'''
     t[0] = Node("dictionary", [t[1],t[4]], "dictionary")
@@ -677,20 +692,21 @@ def p_dictionary_objects(t):
         t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
 
         def do(self):
-            return list([self.children[0].do()] + self.children[1].do())
+            temp  = self.children[0].do()
+            temp.update(self.children[1].do())
+            return temp
 
     except:
         t[0] = Node ("dictionary_object", t[1], "dictionary_object")
-
         def do(self):
-            return [self.children.do()]
+            return self.children.do()
     t[0].do = MethodType(do, t[0], Node)
 
 def p_dictionary_object(t):
     'dictionary_object : key COLON value'
-    t[0] = Node("dictionary_object", [t[1], t[2]], "dictionary_object")
+    t[0] = Node("dictionary_object", [t[1], t[3]], "dictionary_object")
     def do(self):
-        return [self.children.do()]
+        return {self.children[0].do() : self.children[1].do()}
     t[0].do = MethodType(do, t[0], Node)
 
 def p_dictionary_key(t):
