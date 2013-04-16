@@ -1,0 +1,7 @@
+websites = ["http://www.cs.columbia.edu/~aho/","http://www.cs.columbia.edu/"];
+tags = ["h1","h4"];
+for each website in websites do 
+for each tag in tags do 
+print(@(tag, website));
+end  
+end

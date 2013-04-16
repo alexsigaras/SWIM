@@ -454,7 +454,7 @@ def p_expression_name(t):
 def p_expression_string(t):
     '''expression : STRING1
                   | STRING2''' 
-    t[0] = Node("string", t[1], 'string')
+    t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self):
         return self.children
     t[0].do = MethodType(do, t[0], Node)     
@@ -568,14 +568,13 @@ def p_statement_while(t):
 
 def p_statement_for(t):
     #'statement : FOR LPAREN statement expression statement RPAREN'
-    'statement : FOR EACH ID IN elements DO statements END'
-    t[0] = Node("for", [t[3], t[5], t[8]] , "for")
+    'statement : FOR EACH ID IN element DO statements END'
+    t[0] = Node("for", [t[3], t[5], t[7]] , "for")
     def do(self):
-        for temp in self.children[0]:
-            self.children[1].do()
-            self.do()
+        for temp in self.children[1].do():
+            identifiers[self.children[0]] = temp
+            self.children[2].do()
     t[0].do = MethodType(do, t[0], Node)
-
 
 #----------------------------------------------------#
 
