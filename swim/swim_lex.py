@@ -74,8 +74,10 @@ tokens = [
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
-t_LBRACKET  = r'\['
-t_RBRACKET  = r'\]'
+t_LSBRACKET  = r'\['
+t_RSBRACKET  = r'\]'
+t_LCBRACKET = r'\{'
+t_RCBRACKET = r'\}'
 t_SELECTOR  = r'@'
 t_COMMA     = r','
 t_SEMICOLON = r';'

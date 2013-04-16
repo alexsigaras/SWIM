@@ -423,7 +423,7 @@ def p_expression_parse_text(t):
     t[0].do = MethodType(do, t[0], Node)      
 
 def p_expression_list(t):
-    'expression : LBRACKET elements RBRACKET'
+    'expression : LSBRACKET elements RSBRACKET'
 
     t[0] = Node("list", t[2], "list")
 
@@ -567,7 +567,6 @@ def p_statement_while(t):
 #----------------------------------------------------#
 
 def p_statement_for(t):
-    #'statement : FOR LPAREN statement expression statement RPAREN'
     'statement : FOR EACH ID IN element DO statements END'
     t[0] = Node("for", [t[3], t[5], t[7]] , "for")
     def do(self):
@@ -583,7 +582,7 @@ def p_statement_for(t):
 #----------------------------------------------------#
 
 def p_list(t):
-    'statement : ID ASSIGN LBRACKET elements RBRACKET SEMICOLON'
+    'statement : ID ASSIGN LSBRACKET elements RSBRACKET SEMICOLON'
 
     t[0] = Node("list", [t[1],t[4]], "elements")
     def do(self):
@@ -617,9 +616,19 @@ def p_element(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
+#----------------------------------------------------#
+#                  5.8 Dictionary                    #
+#----------------------------------------------------#
+
+# def p_function(t):
+    # '''statement: ID ASSIGN LCBRACKET .... RCBRACKET SEMICOLON'''
+# tel = {'jack': 4098, 'sape': 4139}
+
 
 #----------------------------------------------------#
-#                  5.8 Functions                     #
+
+#----------------------------------------------------#
+#                  5.9 Functions                     #
 #----------------------------------------------------#
 
 
@@ -690,7 +699,7 @@ def p_function(t):
 #     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                    5.9 Error                       #
+#                    5.10 Error                      #
 #----------------------------------------------------#
 
 def p_error(t):
