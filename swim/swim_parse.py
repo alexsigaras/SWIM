@@ -206,8 +206,43 @@ def p_statement_decrement(t):
 #                       5.3 Expressions                        #
 #--------------------------------------------------------------#
 
+def p_expression(t):
+    '''expression : simple_expr
+                  | compound_expr'''
+    
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_simple_expr(t):
+    '''simple_expr : boolean_expr
+                   | not_expr
+                   | number_expr
+                   | id_expr
+                   | string_expr
+                   | list_expr
+                   | parse_text_expr
+                   | group_expr
+                   | uplus_expr
+                   | uminus_expr'''
+
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_compound_expr(t):
+    '''compound_expr : arithmetic_expr
+                     | conditional_expr'''
+    
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
 #--------------------------------------------------------------#
-#                   5.3.1 Binary Operations                    #
+#                   5.3.1 Compound Expressions                 #
 #--------------------------------------------------------------#
 
 #----------------------------------------------------#
@@ -215,12 +250,12 @@ def p_statement_decrement(t):
 #----------------------------------------------------#
 
 def p_expression_arithmetic_op(t):
-    '''expression : expression PLUS expression 
-                  | expression MINUS expression 
-                  | expression MULTIPLY expression 
-                  | expression DIVIDE expression
-                  | expression POW expression 
-                  | expression MOD expression'''
+    '''arithmetic_expr : expression PLUS expression 
+                       | expression MINUS expression 
+                       | expression MULTIPLY expression 
+                       | expression DIVIDE expression
+                       | expression POW expression 
+                       | expression MOD expression'''
     
     t[0] = Node("arithmetic_op", [t[1], t[3]], t[2])
                     
@@ -277,15 +312,15 @@ def p_expression_arithmetic_op(t):
 #----------------------------------------------------#
 
 def p_expression_cond_op(t):
-    '''expression : expression AND expression
-                  | expression OR expression
-                  | expression XOR expression
-                  | expression EQUALS expression
-                  | expression NOT_EQUALS expression
-                  | expression GREATER_THAN expression
-                  | expression LESS_THAN expression
-                  | expression GREATER_THAN_OR_EQUAL expression
-                  | expression LESS_THAN_OR_EQUAL expression'''
+    '''conditional_expr : expression AND expression
+                        | expression OR expression
+                        | expression XOR expression
+                        | expression EQUALS expression
+                        | expression NOT_EQUALS expression
+                        | expression GREATER_THAN expression
+                        | expression LESS_THAN expression
+                        | expression GREATER_THAN_OR_EQUAL expression
+                        | expression LESS_THAN_OR_EQUAL expression'''
 
     t[0] = Node("conditional_op", [t[1], t[3]], t[2])
                     
@@ -359,7 +394,7 @@ def p_expression_cond_op(t):
 #--------------------------------------------------------------#
           
 def p_expression_not_op(t):
-    '''expression : NOT expression'''
+    '''not_expr : NOT expression'''
     
     t[0] = Node("logop", t[2], t[1])
     def do(self):
@@ -368,8 +403,8 @@ def p_expression_not_op(t):
     t[0].do = MethodType(do, t[0], Node)    
     
 def p_expression_boolean(t):
-    '''expression_boolean : TRUE
-                          | FALSE'''
+    '''boolean_expr : TRUE
+                    | FALSE'''
                   
     t[0] = Node("boolean", t[1], 'boolean')
     
@@ -382,7 +417,7 @@ def p_expression_boolean(t):
     t[0].do = MethodType(do, t[0], Node)
                         
 def p_expression_uminus(t):
-    'expression : MINUS expression %prec UMINUS'
+    'uminus_expr : MINUS expression %prec UMINUS'
     
     t[0] = Node("uminus", t[2], 'uminus')
     def do(self):
@@ -394,7 +429,7 @@ def p_expression_uminus(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 def p_expression_uplus(t):
-    'expression : PLUS expression %prec UPLUS'
+    'uplus_expr : PLUS expression %prec UPLUS'
     
     t[0] = Node("uplus", t[2], 'uplus')
     def do(self):
@@ -406,7 +441,7 @@ def p_expression_uplus(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 def p_expression_group(t):
-    'expression : LPAREN expression RPAREN'
+    'group_expr : LPAREN expression RPAREN'
     
     t[0] = Node("group", t[2], 'group')
     def do(self):
@@ -415,7 +450,7 @@ def p_expression_group(t):
     t[0].do = MethodType(do, t[0], Node)    
 
 def p_expression_parse_text(t):
-    'expression : SELECTOR LPAREN elements RPAREN'
+    'parse_text_expr : SELECTOR LPAREN elements RPAREN'
     
     t[0] = Node("selector", t[3], t[1])
     def do(self):
@@ -437,7 +472,7 @@ def p_expression_parse_text(t):
     t[0].do = MethodType(do, t[0], Node)      
 
 def p_expression_list(t):
-    'expression : LSBRACKET elements RSBRACKET'
+    'list_expr : LSBRACKET elements RSBRACKET'
 
     t[0] = Node("list", t[2], "list")
 
@@ -446,7 +481,7 @@ def p_expression_list(t):
     t[0].do = MethodType(do, t[0], Node)
         
 def p_expression_number(t):
-    'expression : NUMBER'
+    'number_expr : NUMBER'
 
     t[0] = Node("number", t[1], 'number')
     def do(self):
@@ -454,7 +489,7 @@ def p_expression_number(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 def p_expression_name(t):
-    'expression : ID'
+    'id_expr : ID'
     
     t[0] = Node("name", str(t[1]), 'name')
     def do(self):
@@ -466,7 +501,7 @@ def p_expression_name(t):
     t[0].do = MethodType(do, t[0], Node)     
     
 def p_expression_string(t):
-    '''expression : STRING1
+    '''string_expr : STRING1
                   | STRING2''' 
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self):
@@ -474,42 +509,7 @@ def p_expression_string(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #-----------------------------------------------------#
-def p_expression(t):
-    '''expression : simple_expr
-                  '''
-                  # | compound_expr
-    t[0] = Node("expr", t[1], 'expr')
-    def do(self):
-        return self.children.do()
-    t[0].do = MethodType(do, t[0], Node)
 
-def p_simple_expr(t):
-    '''simple_expr : expression_boolean
-                   '''
-
-                   # | expression_number
-                   # | expression_id
-                   # | expression_string
-                   # | expression_list
-                   # | expression_parse_text
-                   # | expression_group
-                   # | expression_uplus
-                   # | expression_uminus
-                   # | expression_not_op
-
-    t[0] = Node("expr", t[1], 'expr')
-    def do(self):
-        return self.children.do()
-    t[0].do = MethodType(do, t[0], Node)
-
-# def p_compound_expr(t):
-#     '''compound_expr : expression_arithmetic_op
-#                      | expression_cond_op'''
-    
-#     t[0] = Node("expr", t[1], 'expr')
-#     def do(self):
-#         return self.children.do()
-#     t[0].do = MethodType(do, t[0], Node)
 
 #---------------------------------------------------------#
 
