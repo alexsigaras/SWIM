@@ -207,7 +207,7 @@ def p_statement_increment(t):
     'increment_stmt : expression PLUS PLUS SEMICOLON'
     t[0] = Node("increment", t[1], "++")
     def do(self, id = None):
-        identifiers[self.children.children] = self.children.do(id) + 1
+        identifiers[self.children.do(True)] = self.children.do() + 1
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
@@ -218,7 +218,7 @@ def p_statement_decrement(t):
     'decrement_stmt : expression MINUS MINUS SEMICOLON'
     t[0] = Node("decrement", t[1], "--")
     def do(self, id = None):
-        identifiers[self.children.children] = self.children.do(id) - 1
+        identifiers[self.children.do(True)] = self.children.do() - 1
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
