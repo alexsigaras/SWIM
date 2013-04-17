@@ -1,4 +1,1 @@
-a=@(".post", "http://www.arstechnica.com")
-b=@("body", "http://www.nytimes.com")
-c=a+b;
-c
+a=1;
