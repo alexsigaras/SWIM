@@ -1,0 +1,5 @@
+fun cool(url) do 
+    print(@("body" url));
+end
+
+cool("http://www.nytimes.com");

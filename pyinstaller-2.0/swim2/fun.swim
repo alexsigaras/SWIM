@@ -1,0 +1,2 @@
+fun foo(a) do print(a); end
+foo(1);
