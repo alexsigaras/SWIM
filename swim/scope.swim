@@ -1,0 +1,9 @@
+a=1; // global var
+while a<10 do
+print(a);
+a++;
+c=2;
+print(c);
+end
+
+print(c);

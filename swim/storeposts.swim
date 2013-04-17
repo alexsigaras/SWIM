@@ -1,0 +1,7 @@
+websites = ["http://www.arstechnica.com", "http://www.engadget.com", "http://www.gizmodo.com"];
+selector = ".post";
+results =[""];
+for each website in webstites do
+	doc = @(selector, website);
+	results = results + [doc];
+end
