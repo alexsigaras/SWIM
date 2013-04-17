@@ -347,12 +347,14 @@ def p_dictionary_object(t):
 def p_dictionary_key(t):
     '''key : STRING1
            | STRING2'''
+
     t[0] = Node("key", stripe_quotation(t[1]), 'key')
     def do(self):
         try:
             return self.children
         except:
             raise Exception
+
     t[0].do = MethodType(do, t[0], Node)
 
 def p_dictionary_value(t):
@@ -536,7 +538,7 @@ def p_function_call(t):
             #         identifiers[id] = self.children[1].do()[cnt]
             #         cnt += 1
             except:
-                print "Function paramter error!"
+                print "Function parameter error!"
                 return None 
             #print "here"
             #print self.children[0]
@@ -724,13 +726,14 @@ def p_expression_name(t):
 
 def p_expression_string(t):
     '''string_expr : STRING1
-                  | STRING2''' 
+                   | STRING2''' 
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self):
         try:
             return self.children
         except:
             raise Exception
+
     t[0].do = MethodType(do, t[0], Node)  
 
 #----------------------------------------------------#
