@@ -467,10 +467,10 @@ def p_statement_while(t):
     t[0] = Node("while", [t[2],t[4],t[1]])
 
     def do(self, id = None):
-        try:
-            while self.children[0].do(id): 
-                self.children[1].do(id)
-                self.do(id)
+        try:            
+            while self.children[0].do(): 
+                self.children[1].do()
+                self.do()
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -500,6 +500,7 @@ def p_function_decl(t):
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
     def do(self, id = None):
         identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
+        return self
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
