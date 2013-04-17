@@ -59,7 +59,7 @@ reserved = {
 #---------------------------------#
 
 tokens = [
-    'LPAREN','RPAREN', 'LBRACKET', 'RBRACKET', 'SELECTOR', 'COMMA', 'SEMICOLON',
+    'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'SEMICOLON', 'COLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
     'ASSIGN',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
@@ -74,10 +74,13 @@ tokens = [
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
-t_LBRACKET  = r'\['
-t_RBRACKET  = r'\]'
+t_LSBRACKET  = r'\['
+t_RSBRACKET  = r'\]'
+t_LCBRACKET = r'\{'
+t_RCBRACKET = r'\}'
 t_SELECTOR  = r'@'
 t_COMMA     = r','
+t_COLON     = r':'
 t_SEMICOLON = r';'
 
 #---------------------------------#

@@ -81,7 +81,9 @@ else:
         #     else:
         #         yacc.parse(line)
         s = fn.read()
-        s = s.replace('\n','')
+        #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
+        s = s.replace('\n',' ')
+        print s
         #print s
         yacc.parse(s)
         fn.close()  

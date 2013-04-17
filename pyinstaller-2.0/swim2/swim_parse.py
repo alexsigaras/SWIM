@@ -34,8 +34,6 @@ from namespace import Namespace
 from types import *
 
 #-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
 #                   2. External Library Import                                #
 #-----------------------------------------------------------------------------#
 
@@ -51,8 +49,6 @@ from fpdf import fpdf as pdf
 from swim_exception import *
 
 #-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
 
@@ -61,24 +57,20 @@ def stripe_quotation(string):
     return result
 
 #-----------------------------------------------------------------------------#
-
-#-----------------------------------------------------------------------------#
-#                           4.  Parsing Rules                                 #
+#                           4.  Precedence                                    #
 #-----------------------------------------------------------------------------#
 
 precedence = (
-    ('nonassoc', 'LESS_THAN','LESS_THAN_OR_EQUAL','EQUALS','NOT_EQUALS','GREATER_THAN','GREATER_THAN_OR_EQUAL',),
-    ('left', 'PLUS','MINUS','COMMA','AND','OR','XOR'),
-    ('left', 'MULTIPLY','DIVIDE','MOD'),
+    ('nonassoc', 'LESS_THAN', 'LESS_THAN_OR_EQUAL', 'EQUALS', 'NOT_EQUALS', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL'),
+    ('left', 'PLUS', 'MINUS', 'COMMA', 'AND', 'OR', 'XOR'),
+    ('left', 'MULTIPLY', 'DIVIDE', 'MOD'),
     ('right', 'NOT'),
     ('right', 'POW'),
-    ('right', 'UMINUS', 'UPLUS'),
-    )
+    ('left', 'UPLUS', 'UMINUS'),
+)
 
-# Namaspace stack
+# Namespace stack
 identifiers = Namespace() 
-
-#-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
@@ -110,8 +102,6 @@ def p_start(t):
     # Saving mode for function and class definition
     ''' TO DO '''
 
-#----------------------------------------------------#
-
 #--------------------------------------------------------------#
 #                       5.2 Statements                         #
 #--------------------------------------------------------------#
@@ -133,14 +123,49 @@ def p_statements(t):
             self.children.do()
     t[0].do = MethodType(do, t[0], Node)
 
-# def p_statement(t):
-#     '''statement : ___statement
-#                  | ___statement
+def p_statement(t):
+    '''statement : simple_stmt
+                 | compound_stmt'''
 
+    t[0] = Node("stmt", t[1], 'stmt')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_simple_stmt(t):
+    '''simple_stmt : expression_stmt
+                   | assign_stmt
+                   | increment_stmt
+                   | decrement_stmt
+                   | list_stmt
+                   | dictionary_stmt'''
+
+    t[0] = Node("stmt", t[1], 'stmt')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_compound_stmt(t):
+    '''compound_stmt : if_stmt
+                 | while_stmt
+                 | for_stmt
+                 | function_stmt'''
+    
+    t[0] = Node("stmt", t[1], 'stmt')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+#--------------------------------------------------------------#
+#                 5.2.1 Simple Statements                      #
+#--------------------------------------------------------------#
+
+#----------------------------------------------------#
+#               5.2.1.1 Expression                   #
 #----------------------------------------------------#
 
 def p_statement_expr(t):
-    'statement : expression'
+    'expression_stmt : expression'
     
     t[0] = Node("expr", t[1], 'expr')
     def do(self):
@@ -148,11 +173,11 @@ def p_statement_expr(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                  5.2. Assignment                   #
+#               5.2.1.2 Assignment                   #
 #----------------------------------------------------#
     
 def p_statement_assign(t):
-    'statement : ID ASSIGN expression SEMICOLON'
+    'assign_stmt : ID ASSIGN expression SEMICOLON'
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self):
         ''' Need to check ID !'''       
@@ -161,39 +186,472 @@ def p_statement_assign(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-
-#----------------------------------------------------#
-#                5.2. Auto Increment                 #
+#                5.2.1.3 Auto Increment              #
 #----------------------------------------------------# 
 
 def p_statement_increment(t):
-    'statement : expression PLUS PLUS SEMICOLON'
+    'increment_stmt : expression PLUS PLUS SEMICOLON'
     t[0] = Node("increment", t[1], "++")
     def do(self):
         identifiers[self.children.children] = self.children.do() + 1
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-
-#----------------------------------------------------#
-#                5.2. Auto Decrement                 #
+#                5.2.1.4 Auto Decrement              #
 #----------------------------------------------------# 
 
 def p_statement_decrement(t):
-    'statement : expression MINUS MINUS SEMICOLON'
+    'decrement_stmt : expression MINUS MINUS SEMICOLON'
     t[0] = Node("decrement", t[1], "--")
     def do(self):
         identifiers[self.children.children] = self.children.do() - 1
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
+#                  5.2.1.5 List                      #
+#----------------------------------------------------#
+
+def p_list(t):
+    'list_stmt : ID ASSIGN LSBRACKET elements RSBRACKET SEMICOLON'
+
+    t[0] = Node("list", [t[1],t[4]], "elements")
+    def do(self):
+        ''' Need to check ID !'''       
+        identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_elements(t):
+    '''elements : element COMMA elements
+                | element'''
+    try:
+        t[0] = Node ("elements", [t[1], t[3]], "elements")    
+
+        def do(self):
+            return list([self.children[0].do()] + self.children[1].do())
+
+    except:
+        t[0] = Node ("element", t[1], "element")
+
+        def do(self):
+            return [self.children.do()]
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_element(t):
+    '''element : expression'''
+    
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node) 
+
+#----------------------------------------------------#
+#                 5.2.1.6 Dictionary                 #
+#----------------------------------------------------#
+
+def p_dictionary(t):
+    '''dictionary_stmt : ID ASSIGN LCBRACKET dictionary_objects RCBRACKET SEMICOLON'''
+    t[0] = Node("dictionary", [t[1],t[4]], "dictionary")
+    def do(self):
+        ''' Need to check ID !'''       
+        identifiers[self.children[0]] = self.children[1].do()
+        return identifiers[self.children[0]]
+    t[0].do = MethodType(do, t[0], Node)
+
+
+def p_dictionary_objects(t):
+    '''dictionary_objects : dictionary_object COMMA dictionary_objects
+                          | dictionary_object'''
+    try:
+        t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
+
+        def do(self):
+            temp  = self.children[0].do()
+            temp.update(self.children[1].do())
+            return temp
+
+    except:
+        t[0] = Node ("dictionary_object", t[1], "dictionary_object")
+        def do(self):
+            return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_object(t):
+    'dictionary_object : key COLON value'
+    t[0] = Node("dictionary_object", [t[1], t[3]], "dictionary_object")
+    def do(self):
+        return {self.children[0].do() : self.children[1].do()}
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_key(t):
+    '''key : STRING1
+           | STRING2'''
+    t[0] = Node("key", stripe_quotation(t[1]), 'key')
+    def do(self):
+        return self.children
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_value(t):
+    'value : expression'
+    t[0] = Node("value", t[1], 'value')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+#--------------------------------------------------------------#
+#                   5.2.2 Compound Statements                  #
+#--------------------------------------------------------------#
+
+#----------------------------------------------------#
+#               5.2.2.1  If Statement                #
+#----------------------------------------------------#
+
+def p_statement_if(t):
+    'if_stmt : IF expression DO statements elif_blocks END'
+
+    t[0] = Node ("if", [t[2],t[4],t[5]])
+
+    def do(self):
+        if self.children[0].do():
+            return self.children[1].do()
+        else:
+            return self.children[2].do()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_elif_blocks(t):
+    '''elif_blocks : elif_block elif_blocks
+                   | else_block 
+                   | '''
+    try:     
+        t[0] = Node ("elifs", [t[1], t[2]], "elifs")
+
+        def do(self):
+            if self.children[0].do():
+                return self.children[0].do()
+            else:
+                return self.children[1].do()
+    except:
+        try:
+            t[0] = Node ("else", t[1], "else")
+
+            def do(self):
+                return self.children.do()
+        except:
+            t[0] = Node ("else", None, "else")
+            def do(self):
+                return None
+    t[0].do = MethodType(do, t[0], Node)                   
+
+def p_statement_elif_block(t):
+    'elif_block : ELIF expression DO statements'
+
+    t[0] = Node ("elif", [t[2], t[4]])
+
+    def do(self):
+        if self.children[0].do():
+            return self.children[1].do
+        else:
+            return False
+    
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_else_block(t):
+    'else_block : ELSE statements'
+
+    t[0] = Node ("else", t[2])
+
+    def do(self):
+        return self.children.do()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#              5.2.2.2 While Statement               #
+#----------------------------------------------------#
+
+def p_statement_while(t):
+    'while_stmt : WHILE expression DO statements END'
+
+    t[0] = Node("while", [t[2],t[4],t[1]])
+
+    def do(self):
+        while self.children[0].do(): 
+            self.children[1].do()
+            self.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#             5.2.2.3 For Statement                  #
+#----------------------------------------------------#
+
+def p_statement_for(t):
+    'for_stmt : FOR EACH ID IN element DO statements END'
+    t[0] = Node("for", [t[3], t[5], t[7]] , "for")
+    def do(self):
+        for temp in self.children[1].do():
+            identifiers[self.children[0]] = temp
+            self.children[2].do()
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#              5.2.2.4 Functions                     #
+#----------------------------------------------------#
+
+def p_function(t):
+    '''function_stmt : ID LPAREN statement RPAREN SEMICOLON'''
+    t[0] = Node("function", t[3], t[1])
+
+    def do(self):   
+        result = self.children.do() 
+        if self.leaf == "print" :
+            if isinstance(result, StringType):
+                # Escaped sequence handling
+                escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
+                
+                for seq in escaped_sequences:
+                    if result.find(seq) != -1:      
+                        result = result.decode('string-escape')
+                    
+                # string containing ""              
+                # 2 byte unicode with unicode characters
+                if re.match(r'u"\\u', result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r'^u"', result):
+                    result =  result.replace('"','')[1:].decode("utf-8")
+                    
+                # string containing ''          
+                elif re.match(r"u'\\u", result):
+                    result = unichr(int(result[4:8], 16))
+                # 2 byte unicode with strings
+                elif re.match(r"^u'", result):
+                    result = result.replace("'",'')[1:].decode("utf-8")         
+                else:
+                    result = result.replace("'",'')            
+
+                print result       
+            else:
+                print result        
+     
+        elif self.leaf == "pdf":
+            try:
+                #print stripe_quotation(t[3][0])
+                f = pdf.FPDF()
+                f.add_page()
+                f.set_font('Arial','B',16)          
+                f.multi_cell(w=200,h=5,txt = stripe_quotation(self.children.do()[0])) 
+                
+                # for our user test
+                filename = stripe_quotation(self.children.do()[1])
+                filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
+                
+                f.output(os.path.join("..","doc",filename),'F')
+            except:
+                print("Mismatch grammar for pdf output!")
+                raise Exception     
+        
+    t[0].do = MethodType(do, t[0], Node)     
 
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
 #--------------------------------------------------------------#
 
+def p_expression(t):
+    '''expression : unary_expr
+                  | binary_expr'''
+    
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_unary_expr(t):
+    '''unary_expr : boolean_expr
+                   | not_expr
+                   | number_expr
+                   | id_expr
+                   | string_expr
+                   | list_expr
+                   | parse_text_expr
+                   | group_expr
+                   | uplus_expr
+                   | uminus_expr'''
+
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_binary_expr(t):
+    '''binary_expr : arithmetic_expr
+                   | conditional_expr'''
+    
+    t[0] = Node("expr", t[1], 'expr')
+    def do(self):
+        return self.children.do()
+    t[0].do = MethodType(do, t[0], Node)
+
 #--------------------------------------------------------------#
-#                   5.3.1 Binary Operations                    #
+#                   5.3.1 Simple Expressions                   #
+#--------------------------------------------------------------#
+
+#----------------------------------------------------#
+#               5.3.1.1 Boolean                      #
+#----------------------------------------------------#
+def p_expression_boolean(t):
+    '''boolean_expr : TRUE
+                    | FALSE'''
+                  
+    t[0] = Node("boolean", t[1], 'boolean')
+    
+    if t[1] == "True":
+        def do(self):
+            return True
+    elif t[1] == "False":
+        def do(self):
+            return False
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#               5.3.1.2 Not                          #
+#----------------------------------------------------#
+
+def p_expression_not_op(t):
+    '''not_expr : NOT expression'''
+    
+    t[0] = Node("logop", t[2], t[1])
+    def do(self):
+        return not self.children.do()
+        
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#              5.3.1.3 Number                        #
+#----------------------------------------------------#
+
+def p_expression_number(t):
+    'number_expr : NUMBER'
+
+    t[0] = Node("number", t[1], 'number')
+    def do(self):
+        return self.children
+    t[0].do = MethodType(do, t[0], Node) 
+
+#----------------------------------------------------#
+#              5.3.1.4 ID                            #
+#----------------------------------------------------#
+
+def p_expression_name(t):
+    'id_expr : ID'
+    
+    t[0] = Node("name", str(t[1]), 'name')
+    def do(self):
+        try:
+            return identifiers[self.children]
+        except LookupError:
+            print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
+            raise NameException(t.lexer.lineno, str(self.children))
+    t[0].do = MethodType(do, t[0], Node)     
+
+#----------------------------------------------------#
+#              5.3.1.4 String                        #
+#----------------------------------------------------#
+
+def p_expression_string(t):
+    '''string_expr : STRING1
+                  | STRING2''' 
+    t[0] = Node("string", stripe_quotation(t[1]), 'string')
+    def do(self):
+        return self.children
+    t[0].do = MethodType(do, t[0], Node)  
+
+#----------------------------------------------------#
+#               5.3.1.5 List                         #
+#----------------------------------------------------#
+
+def p_expression_list(t):
+    'list_expr : LSBRACKET elements RSBRACKET'
+
+    t[0] = Node("list", t[2], "list")
+
+    def do(self):
+        return list( self.children.do() )
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#               5.3.1.6 Parse                        #
+#----------------------------------------------------#
+
+def p_expression_parse_text(t):
+    'parse_text_expr : SELECTOR LPAREN elements RPAREN'
+    
+    t[0] = Node("selector", t[3], t[1])
+    def do(self):
+        try:
+            raw_selector = self.children.do()[0]
+            selector = stripe_quotation(raw_selector)
+            raw_url = self.children.do()[1]
+
+            if type(raw_url) == str:
+                url = stripe_quotation(raw_url)
+                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+                return d(selector)
+            else:
+                return raw_url(selector)
+        except Exception:
+            print("Mismatch grammar for parsing!")
+            raise Exception
+                
+    t[0].do = MethodType(do, t[0], Node)      
+
+#----------------------------------------------------#
+#               5.3.1.7 Group                        #
+#----------------------------------------------------#
+
+def p_expression_group(t):
+    'group_expr : LPAREN expression RPAREN'
+    
+    t[0] = Node("group", t[2], 'group')
+    def do(self):
+        return self.children.do()    
+        
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#               5.3.1.8 Unary Plus                   #
+#----------------------------------------------------#
+
+def p_expression_uplus(t):
+    'uplus_expr : PLUS expression %prec UPLUS'
+    
+    t[0] = Node("uplus", t[2], 'uplus')
+    def do(self):
+        try:
+            return self.children.do()
+        except:
+            raise Exception
+        
+    t[0].do = MethodType(do, t[0], Node) 
+
+#----------------------------------------------------#
+#              5.3.1.9 Unary Minus                   #
+#----------------------------------------------------#
+
+def p_expression_uminus(t):
+    'uminus_expr : MINUS expression %prec UMINUS'
+    
+    t[0] = Node("uminus", t[2], 'uminus')
+    def do(self):
+        try:
+            return -self.children.do()
+        except:
+            raise Exception
+        
+    t[0].do = MethodType(do, t[0], Node) 
+    
+#--------------------------------------------------------------#
+#                   5.3.1 Compound Expressions                 #
 #--------------------------------------------------------------#
 
 #----------------------------------------------------#
@@ -201,12 +659,12 @@ def p_statement_decrement(t):
 #----------------------------------------------------#
 
 def p_expression_arithmetic_op(t):
-    '''expression : expression PLUS expression 
-                  | expression MINUS expression 
-                  | expression MULTIPLY expression 
-                  | expression DIVIDE expression
-                  | expression POW expression 
-                  | expression MOD expression'''
+    '''arithmetic_expr : expression PLUS expression 
+                       | expression MINUS expression 
+                       | expression MULTIPLY expression 
+                       | expression DIVIDE expression
+                       | expression POW expression 
+                       | expression MOD expression'''
     
     t[0] = Node("arithmetic_op", [t[1], t[3]], t[2])
                     
@@ -263,15 +721,15 @@ def p_expression_arithmetic_op(t):
 #----------------------------------------------------#
 
 def p_expression_cond_op(t):
-    '''expression : expression AND expression
-                  | expression OR expression
-                  | expression XOR expression
-                  | expression EQUALS expression
-                  | expression NOT_EQUALS expression
-                  | expression GREATER_THAN expression
-                  | expression LESS_THAN expression
-                  | expression GREATER_THAN_OR_EQUAL expression
-                  | expression LESS_THAN_OR_EQUAL expression'''
+    '''conditional_expr : expression AND expression
+                        | expression OR expression
+                        | expression XOR expression
+                        | expression EQUALS expression
+                        | expression NOT_EQUALS expression
+                        | expression GREATER_THAN expression
+                        | expression LESS_THAN expression
+                        | expression GREATER_THAN_OR_EQUAL expression
+                        | expression LESS_THAN_OR_EQUAL expression'''
 
     t[0] = Node("conditional_op", [t[1], t[3]], t[2])
                     
@@ -342,123 +800,6 @@ def p_expression_cond_op(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#--------------------------------------------------------------#
-          
-def p_expression_not_op(t):
-    '''expression : NOT expression'''
-    
-    t[0] = Node("logop", t[2], t[1])
-    def do(self):
-        return not self.children.do()
-        
-    t[0].do = MethodType(do, t[0], Node)    
-    
-def p_expression_boolean(t):
-    '''expression : TRUE
-                  | FALSE'''
-                  
-    t[0] = Node("boolean", t[1], 'boolean')
-    
-    if t[1] == "True":
-        def do(self):
-            return True
-    elif t[1] == "False":
-        def do(self):
-            return False
-    t[0].do = MethodType(do, t[0], Node)
-                        
-def p_expression_uminus(t):
-    'expression : MINUS expression %prec UMINUS'
-    
-    t[0] = Node("uminus", t[2], 'uminus')
-    def do(self):
-        try:
-            return -self.children.do()
-        except:
-            raise Exception
-        
-    t[0].do = MethodType(do, t[0], Node) 
-
-def p_expression_uplus(t):
-    'expression : PLUS expression %prec UPLUS'
-    
-    t[0] = Node("uplus", t[2], 'uplus')
-    def do(self):
-        try:
-            return self.children.do()
-        except:
-            raise Exception
-        
-    t[0].do = MethodType(do, t[0], Node) 
-
-def p_expression_group(t):
-    'expression : LPAREN expression RPAREN'
-    
-    t[0] = Node("group", t[2], 'group')
-    def do(self):
-        return self.children.do()    
-        
-    t[0].do = MethodType(do, t[0], Node)    
-
-def p_expression_parse_text(t):
-    'expression : SELECTOR LPAREN elements RPAREN'
-    
-    t[0] = Node("selector", t[3], t[1])
-    def do(self):
-        try:
-            raw_selector = self.children.do()[0]
-            selector = stripe_quotation(raw_selector)
-            raw_url = self.children.do()[1]
-
-            if type(raw_url) == str:
-                url = stripe_quotation(raw_url)
-                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-                return d(selector)
-            else:
-                return raw_url(selector)
-        except Exception:
-            print("Mismatch grammar for parsing!")
-            raise Exception
-                
-    t[0].do = MethodType(do, t[0], Node)      
-
-def p_expression_list(t):
-    'expression : LBRACKET elements RBRACKET'
-
-    t[0] = Node("list", t[2], "list")
-
-    def do(self):
-        return list( self.children.do() )
-    t[0].do = MethodType(do, t[0], Node)
-        
-def p_expression_number(t):
-    'expression : NUMBER'
-
-    t[0] = Node("number", t[1], 'number')
-    def do(self):
-        return self.children
-    t[0].do = MethodType(do, t[0], Node) 
-
-def p_expression_name(t):
-    'expression : ID'
-    
-    t[0] = Node("name", str(t[1]), 'name')
-    def do(self):
-        try:
-            return identifiers[self.children]
-        except LookupError:
-            print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
-            raise NameException(t.lexer.lineno, str(self.children))
-    t[0].do = MethodType(do, t[0], Node)     
-    
-def p_expression_string(t):
-    '''expression : STRING1
-                  | STRING2''' 
-    t[0] = Node("string", t[1], 'string')
-    def do(self):
-        return self.children
-    t[0].do = MethodType(do, t[0], Node)     
-
 # def p_expression_unistring(t):
 #     'expression : ID expression'
     
@@ -473,225 +814,9 @@ def p_expression_string(t):
 #         except LookupError:
 #             print("Undefined name '%s'" % self.children[0])
 #             raise Exception
-            
 #     t[0].do = MethodType(do, t[0], Node)  
-
-#--------------------------------------------------------------#
-
 #----------------------------------------------------#
-#               5.4  If Statement                    #
-#----------------------------------------------------#
-
-def p_statement_if(t):
-    'statement : IF expression DO statements elif_blocks END'
-
-    t[0] = Node ("if", [t[2],t[4],t[5]])
-
-    def do(self):
-        if self.children[0].do():
-            return self.children[1].do()
-        else:
-            return self.children[2].do()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_statement_elif_blocks(t):
-    '''elif_blocks : elif_block elif_blocks
-                   | else_block 
-                   | '''
-    try:     
-        t[0] = Node ("elifs", [t[1], t[2]], "elifs")
-
-        def do(self):
-            if self.children[0].do():
-                return self.children[0].do()
-            else:
-                return self.children[1].do()
-
-    except:
-        try:
-            t[0] = Node ("else", t[1], "else")
-
-            def do(self):
-                return self.children.do()
-        except:
-            t[0] = Node ("else", None, "else")
-            def do(self):
-                return None
-    t[0].do = MethodType(do, t[0], Node)                   
-
-def p_statement_elif_block(t):
-    'elif_block : ELIF expression DO statements'
-
-    t[0] = Node ("elif", [t[2], t[4]])
-
-    def do(self):
-        if self.children[0].do():
-            return self.children[1].do
-        else:
-            return False
-    
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_statement_else_block(t):
-    'else_block : ELSE statements'
-
-    t[0] = Node ("else", t[2])
-
-    def do(self):
-        return self.children.do()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-#----------------------------------------------------#
-    
-#----------------------------------------------------#
-#                 5.5 While Statement                #
-#----------------------------------------------------#
-
-def p_statement_while(t):
-    'statement : WHILE expression DO statements END'
-
-    t[0] = Node("while", [t[2],t[4],t[1]])
-
-    def do(self):
-        while self.children[0].do(): 
-            self.children[1].do()
-            self.do()
-    t[0].do = MethodType(do, t[0], Node)
-
-#----------------------------------------------------#
-
-#----------------------------------------------------#
-#                 5.6 For Statement                  #
-#----------------------------------------------------#
-
-def p_statement_for(t):
-    #'statement : FOR LPAREN statement expression statement RPAREN'
-    'statement : FOR EACH ID IN elements DO statements END'
-    t[0] = Node("for", [t[3], t[5], t[8]] , "for")
-    def do(self):
-        for temp in self.children[0]:
-            self.children[1].do()
-            self.do()
-    t[0].do = MethodType(do, t[0], Node)
-
-
-#----------------------------------------------------#
-
-#----------------------------------------------------#
-#                  5.7 List                          #
-#----------------------------------------------------#
-
-def p_list(t):
-    'statement : ID ASSIGN LBRACKET elements RBRACKET SEMICOLON'
-
-    t[0] = Node("list", [t[1],t[4]], "elements")
-    def do(self):
-        ''' Need to check ID !'''       
-        identifiers[self.children[0]] = self.children[1].do()
-        return identifiers[self.children[0]]
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_elements(t):
-    '''elements : element COMMA elements
-                | element'''
-    try:
-        t[0] = Node ("elements", [t[1], t[3]], "elements")    
-
-        def do(self):
-            return list([self.children[0].do()] + self.children[1].do())
-
-    except:
-        t[0] = Node ("element", t[1], "element")
-
-        def do(self):
-            return [self.children.do()]
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_element(t):
-    '''element : expression'''
-    
-    t[0] = Node("expr", t[1], 'expr')
-    def do(self):
-        return self.children.do()
-    t[0].do = MethodType(do, t[0], Node) 
-
-#----------------------------------------------------#
-
-#----------------------------------------------------#
-#                  5.8 Functions                     #
-#----------------------------------------------------#
-
-
-def p_function(t):
-    '''expression : ID LPAREN statement RPAREN SEMICOLON'''
-    t[0] = Node("function", t[3], t[1])
-
-    def do(self):   
-        result = self.children.do() 
-        if self.leaf == "print" :
-            if isinstance(result, StringType):
-                # Escaped sequence handling
-                escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-                
-                for seq in escaped_sequences:
-                    if result.find(seq) != -1:      
-                        result = result.decode('string-escape')
-                    
-                # string containing ""              
-                # 2 byte unicode with unicode characters
-                if re.match(r'u"\\u', result):
-                    result = unichr(int(result[4:8], 16))
-                # 2 byte unicode with strings
-                elif re.match(r'^u"', result):
-                    result =  result.replace('"','')[1:].decode("utf-8")
-                    
-                # string containing ''          
-                elif re.match(r"u'\\u", result):
-                    result = unichr(int(result[4:8], 16))
-                # 2 byte unicode with strings
-                elif re.match(r"^u'", result):
-                    result = result.replace("'",'')[1:].decode("utf-8")         
-                else:
-                    result = result.replace("'",'')            
-
-                print result       
-            else:
-                print result        
-     
-        elif self.leaf == "pdf":
-            try:
-                #print stripe_quotation(t[3][0])
-                f = pdf.FPDF()
-                f.add_page()
-                f.set_font('Arial','B',16)          
-                f.multi_cell(w=200,h=5,txt = stripe_quotation(self.children.do()[0])) 
-                
-                # for our user test
-                filename = stripe_quotation(self.children.do()[1])
-                filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-                
-                f.output(os.path.join("..","doc",filename),'F')
-            except:
-                print("Mismatch grammar for pdf output!")
-                raise Exception     
-        
-    t[0].do = MethodType(do, t[0], Node)     
-
-#----------------------------------------------------#
-
-# def p_param_statement(t):
-#     'param_statement : ID ASSIGN expression'
-#     t[0] = Node("param_statement", [t[1], t[3]], t[2])
-#     def do(self):
-#         ''' Need to check ID !'''       
-#         identifiers[self.children[0]] = self.children[1].do()
-#         return identifiers[self.children[0]]
-#     t[0].do = MethodType(do, t[0], Node)
-
-#----------------------------------------------------#
-#                    5.9 Error                       #
+#                     5.4 Error                      #
 #----------------------------------------------------#
 
 def p_error(t):
