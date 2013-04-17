@@ -1,0 +1,11 @@
+websites = ["http://www.cs.columbia.edu/~aho/","http://www.cs.columbia.edu/"]; # single comment
+
+tags = ["h1","h4"]; /* this is another comment that is here as well */
+
+# for each website in websites do
+
+#for each tag in tags do
+
+#	print(@(tag, website));
+#		end
+#end
