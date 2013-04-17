@@ -4,12 +4,12 @@ jQuery(document).ready(function($){
 
 		if(this.checked) 
 		{
-			alert("set");
+			// alert("set");
 			$('#resultContent').empty().append(x);
 		}
 		else
 		{
-			alert("unset");
+			// alert("unset");
 			x = $('#resultContent').html();
 			$('#resultContent').html($('#resultContent').text());
 		}

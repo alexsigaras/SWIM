@@ -1,1 +1,1 @@
-@(".post", "http://www.arstechnica.com")
+print("hello");

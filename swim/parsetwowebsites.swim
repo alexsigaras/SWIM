@@ -1,11 +1,13 @@
-websites = ["http://www.cs.columbia.edu/~aho/","http://www.cs.columbia.edu/"]; # single comment
-
-tags = ["h1","h4"]; /* this is another comment that is here as well */
-
-# for each website in websites do
-
-#for each tag in tags do
-
-#	print(@(tag, website));
-#		end
-#end
+websites = ["http://www.cs.columbia.edu/~aho/","http://www.cs.columbia.edu/"];
+tags = ["h1","h4"];
+results = ["michal"];
+for each website in websites do
+for each tag in tags do
+a = @(tag, website);
+print(a);
+results = results + a;
+end
+end
+for each result in results do
+print(result);
+end

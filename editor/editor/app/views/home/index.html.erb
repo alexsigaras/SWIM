@@ -1,8 +1,13 @@
 <%= javascript_include_tag "ace/ace" %>
-<div id="content">
+<div id="content span14">
 	<%= render 'home/drawer' %>
-	<div class="row" >
-		<%= render 'home/editor' %>
+	<div class="row span14" >
+		
+			<%= render 'home/editor' %>
+		
+			<%= javascript_include_tag "console" %>
+			<div id="console"></div>
+
 	</div>
 </div>
 <%= javascript_include_tag "drawer" %>

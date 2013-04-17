@@ -8,7 +8,7 @@ editor.setShowInvisibles(true);
 
 $("#results").click(function() {
 	$('#token').val(editor.getValue());
-	alert($('#token').val());
+	//alert($('#token').val());
 	$('#submitme').click();
 });
 
@@ -21,14 +21,18 @@ $("#clear").click(function() {
 
 //editor styling and sizing
 $("#editor").height($(window).height()*.95);
-$("#editor").width($(window).width()*.88);
+$("#editor").width($(window).width()*.44);
+  $("#console").height($(window).height()*.95);
+  $("#console").width($(window).width()*.44);
 editor.resize()
 
 
 
 $(window).resize(function(){
 	$("#editor").height($(window).height()*.95);
-	$("#editor").width($(window).width()*.88);
+	$("#editor").width($(window).width()*.44);
+  $("#console").height($(window).height()*.95);
+  $("#console").width($(window).width()*.44);
 	editor.resize()
 });
 

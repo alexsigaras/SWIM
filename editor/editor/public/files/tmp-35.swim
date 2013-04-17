@@ -1,4 +1,4 @@
-a=@(".post", "http://www.arstechnica.com");
-b=@("body", "http://www.nytimes.com");
+a=1;
+b=2;
 c=a+b;
 print(c);

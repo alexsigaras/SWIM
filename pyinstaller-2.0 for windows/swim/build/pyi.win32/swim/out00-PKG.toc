@@ -1,0 +1,12 @@
+('C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\swim\\build\\pyi.win32\\swim\\out00-PKG.pkg',
+ {'BINARY': 1,
+  'DATA': 1,
+  'EXECUTABLE': 1,
+  'EXTENSION': 1,
+  'PYMODULE': 1,
+  'PYSOURCE': 1},
+ [('out00-PYZ.pyz', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\swim\\build\\pyi.win32\\swim\\out00-PYZ.pyz', 'PYZ'), ('iu', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\PyInstaller\\loader\\iu.pyc', 'PYMODULE'), ('struct', 'C:\\Python27\\lib\\struct.pyc', 'PYMODULE'), ('archive', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\PyInstaller\\loader\\archive.pyc', 'PYMODULE'), ('_pyi_bootstrap', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\support\\_pyi_bootstrap.py', 'PYSOURCE'), ('carchive', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\PyInstaller\\loader\\carchive.py', 'PYSOURCE'), ('_pyi_egg_install.py', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\support/_pyi_egg_install.py', 'PYSOURCE'), ('pyi_rth_encodings', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\support/rthooks/pyi_rth_encodings.py', 'PYSOURCE'), ('swim', 'swim.py', 'PYSOURCE'), ('swim.exe.manifest', 'C:\\Users\\Alex\\Dropbox\\Github\\Private\\PLT-SLAMM\\pyinstaller-2.0 for windows\\swim\\build\\pyi.win32\\swim\\swim.exe.manifest', 'BINARY')],
+ 1,
+ None,
+ True,
+ 0)

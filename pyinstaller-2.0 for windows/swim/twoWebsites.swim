@@ -1,0 +1,4 @@
+a = @(".post", "http://www.arstechnica.com");
+b = @("body", "http://nytimes.com");
+c = a + b;
+print(c);
