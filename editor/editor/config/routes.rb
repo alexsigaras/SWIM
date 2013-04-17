@@ -5,6 +5,8 @@ Editor::Application.routes.draw do
   root :to => 'home#index'
  
 
+  get "code" => "application#runit"
+
 
 
 
