@@ -50,6 +50,8 @@ reserved = {
     'xor'      : 'XOR',
     'not'      : 'NOT',
     'end'      : 'END',
+    'fun'      : 'FUN', 
+    'class'    : 'CLASS',
 }
 
 #---------------------------------#

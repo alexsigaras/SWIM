@@ -48,6 +48,9 @@ from fpdf import fpdf as pdf
 # Error handling
 from swim_exception import *
 
+# Builtin functions
+from swim_builtin import *
+
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
@@ -138,7 +141,8 @@ def p_simple_stmt(t):
                    | increment_stmt
                    | decrement_stmt
                    | list_stmt
-                   | dictionary_stmt'''
+                   | dictionary_stmt
+                   | function_call'''
 
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self):
@@ -148,8 +152,8 @@ def p_simple_stmt(t):
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
                  | while_stmt
-                 | for_stmt
-                 | function_stmt'''
+                 | for_stmt                 
+                 | function_decl'''
     
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self):
@@ -398,60 +402,103 @@ def p_statement_for(t):
 #              5.2.2.4 Functions                     #
 #----------------------------------------------------#
 
-def p_function(t):
-    '''function_stmt : ID LPAREN statement RPAREN SEMICOLON'''
-    t[0] = Node("function", t[3], t[1])
+def p_function_decl(t):
+    '''function_decl : FUN ID LPAREN elements RPAREN DO statements END'''
+    t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
+    def do(self):
+        identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
+    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
-    def do(self):   
-        result = self.children.do() 
-        if self.leaf == "print" :
-            if isinstance(result, StringType):
-                # Escaped sequence handling
-                escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-                
-                for seq in escaped_sequences:
-                    if result.find(seq) != -1:      
-                        result = result.decode('string-escape')
-                    
-                # string containing ""              
-                # 2 byte unicode with unicode characters
-                if re.match(r'u"\\u', result):
-                    result = unichr(int(result[4:8], 16))
-                # 2 byte unicode with strings
-                elif re.match(r'^u"', result):
-                    result =  result.replace('"','')[1:].decode("utf-8")
-                    
-                # string containing ''          
-                elif re.match(r"u'\\u", result):
-                    result = unichr(int(result[4:8], 16))
-                # 2 byte unicode with strings
-                elif re.match(r"^u'", result):
-                    result = result.replace("'",'')[1:].decode("utf-8")         
-                else:
-                    result = result.replace("'",'')            
+def p_function_call(t):
+    '''function_call : ID LPAREN elements RPAREN SEMICOLON'''
+    t[0] = Node("funcall", [t[1],t[3]], 'funcall')
+  
 
-                print result       
-            else:
-                print result        
-     
-        elif self.leaf == "pdf":
+    if t[1] == "print":
+        def do(self):
+            builtin_print(self.children[1].do()[0])
+    elif t[1] == "pdf":
+        def do(self):
+            buildtin_pdf(self.children[1].do())
+    else:      
+        @identifiers.scope
+        def do(self):
+            #result = self.children.do()
+            #identifiers[self.children[0]] = self.children[1].do()
+            # args = indentifiers[self.children[2][0]]
+            # body = indentifiers[self.children[2][0]]
+
+            func = identifiers[self.children[0]]
+            #print "here should go here"
+            #print func.children[1].children.children.children.children.children
             try:
-                #print stripe_quotation(t[3][0])
-                f = pdf.FPDF()
-                f.add_page()
-                f.set_font('Arial','B',16)          
-                f.multi_cell(w=200,h=5,txt = stripe_quotation(self.children.do()[0])) 
-                
-                # for our user test
-                filename = stripe_quotation(self.children.do()[1])
-                filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-                
-                f.output(os.path.join("..","doc",filename),'F')
+                cnt = 0
+                #print func.children[1].children[0]
+                identifiers[func.children[1].children.children.children.children.children] = self.children[1].do()[cnt]
+            #     for id in func.children[1].do().children.children.children.children:
+            #         #print id
+            #         identifiers[id] = self.children[1].do()[cnt]
+            #         cnt += 1
             except:
-                print("Mismatch grammar for pdf output!")
-                raise Exception     
-        
-    t[0].do = MethodType(do, t[0], Node)     
+                print "Function paramter error!"
+                return None 
+            #print "here"
+            #print self.children[0]
+            identifiers[self.children[0]].children[2].do()
+    t[0].do = MethodType(do, t[0], Node)
+
+# def p_function_declaration_statement(p):
+#     'function_declaration_statement : FUNCTION is_reference STRING LPAREN parameter_list RPAREN LBRACE inner_statement_list RBRACE'
+#     p[0] = ast.Function(p[3], p[5], p[8], p[2], lineno=p.lineno(1))
+
+# def p_function_call(p):
+#     '''function_call : namespace_name LPAREN function_call_parameter_list RPAREN
+#                      | NS_SEPARATOR namespace_name LPAREN function_call_parameter_list RPAREN
+#                      | NAMESPACE NS_SEPARATOR namespace_name LPAREN function_call_parameter_list RPAREN'''
+#     if len(p) == 5:
+#         p[0] = ast.FunctionCall(p[1], p[3], lineno=p.lineno(2))
+#     elif len(p) == 6:
+#         p[0] = ast.FunctionCall(p[1] + p[2], p[4], lineno=p.lineno(1))
+#     else:
+#         p[0] = ast.FunctionCall(p[1] + p[2] + p[3], p[5], lineno=p.lineno(1))
+
+# def p_function_call_parameter_list(p):
+#     '''function_call_parameter_list : function_call_parameter_list COMMA function_call_parameter
+#                                     | function_call_parameter'''
+#     if len(p) == 4:
+#         p[0] = p[1] + [p[3]]
+#     else:
+#         p[0] = [p[1]]
+
+# def p_function_call_parameter_list_empty(p):
+#     'function_call_parameter_list : empty'
+#     p[0] = []
+
+# def p_function_call_parameter(p):
+#     '''function_call_parameter : expr
+#                                | AND variable'''
+#     if len(p) == 2:
+#         p[0] = ast.Parameter(p[1], False, lineno=p.lineno(1))
+#     else:
+#         p[0] = ast.Parameter(p[2], True, lineno=p.lineno(1))
+# def p_parameters(t):
+#     """parameters : LPAR RPAR
+#                   | LPAR varargslist RPAR"""
+#     if len(t) == 3:
+#         t[0] = []
+#     else:
+#         t[0] = t[2]
+    
+# varargslist: (fpdef ['=' test] ',')* ('*' NAME [',' '**' NAME] | '**' NAME) | 
+# highly simplified
+# def p_varargslist(p):
+#     """varargslist : varargslist COMMA ID
+#                    | ID"""
+#     if len(p) == 4:
+#         p[0] = p[1] + p[3]
+#     else:
+#         p[0] = [p[1]]
+
 
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
