@@ -4,8 +4,9 @@ class Namespace:
 		scope in before the procedure and scope out after'''
 	
 
-	def __init__(self, globl = {}):
+	def __init__(self, globl = {}, debug=False):
 		self.stack = [globl]
+		self.debug = debug
 
 	def __str__(self):
 		return str(self.stack)
@@ -36,9 +37,15 @@ class Namespace:
 	def scope_in(self):
 		'pushes a new namespace on top of the stack'
 		self.stack.append({})
+		if self.debug:
+			print "Namespace on entrance: " + str(self)
 
 	def scope_out(self):
 		'removes the top namespace from the stack'
+
+		if self.debug:
+			print "Namespace at end of call: " + str(self)
+
 		try:
 			if len(self.stack) <= 1:
 				raise ScopeError('Attempted to drop global scope')
