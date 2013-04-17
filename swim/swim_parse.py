@@ -223,7 +223,8 @@ def p_list(t):
 
 def p_elements(t):
     '''elements : element COMMA elements
-                | element'''
+                | element
+                |'''
     try:
         t[0] = Node ("elements", [t[1], t[3]], "elements")    
 
@@ -231,10 +232,15 @@ def p_elements(t):
             return list([self.children[0].do()] + self.children[1].do())
 
     except:
-        t[0] = Node ("element", t[1], "element")
+        try:
+            t[0] = Node ("element", t[1], "element")
 
-        def do(self):
-            return [self.children.do()]
+            def do(self):
+                return [self.children.do()]
+        except:
+            t[0] = Node ("empty_element", None, "empty_element")
+            def do(self):
+                return []
     t[0].do = MethodType(do, t[0], Node)
 
 def p_element(t):
@@ -261,7 +267,8 @@ def p_dictionary(t):
 
 def p_dictionary_objects(t):
     '''dictionary_objects : dictionary_object COMMA dictionary_objects
-                          | dictionary_object'''
+                          | dictionary_object
+                          |'''
     try:
         t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
 
@@ -271,9 +278,14 @@ def p_dictionary_objects(t):
             return temp
 
     except:
-        t[0] = Node ("dictionary_object", t[1], "dictionary_object")
-        def do(self):
-            return self.children.do()
+        try:
+            t[0] = Node ("dictionary_object", t[1], "dictionary_object")
+            def do(self):
+                return self.children.do()
+        except:
+            t[0] = Node ("empty_dictionary_object", None, "empty_dictionary_object")
+            def do(self):
+                return {}
     t[0].do = MethodType(do, t[0], Node)
 
 def p_dictionary_object(t):
