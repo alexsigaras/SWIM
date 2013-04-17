@@ -207,7 +207,7 @@ def p_statement_increment(t):
     'increment_stmt : expression PLUS PLUS SEMICOLON'
     t[0] = Node("increment", t[1], "++")
     def do(self, id = None):
-        identifiers[self.children.children] = self.children.do(id) + 1
+        identifiers[self.children.do(True)] = self.children.do() + 1
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
@@ -218,7 +218,7 @@ def p_statement_decrement(t):
     'decrement_stmt : expression MINUS MINUS SEMICOLON'
     t[0] = Node("decrement", t[1], "--")
     def do(self, id = None):
-        identifiers[self.children.children] = self.children.do(id) - 1
+        identifiers[self.children.do(True)] = self.children.do() - 1
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
@@ -342,12 +342,14 @@ def p_dictionary_object(t):
 def p_dictionary_key(t):
     '''key : STRING1
            | STRING2'''
+
     t[0] = Node("key", stripe_quotation(t[1]), 'key')
     def do(self, id = None):
         try:
             return self.children
         except:
             raise Exception
+
     t[0].do = MethodType(do, t[0], Node)
 
 def p_dictionary_value(t):
@@ -465,10 +467,10 @@ def p_statement_while(t):
     t[0] = Node("while", [t[2],t[4],t[1]])
 
     def do(self, id = None):
-        try:
-            while self.children[0].do(id): 
-                self.children[1].do(id)
-                self.do(id)
+        try:            
+            while self.children[0].do(): 
+                self.children[1].do()
+                self.do()
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -498,6 +500,7 @@ def p_function_decl(t):
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
     def do(self, id = None):
         identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
+        return self
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
@@ -507,10 +510,10 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
-            builtin_print(self.children[1].do()[0])
+            return builtin_print(self.children[1].do()[0])
     elif t[1] == "pdf":
         def do(self, id = None):
-            buildtin_pdf(self.children[1].do())
+            return buildtin_pdf(self.children[1].do())
     else:      
         @identifiers.scope
         def do(self, id = None):
@@ -524,9 +527,9 @@ def p_function_call(t):
                     identifiers[name] = self.children[1].do()[cnt]
                     cnt += 1
             except:
-                print "Function paramter error!"
+                print "Function parameter error!"
                 return None 
-            identifiers[self.children[0]].children[2].do()
+            return identifiers[self.children[0]].children[2].do()
     t[0].do = MethodType(do, t[0], Node)
 
 
@@ -661,13 +664,14 @@ def p_expression_name(t):
 
 def p_expression_string(t):
     '''string_expr : STRING1
-                  | STRING2''' 
+                   | STRING2''' 
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self, id = None):
         try:
             return self.children
         except:
             raise Exception
+
     t[0].do = MethodType(do, t[0], Node)  
 
 #----------------------------------------------------#
