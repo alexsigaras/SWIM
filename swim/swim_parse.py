@@ -510,10 +510,10 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
-            builtin_print(self.children[1].do()[0])
+            return builtin_print(self.children[1].do()[0])
     elif t[1] == "pdf":
         def do(self, id = None):
-            buildtin_pdf(self.children[1].do())
+            return buildtin_pdf(self.children[1].do())
     else:      
         @identifiers.scope
         def do(self, id = None):
@@ -529,7 +529,7 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            identifiers[self.children[0]].children[2].do()
+            return identifiers[self.children[0]].children[2].do()
     t[0].do = MethodType(do, t[0], Node)
 
 
