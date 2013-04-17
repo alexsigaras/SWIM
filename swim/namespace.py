@@ -3,6 +3,7 @@ class Namespace:
 		add "@namespace.scope" before function definition to automatically
 		scope in before the procedure and scope out after'''
 	
+	level = 0
 
 	def __init__(self, globl = {}, debug=False):
 		self.stack = [globl]
@@ -38,13 +39,15 @@ class Namespace:
 		'pushes a new namespace on top of the stack'
 		self.stack.append({})
 		if self.debug:
-			print "Namespace on entrance: " + str(self)
+			self.level += 1
+			print "Namespace on level " + str(self.level) + ": "+ str(self)
 
 	def scope_out(self):
 		'removes the top namespace from the stack'
 
 		if self.debug:
-			print "Namespace at end of call: " + str(self)
+			print "Namespace at end of level " + str(self.level) + ": " + str(self)
+			self.level -= 1
 
 		try:
 			if len(self.stack) <= 1:
