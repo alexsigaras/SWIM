@@ -147,9 +147,9 @@ def p_simple_stmt(t):
                    | list_stmt
                    | dictionary_stmt
                    | function_call_stmt
+                   | return_stmt
                    '''
 #
-#| return_stmt
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
         try:
@@ -571,12 +571,12 @@ def p_function_call(t):
 #                    5.2.2.5 Return                  #
 #----------------------------------------------------#
 
-# def p_return(t):
-#     '''return_stmt : RETURN elements SEMICOLON'''
-#     t[0] = Node('return', t[2], 'return')    
-#     def do(self, id = None):
-#         return self.children.do()[0]
-#     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
+def p_return(t):
+    '''return_stmt : RETURN elements SEMICOLON'''
+    t[0] = Node('return', t[2], 'return')    
+    def do(self, id = None):
+        return self.children.do()[0]
+    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
