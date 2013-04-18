@@ -28,3 +28,5 @@ fun length(list) do i=0; for each element in list do i++; end print(i); end
 
 fun getKey(x, dictionary) do i=1; for each dictionary_object in dictionary do if(i==x) do print(dictionary_object); end i++; end end // gets them in reverse order.
 fun length(dictionary) do i=0; for each dictionary_object in dictionary do i++; end print(i); end
+
+for each item in list do if (item==2) do flag = True; end if(not flag) do print(item); end end
