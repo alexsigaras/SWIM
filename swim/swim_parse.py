@@ -508,7 +508,7 @@ def p_function_decl(t):
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
-    '''function_call_stmt : ID LPAREN elements RPAREN'''
+    '''function_call_stmt : ID LPAREN elements RPAREN SEMICOLON'''
     t[0] = Node("funcall", [t[1],t[3]], 'funcall')
   
 
@@ -573,6 +573,7 @@ def p_function_call(t):
 
 def p_return(t):
     '''return_stmt : RETURN elements SEMICOLON'''
+    print "Alexandros"
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
         return self.children.do()[0]

@@ -1,0 +1,18 @@
+# Functions
+
+fun getHtml(url) do print(@("html", url)); end
+fun getArticle(url) do print(@(".article", url)); end
+fun getPost(url) do print(@(".post", url)); end
+
+fun add(x, y) do print(x + y); end
+fun remove(x, y) do print(x - y); end
+fun multiply(x, y) do print(x * y); end
+fun divide(x, y) do print(x / y); end
+
+fun getElement(x, list) do 
+i==1;
+for each element in list do
+if(i==x) do print(element); end
+i++;
+end
+end
