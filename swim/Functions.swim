@@ -26,5 +26,5 @@ fun length(list) do i=0; for each element in list do i++; end print(i); end
 
 # Dictionary Functions
 
-fun getElement(x, dictionary) do i=1; for each dictionary_object in list do if(i==x) do print(dictionary_object); end i++; end end // gets them in reverse order.
+fun getKey(x, dictionary) do i=1; for each dictionary_object in dictionary do if(i==x) do print(dictionary_object); end i++; end end // gets them in reverse order.
 fun length(dictionary) do i=0; for each dictionary_object in dictionary do i++; end print(i); end

@@ -87,7 +87,7 @@ def p_start(t):
         print(t[1].traverse())
     else:
         try:
-            result = t[1].do(id)
+            result = t[1].do()
             if result is not None:                
             	print(result)
         except Error as e:
@@ -122,7 +122,8 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                self.children.do(id)
+            	#print self.children
+                self.children.do()
             except:
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -602,6 +603,7 @@ def p_unary_expr(t):
                   | id_expr
                   | string_expr
                   | list_expr
+                  | dictionary_expr
                   | parse_text_expr
                   | group_expr
                   | uplus_expr
@@ -732,6 +734,22 @@ def p_expression_list(t):
     def do(self, id = None):
         try:
             return list( self.children.do(id) )
+        except:
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#               5.3.1.5 Dictionary                   #
+#----------------------------------------------------#
+
+def p_expression_dictionary(t):
+    'dictionary_expr : LCBRACKET dictionary_objects RCBRACKET'
+
+    t[0] = Node("dictionary", t[2], "dictionary")
+
+    def do(self, id = None):
+        try:
+            return self.children.do(id)
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
