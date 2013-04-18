@@ -87,9 +87,9 @@ def p_start(t):
         print(t[1].traverse())
     else:
         try:
-	        result = t[1].do(id)
-	        if result is not None:
-	        	print(result)
+            result = t[1].do(id)
+            if result is not None:                
+            	print(result)
         except Error as e:
         	#print 1
         	#print e
@@ -146,7 +146,8 @@ def p_simple_stmt(t):
                    | decrement_stmt
                    | list_stmt
                    | dictionary_stmt
-                   | function_call'''
+                   | function_call_stmt
+                   | return_stmt'''
 
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
@@ -191,7 +192,9 @@ def p_statement_expr(t):
 #----------------------------------------------------#
     
 def p_statement_assign(t):
-    'assign_stmt : ID ASSIGN expression SEMICOLON'
+    '''assign_stmt : ID ASSIGN expression SEMICOLON
+                   | ID ASSIGN function_call_stmt SEMICOLON'''
+
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
         ''' Need to check ID !'''       
@@ -276,7 +279,7 @@ def p_element(t):
     def do(self, id = None):
         try:
             return self.children.do(id)
-        except:
+        except:  
             raise Exception
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -496,7 +499,7 @@ def p_statement_for(t):
 #----------------------------------------------------#
 
 def p_function_decl(t):
-    '''function_decl : FUN ID LPAREN elements RPAREN DO statements END'''
+    '''function_decl : FUN ID LPAREN elements RPAREN DO function_stmt END'''
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
     def do(self, id = None):
         identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
@@ -504,7 +507,7 @@ def p_function_decl(t):
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
-    '''function_call : ID LPAREN elements RPAREN SEMICOLON'''
+    '''function_call_stmt : ID LPAREN elements RPAREN'''
     t[0] = Node("funcall", [t[1],t[3]], 'funcall')
   
 
@@ -532,6 +535,47 @@ def p_function_call(t):
             return identifiers[self.children[0]].children[2].do()
     t[0].do = MethodType(do, t[0], Node)
 
+def p_function_statements(t):
+    '''function_stmt : statement RETURN statements
+                     | statement
+                     |'''
+    try:
+            t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
+
+            def do(self, id = None):
+                try:
+                    return list([self.children[0].do(id)] + self.children[1].do(id))
+                except:
+                    raise Exception
+
+        except:
+            try:
+                t[0] = Node ("function_stm", t[1], "function_stm")
+
+                def do(self, id = None):
+                    try:
+                        return [self.children.do(id)]
+                    except:
+                        raise Exception
+            except:
+                t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
+                def do(self, id = None):
+                    try:
+                        return []
+                    except:
+                        raise Exception
+        t[0].do = MethodType(do, t[0], Node)
+    
+#----------------------------------------------------#
+#                    5.2.2.5 Return                  #
+#----------------------------------------------------#
+
+# def p_return(t):
+#     '''return_stmt : RETURN elements SEMICOLON'''
+#     t[0] = Node('return', t[2], 'return')    
+#     def do(self, id = None):
+#         return self.children.do()[0]
+#     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
