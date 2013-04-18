@@ -16,3 +16,9 @@ if(i==x) do print(element); end
 i++;
 end
 end
+
+
+# List Functions
+
+fun getElement(x, list) do i=1; for each element in list do if(i==x) do print(element); end i++; end end
+fun length(list) do i=0; for each element in list do i++; end print(i); end

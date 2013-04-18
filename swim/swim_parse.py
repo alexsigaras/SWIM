@@ -199,7 +199,7 @@ def p_statement_assign(t):
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
         ''' Need to check ID !'''       
-        identifiers[self.children[0]] = self.children[1].do(id)
+        identifiers[self.children[0]] = self.children[1].do()
         return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node)
 
@@ -488,9 +488,9 @@ def p_statement_for(t):
     t[0] = Node("for", [t[3], t[5], t[7]] , "for")
     def do(self, id = None):
         try:
-            for temp in self.children[1].do(id):
+            for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
-                self.children[2].do(id)
+                self.children[2].do()
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
