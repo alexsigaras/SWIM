@@ -1,0 +1,17 @@
+fun decide(args) do
+   fun printLev(args) do
+       print("lev");
+   end
+   
+   fun printalex(args) do
+      print("alex");
+   end
+
+   if(args==1) do 
+      printLev(args);
+   else 
+      printalex(args); 
+   end
+end
+
+decide(2);
