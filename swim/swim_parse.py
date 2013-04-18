@@ -147,8 +147,9 @@ def p_simple_stmt(t):
                    | list_stmt
                    | dictionary_stmt
                    | function_call_stmt
-                   | return_stmt'''
-
+                   '''
+#
+#| return_stmt
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
         try:
@@ -499,7 +500,7 @@ def p_statement_for(t):
 #----------------------------------------------------#
 
 def p_function_decl(t):
-    '''function_decl : FUN ID LPAREN elements RPAREN DO function_stmt END'''
+    '''function_decl : FUN ID LPAREN elements RPAREN DO statements END'''
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
     def do(self, id = None):
         identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
@@ -535,36 +536,36 @@ def p_function_call(t):
             return identifiers[self.children[0]].children[2].do()
     t[0].do = MethodType(do, t[0], Node)
 
-def p_function_statements(t):
-    '''function_stmt : statement RETURN statements
-                     | statement
-                     |'''
-    try:
-            t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
+# def p_function_statements(t):
+#     '''function_stmt : statement RETURN statements
+#                      | statement
+#                      |'''
+#     try:
+#             t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
 
-            def do(self, id = None):
-                try:
-                    return list([self.children[0].do(id)] + self.children[1].do(id))
-                except:
-                    raise Exception
+#             def do(self, id = None):
+#                 try:
+#                     return list([self.children[0].do(id)] + self.children[1].do(id))
+#                 except:
+#                     raise Exception
 
-        except:
-            try:
-                t[0] = Node ("function_stm", t[1], "function_stm")
+#         except:
+#             try:
+#                 t[0] = Node ("function_stm", t[1], "function_stm")
 
-                def do(self, id = None):
-                    try:
-                        return [self.children.do(id)]
-                    except:
-                        raise Exception
-            except:
-                t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
-                def do(self, id = None):
-                    try:
-                        return []
-                    except:
-                        raise Exception
-        t[0].do = MethodType(do, t[0], Node)
+#                 def do(self, id = None):
+#                     try:
+#                         return [self.children.do(id)]
+#                     except:
+#                         raise Exception
+#             except:
+#                 t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
+#                 def do(self, id = None):
+#                     try:
+#                         return []
+#                     except:
+#                         raise Exception
+#         t[0].do = MethodType(do, t[0], Node)
     
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
