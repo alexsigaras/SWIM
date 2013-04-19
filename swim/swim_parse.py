@@ -88,8 +88,8 @@ def p_start(t):
     else:
         try:
             result = t[1].do()
-            if result is not None:                
-            	print(result)
+            #if result is not None:                
+            #	print(result)
         except Error as e:
         	#print 1
         	#print e
@@ -112,13 +112,17 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                # print self.children[1].do(id)
-                if self.children[0].do(id) == "break":
-                    #print "break occurred!"
+                firstResult = self.children[0].do(id)
+                if firstResult == "break":
                     return "break"
+                elif firstResult == "return":
+                    return "return"
                 else: 
-                    #print "no break occurred!"
-                    self.children[1].do(id)
+                    secondResult = self.children[1].do(id)
+                    if secondResult == "break":
+                        return "break"
+                    elif secondResult == "return":
+                        return "return"                    
             except:
                 raise Exception
 
@@ -126,9 +130,7 @@ def p_statements(t):
         t[0] = Node ("statement", t[1], "statement")
 
         def do(self, id = None):
-            try:
-                #print self.children.do(id)
-            	#print sself.children
+            try:                
                 return self.children.do()
             except:
                 raise Exception
@@ -498,8 +500,11 @@ def p_statement_for(t):
         try:
             for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
-                if self.children[2].do() == "break":
+                result  = self.children[2].do()
+                if result == "break":
                     break
+                elif result == "return":
+                    return "return"
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -542,7 +547,10 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            return identifiers[self.children[0]].children[2].do()
+            result = identifiers[self.children[0]].children[2].do() 
+            if result == "return":
+                return "return"
+            return result 
     t[0].do = MethodType(do, t[0], Node)
 
 # def p_function_statements(t):
@@ -582,11 +590,11 @@ def p_function_call(t):
 
 def p_return(t):
     '''return_stmt : RETURN elements SEMICOLON'''
-
-    print "Alexandros"
+    
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
-        return self.children.do()[0]
+        # return self.children.do()[0]
+        return "return"
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #----------------------------------------------------#

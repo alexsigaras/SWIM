@@ -1,0 +1,9 @@
+fun foo(a) do
+	print(a);
+	for each item in [1,2,3,4] do
+		print(item);
+		if(item==2) do break; end
+	end
+end
+
+foo([1,2,3,4,5]);
