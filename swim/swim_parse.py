@@ -483,8 +483,11 @@ def p_statement_while(t):
     def do(self, id = None):
         try:            
             while self.children[0].do(): 
-                self.children[1].do()
-                self.do()
+                result = self.children[1].do()
+                if result == "break":
+                    break
+                elif result == "return":
+                    return "return"
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
