@@ -112,8 +112,13 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                self.children[0].do(id)
-                self.children[1].do(id)
+                # print self.children[1].do(id)
+                if self.children[0].do(id) == "break":
+                    #print "break occurred!"
+                    return "break"
+                else: 
+                    #print "no break occurred!"
+                    self.children[1].do(id)
             except:
                 raise Exception
 
@@ -122,8 +127,9 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-            	#print self.children
-                self.children.do()
+                #print self.children.do(id)
+            	#print sself.children
+                return self.children.do()
             except:
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -149,6 +155,7 @@ def p_simple_stmt(t):
                    | dictionary_stmt
                    | function_call_stmt
                    | return_stmt
+                   | break_stmt
                    '''
 #
     t[0] = Node("stmt", t[1], 'stmt')
@@ -161,9 +168,9 @@ def p_simple_stmt(t):
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
-                 | while_stmt
-                 | for_stmt                 
-                 | function_decl'''
+                     | while_stmt
+                     | for_stmt                 
+                     | function_decl'''
     
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
@@ -491,7 +498,8 @@ def p_statement_for(t):
         try:
             for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
-                self.children[2].do()
+                if self.children[2].do() == "break":
+                    break
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -574,10 +582,24 @@ def p_function_call(t):
 
 def p_return(t):
     '''return_stmt : RETURN elements SEMICOLON'''
+
     print "Alexandros"
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
         return self.children.do()[0]
+    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
+
+#----------------------------------------------------#
+#                    5.2.2.5 Break                   #
+#----------------------------------------------------#
+
+def p_break(t):
+    '''break_stmt : BREAK SEMICOLON'''
+    
+    t[0] = Node('break', t[0], 'break')    
+    def do(self, id = None):
+        #print "Entered Break"
+        return "break"
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
