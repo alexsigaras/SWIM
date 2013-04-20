@@ -70,7 +70,7 @@ precedence = (
 )
 
 # Namespace stack
-identifiers = Namespace() 
+identifiers = Namespace(debug=True) 
 
 
 ops = { "+":    operator.add, 
@@ -557,6 +557,7 @@ def p_function_call(t):
     else:      
         #@identifiers.scope
         def do(self, id = None):
+            identifiers.scope_in()
             func = identifiers[self.children[0]]
             try:
                 cnt = 0
@@ -569,11 +570,13 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            result = func.children[2].do() 
+            result = func.children[2].do()
             try:
-            	if result.keys()[0] == "return":            	
-                	return result.values()[0]
+            	if result.keys()[0] == "return":
+                    identifiers.scope_out()
+                    return result.values()[0]
             except:
+                identifiers.scope_out()
             	return result 
     t[0].do = MethodType(do, t[0], Node)
 
