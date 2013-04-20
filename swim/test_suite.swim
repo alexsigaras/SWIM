@@ -25,121 +25,307 @@
 # Description: A complete test suit for the swim language                     #
 #-----------------------------------------------------------------------------#
 
+# BASIC CHECK METHOD FORMAT
+#fun check() do
+#    statement = "";
+#    x = ;
+#    expected = ;
+#    testStatement("", statement, expected, x);
+#end
 
-fun checkPrecedence() do 
-    expected = "6";
+/***************** TEST STATEMENT PRINT ENCAPSULATION ****************/
+
+fun testStatement(testFunName, statement, expectedResult, result) do
+    print(testFunName + " check");
+    print(statement);
+    print("should be: " + expectedResult);
+    if(expectedResult != result) do 
+        printErr("Unexpected result for test " + testFunName);
+    end
+    print(result);
+end
+
+/***************** PRECEDENCE CHECKS ****************/
+
+fun checkPrecedence() do
+    checkAddMult();
+    checkNot();
+    checkPow();
+    checkUPlus();
+end
+
+fun checkAddMult() do
     statement = "1 + 2 * 3";
     x = 1 + 2 * 3;
+    expected = 6;
     testStatement("Precedence", statement, expected, x);
 end
 
+fun checkNot() do
+    statement = "!(True or False)";
+    x = !(True or False);
+    expected = False;
+    testStatement("Not Precedence", statement, expected, x);
+end
 
-precedence = (
-    ('nonassoc', 'LESS_THAN', 'LESS_THAN_OR_EQUAL', 'EQUALS', 'NOT_EQUALS', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL'),
-    ('left', 'PLUS', 'MINUS', 'COMMA', 'AND', 'OR', 'XOR'),
-    ('left', 'MULTIPLY', 'DIVIDE', 'MOD'),
-    ('right', 'NOT'),
-    ('right', 'POW'),
-    ('left', 'UPLUS', 'UMINUS'),
-)
+fun checkPow() do
+    statement = "1+2^3+5";
+    x = 1+2^3+5;
+    expected = 14;
+    testStatement("Power Precedence", statement, expected, x);
+end
+
+fun checkUPlus() do
+    statement = "+7 + 5";
+    x = +7 + 5;
+    expected = 12;
+    testStatement("Unary Plus Precedence", statement, expected, x);
+end
+
+/*****************   OPERATOR CHECKS   ****************/
 
 fun checkOperators() do 
     checkArithmeticOperators();
     checkConditionalOperators();
 end
 
-fun testStatement(testFunName, expectedResult, result) do
-    print(testFunName + " check");
-    print("should be: " + expectedResult);
-    print(result);
+/***************** ARITHMETIC OPERATORS ****************/
+
+fun checkArithmeticOperators() do 
+    checkPlus()
+    checkMinus()
+    checkDivide()
+    checkMult()
+    checkMod();
 end
 
-fun check__() do 
-    print("__ check");
-    print("should be: <x>");  
-
-    print(x);
+fun checkPlus() do
+    statement = "4 + 13";
+    x = 4 + 13;
+    expected = 17;
+    testStatement("Plus Operator", statement, expected, x);
 end
 
-fun check__() do 
-    print("__ check");
-    print("should be: <x>");  
-
-    print(x);
+fun checkMinus() do
+    statement = "4 - 17";
+    x = 4 - 17;
+    expected = -13;
+    testStatement("Minus Operator", statement, expected, x);
 end
 
-fun check__() do 
-    print("__ check");
-    print("should be: <x>");  
-
-    print(x);
+fun checkDivide() do
+    statement = "24/6";
+    x = 24/6;
+    expected = 4;
+    testStatement("Division Operator", statement, expected, x);
 end
 
-fun check__() do 
-    print("__ check");
-    print("should be: <x>");  
-
-    print(x);
+fun checkMult() do
+    statement = "8 * 9";
+    x = 8 * 9;
+    expected = 72;
+    testStatement("Multiplication Operator", statement, expected, x);
 end
 
-checkPrecedence();
-checkArithmeticOperators();
-# Namespace stack
-identifiers = Namespace() 
+fun checkMod() do
+    statement = "72 % 7";
+    x = 72 % 7;
+    expected = 2;
+    testStatement("Mod Operator", statement, expected, x);
+end
 
+/***************** CONDITIONAL OPERATORS ****************/
 
-ops = { "+":    operator.add, 
-        "-":    operator.sub, 
-        "*":    operator.mul, 
-        "%":    operator.mod, 
-        "/":    operator.div, 
-        "^":    operator.pow,
-        "<":    operator.lt,
-        "<=":   operator.le,
-        ">":    operator.gt,
-        ">=":   operator.ge,
-        "!=":   operator.ne,
-        "==":   operator.eq,
-        "and":  operator.and_,
-        "&&":   operator.and_,
-        "or":  operator.or_,
-        "||":   operator.or_,
-        "xor":  operator.xor
-        }
+fun checkConditionalOperators() do
+    checkLess();
+    checkLessEquals();
+    checkGreater();
+    checkGreaterEquals();
+    checkNotEquals();
+    checkEqualsEquals();
+    checkAnd();
+    checkOr();
+    checkXOr();
+end
+
+fun checkLess() do
+    checkLess1();
+    checkLess2();
+    checkLess3();
+end
+
+fun checkLess1() do
+    statement = "7 < 9";
+    x = 7 < 9;
+    expected = true;
+    testStatement("< Operator", statement, expected, x);
+end
+
+fun checkLess2() do
+    statement = "9 < 7";
+    x = 9 < 7;
+    expected = false;
+    testStatement("< Operator", statement, expected, x);
+end
+
+fun checkLess3() do
+    statement = "9 < 9";
+    x = 9 < 9;
+    expected = false;
+    testStatement("< Operator", statement, expected, x);
+end
+
+fun checkGreater() do
+    checkGreater1();
+    checkGreater2();
+    checkGreater3();
+end
+
+fun checkGreater1() do
+    statement = "7 > 9";
+    x = 7 > 9;
+    expected = false;
+    testStatement("> Operator", statement, expected, x);
+end
+
+fun checkGreater2() do
+    statement = "9 > 7";
+    x = 9 > 7;
+    expected = true;
+    testStatement("> Operator", statement, expected, x);
+end
+
+fun checkGreater3() do
+    statement = "9 > 9";
+    x = 9 > 9;
+    expected = false;
+    testStatement("> Operator", statement, expected, x);
+end
+
+fun checkLessEquals() do
+    checkLessEquals1();
+    checkLessEquals2();
+    checkLessEquals3();
+end
+
+fun checkLessEquals1() do
+    statement = "7 <= 9";
+    x = 7 <= 9;
+    expected = true;
+    testStatement("<= Operator", statement, expected, x);
+end
+
+fun checkLessEquals2() do
+    statement = "9 <= 7";
+    x = 9 <= 7;
+    expected = false;
+    testStatement("<= Operator", statement, expected, x);
+end
+
+fun checkLessEquals3() do
+    statement = "9 <= 9";
+    x = 9 <= 9;
+    expected = true;
+    testStatement("<= Operator", statement, expected, x);
+end
+
+fun checkGreaterEquals() do
+    checkGreaterEquals1();
+    checkGreaterEquals2();
+    checkGreaterEquals3();
+end
+
+fun checkGreaterEquals1() do
+    statement = "7 >= 9";
+    x = 7 >= 9;
+    expected = false;
+    testStatement(">= Operator", statement, expected, x);
+end
+
+fun checkGreaterEquals2() do
+    statement = "9 >= 7";
+    x = 9 >= 7;
+    expected = true;
+    testStatement(">= Operator", statement, expected, x);
+end
+
+fun checkGreaterEquals3() do
+    statement = "9 >= 9";
+    x = 9 >= 9;
+    expected = true;
+    testStatement(">= Operator", statement, expected, x);
+end
+
+fun checkNotEquals() do
+    statement = "'string' != 'otherstring'";
+    x = 'string' != 'otherstring';
+    expected = true;
+    testStatement("!= Operator", statement, expected, x);
+end
+
+fun checkEqualsEquals() do
+    statement = "'string' == 'string'";
+    x = 'string' == 'string';
+    expected = true;
+    testStatement("== Operator", statement, expected, x);
+end
+
+fun checkAnd() do
+    checkWrittenAnd();
+    checkAmpersand();
+end
+
+fun checkWrittenAnd() do
+    a = True;
+    b = False;
+    statement = "a and b";
+    x = a and b;
+    expected = False;
+    testStatement("and Operator", statement, expected, x);
+end
+
+fun checkAmpersand() do
+    a = true;
+    b = false;
+    statement = "a && b";
+    x = a && b;
+    expected = true;
+    testStatement("&& Operator", statement, expected, x);
+end
+
+fun checkOr() do
+    checkOrDoubleBar();
+    a = true;
+    b = false;
+    statement = "a or b";
+    x = a or b;
+    expected = frue;
+    testStatement("or Operator", statement, expected, x);
+end
+
+fun checkOrDoubleBar() do
+    a = true;
+    b = false;
+    statement = "a || b";
+    x = a || b;
+    expected = true;
+    testStatement("or Operator", statement, expected, x);
+end
+
+fun checkXOr() do
+    a = true;
+    b = true;
+    statement = "a xor b";
+    x = a xor b;
+    expected = false;
+    testStatement("xor Operator", statement, expected, x);
+end
 
 #-----------------------------------------------------------------------------#
-#                                 5. Grammar                                  #
+#             NEED TO IMPLEMENT EXPECTED NODE TREE CHECK                      #
 #-----------------------------------------------------------------------------# 
 
-#----------------------------------------------------#
-#                   5.1 Starting                     #
-#----------------------------------------------------#
 
-def p_start(t):
-    '''start : statements'''
-    
-    # Normal mode
-    showNodeTree = False
-    if(showNodeTree):
-        print(t[1].traverse())
-    else:
-        try:
-            result = t[1].do()
-            #if result is not None:                
-            #	print(result)
-        except Error as e:
-        	#print 1
-        	#print e
-            print(t[1].traverse())
-            pass
-        	#print "[Line :" + str(e.lineno) + "] " + e.msg 
-    
-    # Saving mode for function and class definition
-    ''' TO DO '''
-
-#--------------------------------------------------------------#
-#                       5.2 Statements                         #
-#--------------------------------------------------------------#
 import traceback
 def p_statements(t):
     '''statements : statement statements
@@ -586,10 +772,10 @@ def p_function_call(t):
                 return None 
             result = func.children[2].do() 
             try:
-            	if result.keys()[0] == "return":            	
-                	return result.values()[0]
+                if result.keys()[0] == "return":                
+                    return result.values()[0]
             except:
-            	return result 
+                return result 
     t[0].do = MethodType(do, t[0], Node)
 
 # def p_function_statements(t):
