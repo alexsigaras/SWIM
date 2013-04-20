@@ -39,6 +39,8 @@ from types import *
 
 # Parsing
 import re
+# simplified arithmetic expressions
+import operator
 
 # Error handling
 from swim_exception import *
@@ -69,6 +71,9 @@ precedence = (
 
 # Namespace stack
 identifiers = Namespace() 
+
+
+ops = { "+": operator.add, "-": operator.sub, "*": operator.mul, "%": operator.mod, "/": operator.div, "^": operator.pow }
 
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
@@ -132,20 +137,15 @@ def p_statements(t):
             try:                
                 return self.children.do()
             except:
+                print traceback.format_exc()
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
 def p_statement(t):
     '''statement : simple_stmt
                  | compound_stmt'''
+    super_do(t, 'stmt')
 
-    t[0] = Node("stmt", t[1], 'stmt')
-    def do(self, id = None):
-        try:
-            return self.children.do(id)
-        except:
-                raise Exception
-    t[0].do = MethodType(do, t[0], Node)
 
 def p_simple_stmt(t):
     '''simple_stmt : expression_stmt
@@ -158,8 +158,23 @@ def p_simple_stmt(t):
                    | return_stmt
                    | break_stmt
                    '''
-#
-    t[0] = Node("stmt", t[1], 'stmt')
+    super_do(t, 'stmt')
+
+def p_compound_stmt(t):
+    '''compound_stmt : if_stmt
+                     | while_stmt
+                     | for_stmt                 
+                     | function_decl'''
+    super_do(t, 'stmt')
+
+
+# This statement do refactors duplicate code
+# that existed in the various statement functions.
+# 
+#  Currently serves statements and expressions
+# 
+def super_do(t, typestring):
+    t[0] = Node(typestring, t[1], typestring)
     def do(self, id = None):
         try:
             return self.children.do(id)
@@ -167,19 +182,6 @@ def p_simple_stmt(t):
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
-def p_compound_stmt(t):
-    '''compound_stmt : if_stmt
-                     | while_stmt
-                     | for_stmt                 
-                     | function_decl'''
-    
-    t[0] = Node("stmt", t[1], 'stmt')
-    def do(self, id = None):
-        try:
-            return self.children.do(id)
-        except:
-                raise Exception
-    t[0].do = MethodType(do, t[0], Node)
 
 #--------------------------------------------------------------#
 #                 5.2.1 Simple Statements                      #
@@ -191,16 +193,12 @@ def p_compound_stmt(t):
 
 def p_statement_expr(t):
     'expression_stmt : expression'
-    
-    t[0] = Node("expr", t[1], 'expr')
-    def do(self, id = None):
-        return self.children.do(id)
-    t[0].do = MethodType(do, t[0], Node)
+    super_do(t, 'expr')
 
 #----------------------------------------------------#
 #               5.2.1.2 Assignment                   #
 #----------------------------------------------------#
-    
+
 def p_statement_assign(t):
     '''assign_stmt : ID ASSIGN expression SEMICOLON
                    | ID ASSIGN function_call_stmt SEMICOLON'''
@@ -883,52 +881,14 @@ def p_expression_arithmetic_op(t):
                        | expression MOD expression'''
     
     t[0] = Node("arithmetic_op", [t[1], t[3]], t[2])
-                    
-    if t[2] == '+':
-        #t[0] = t[1] + t[3]  # add
-        def do(self, id = None):
+    def do(self, id = None):
             try:        
-                return self.children[0].do(id) + self.children[1].do(id)
+                return ops[self.leaf](self.children[0].do(id), self.children[1].do(id))
             except TypeError:
                 raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id))) 
-    elif t[2] == '-':
-        #t[0] = t[1] - t[3]  # subtract
-        
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) - self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '*':
-        #t[0] = t[1] * t[3]  # multiply
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) * self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '/':
-        #t[0] = t[1] / t[3]  # divide
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) / self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '^': 
-        #t[0] = t[1] ** t[3] # power
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) ** self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '%': 
-        #t[0] = t[1] % t[3]  # remainder
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) % self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-                    
     t[0].do = MethodType(do, t[0], Node) 
+    
+
 
 #----------------------------------------------------#
 
