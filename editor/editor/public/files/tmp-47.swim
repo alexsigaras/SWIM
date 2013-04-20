@@ -1,6 +1,0 @@
-fun getBody(url) do 
-    x=@("body", url);
-    print(x);
-end
-a=getBody("http://www.nytimes.com");
-print(a);

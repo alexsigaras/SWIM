@@ -1,5 +1,0 @@
-fun cool(url) do 
-    x=@("body", url);
-    print(x);
-end
-cool("http://www.nytimes.com");
