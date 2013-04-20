@@ -40,13 +40,13 @@ class Namespace:
 		self.stack.append({})
 		if self.debug:
 			self.level += 1
-			print "Namespace on level " + str(self.level) + ": "+ str(self)
+			#print "Namespace on start of level " + str(self.level) + ": "+ str(self)
 
 	def scope_out(self):
 		'removes the top namespace from the stack'
 
 		if self.debug:
-			print "Namespace at end of level " + str(self.level) + ": " + str(self)
+			#print "Namespace at end of level " + str(self.level) + ": " + str(self)
 			self.level -= 1
 
 		try:
