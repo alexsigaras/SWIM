@@ -60,6 +60,7 @@ def stripe_quotation(string):
 #                           4.  Precedence                                    #
 #-----------------------------------------------------------------------------#
 
+# Precedence 
 precedence = (
     ('nonassoc', 'LESS_THAN', 'LESS_THAN_OR_EQUAL', 'EQUALS', 'NOT_EQUALS', 'GREATER_THAN', 'GREATER_THAN_OR_EQUAL'),
     ('left', 'PLUS', 'MINUS', 'COMMA', 'AND', 'OR', 'XOR'),
@@ -70,9 +71,9 @@ precedence = (
 )
 
 # Namespace stack
-identifiers = Namespace() 
+identifiers = Namespace(debug=True) 
 
-
+# Operators Dictionary
 ops = { "+":    operator.add, 
         "-":    operator.sub, 
         "*":    operator.mul, 
@@ -159,6 +160,7 @@ def p_statements(t):
                             return secondResult              
             except:
                 #print traceback.format_exc()
+                print("Error in statements")
                 raise Exception
 
     except:
@@ -187,8 +189,7 @@ def p_simple_stmt(t):
                    | dictionary_stmt
                    | function_call_stmt
                    | return_stmt
-                   | break_stmt
-                   '''
+                   | break_stmt'''
     super_do(t, 'stmt')
 
 def p_compound_stmt(t):
@@ -210,7 +211,8 @@ def super_do(t, typestring):
         try:
             return self.children.do(id)
         except:
-                raise Exception
+            print("Error in super do")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
 
@@ -236,11 +238,16 @@ def p_statement_assign(t):
 
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
-        ''' Need to check ID !'''    
-        a =    self.children[1].do()
-        identifiers[self.children[0]] = a#self.children[1].do()
-        #print(identifiers[self.children[0]])
-        return identifiers[self.children[0]]
+        ''' Need to check ID !'''
+        try:    
+            a = self.children[1].do()
+            identifiers[self.children[0]] = a
+            #self.children[1].do()
+            #print(identifiers[self.children[0]])
+            return identifiers[self.children[0]]
+        except:
+            print("Error in assignment statement")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
@@ -251,7 +258,11 @@ def p_statement_increment(t):
     'increment_stmt : expression PLUS PLUS SEMICOLON'
     t[0] = Node("increment", t[1], "++")
     def do(self, id = None):
-        identifiers[self.children.do(True)] = self.children.do() + 1
+        try:
+            identifiers[self.children.do(True)] = self.children.do() + 1
+        except:
+            print("Error in auto increment statement")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
@@ -262,7 +273,11 @@ def p_statement_decrement(t):
     'decrement_stmt : expression MINUS MINUS SEMICOLON'
     t[0] = Node("decrement", t[1], "--")
     def do(self, id = None):
-        identifiers[self.children.do(True)] = self.children.do() - 1
+        try:
+            identifiers[self.children.do(True)] = self.children.do() - 1
+        except:
+            print("Error in auto decrement statement")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
@@ -279,13 +294,14 @@ def p_list(t):
             identifiers[self.children[0]] = self.children[1].do(id)
             return identifiers[self.children[0]]
         except:
+            print("Error in list statement")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
 def p_elements(t):
     '''elements : element COMMA elements
                 | element
-                |'''
+                | '''
     try:
         t[0] = Node ("elements", [t[1], t[3]], "elements")    
 
@@ -293,6 +309,7 @@ def p_elements(t):
             try:
                 return list([self.children[0].do(id)] + self.children[1].do(id))
             except:
+                print("Error in elements")
                 raise Exception
 
     except:
@@ -303,6 +320,7 @@ def p_elements(t):
                 try:
                     return [self.children.do(id)]
                 except:
+                    print("Error in element")
                     raise Exception
         except:
             t[0] = Node ("empty_element", None, "empty_element")
@@ -310,6 +328,7 @@ def p_elements(t):
                 try:
                     return []
                 except:
+                    print("Error in empty element")
                     raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -321,6 +340,7 @@ def p_element(t):
         try:
             return self.children.do(id)
         except:  
+            print("Error in element")
             raise Exception
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -337,6 +357,7 @@ def p_dictionary(t):
             identifiers[self.children[0]] = self.children[1].do(id)
             return identifiers[self.children[0]]
         except:
+            print("Error in dictionary statement")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -344,7 +365,7 @@ def p_dictionary(t):
 def p_dictionary_objects(t):
     '''dictionary_objects : dictionary_object COMMA dictionary_objects
                           | dictionary_object
-                          |'''
+                          | '''
     try:
         t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
 
@@ -354,6 +375,7 @@ def p_dictionary_objects(t):
                 temp.update(self.children[1].do(id))
                 return temp
             except:
+                print("Error in empty dictionary objects")
                 raise Exception
 
     except:
@@ -363,6 +385,7 @@ def p_dictionary_objects(t):
                 try:
                     return self.children.do(id)
                 except:
+                    print("Error in dictionary object")
                     raise Exception
         except:
             t[0] = Node ("empty_dictionary_object", None, "empty_dictionary_object")
@@ -370,6 +393,7 @@ def p_dictionary_objects(t):
                 try:
                     return {}
                 except:
+                    print("Error in empty dictionary object")
                     raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -380,6 +404,7 @@ def p_dictionary_object(t):
         try:
             return {self.children[0].do(id) : self.children[1].do(id)}
         except:
+            print("Error in dictionary object")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -392,6 +417,7 @@ def p_dictionary_key(t):
         try:
             return self.children
         except:
+            print("Error in dictionary key")
             raise Exception
 
     t[0].do = MethodType(do, t[0], Node)
@@ -403,6 +429,7 @@ def p_dictionary_value(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in dictionary value")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -424,11 +451,13 @@ def p_statement_if(t):
             try:
                 return self.children[1].do(id)
             except:
+                print("Error in if statement")
                 raise Exception
         else:
             try:
                 return self.children[2].do(id)
             except:
+                print("Error in if statement")
                 raise Exception
 
     t[0].do = MethodType(do, t[0], Node)
@@ -450,6 +479,7 @@ def p_statement_elif_blocks(t):
                 try:
                     return self.children[1].do(id)
                 except:
+                    print("Error in elif blocks")
                     raise Exception
     except:
         try:
@@ -459,6 +489,7 @@ def p_statement_elif_blocks(t):
                 try:
                     return self.children.do(id)
                 except:
+                    print("Error in elif blocks")
                     raise Exception
         except:
             t[0] = Node ("else", None, "else")
@@ -466,6 +497,7 @@ def p_statement_elif_blocks(t):
                 try:
                     return None
                 except:
+                    print("Error in elif blocks")
                     raise Exception
     t[0].do = MethodType(do, t[0], Node)                   
 
@@ -479,11 +511,13 @@ def p_statement_elif_block(t):
             try:
                 return self.children[1].do
             except:
+                print("Error in elif block")
                 raise Exception
         else:
             try:
                 return False
             except:
+                print("Error in elif block")
                 raise Exception
     
     t[0].do = MethodType(do, t[0], Node)
@@ -497,6 +531,7 @@ def p_statement_else_block(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in else block")
             raise Exception
 
     t[0].do = MethodType(do, t[0], Node)
@@ -520,6 +555,7 @@ def p_statement_while(t):
                     elif result.keys()[0] == "return":
                         return result
         except:
+            print("Error in while statement")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -542,6 +578,7 @@ def p_statement_for(t):
                     elif result.keys()[0] == "return":
                         return result
         except:
+            print("Error in for statement")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -553,8 +590,12 @@ def p_function_decl(t):
     '''function_decl : FUN ID LPAREN elements RPAREN DO statements END'''
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
     def do(self, id = None):
-        identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
-        return self
+        try:
+            identifiers[self.children[0]] = self  # child 0 is id, adds tree to id ref in symbol table
+            return self
+        except:
+            print("Error in Function declaration")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
@@ -564,16 +605,28 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
+<<<<<<< HEAD
             return builtin_print(self.children[1].do()[0])
     if t[1] == "printErr":
         def do(self, id = None):
             return builtin_print(self.children[1].do()[0], colorCodes['red'])
+=======
+            try:
+                return builtin_print(self.children[1].do()[0])
+            except:
+                print("Error in builtin print")
+>>>>>>> d5f2275d068cd2f031b1876fcd4e91cd17e75c76
     elif t[1] == "pdf":
         def do(self, id = None):
-            return buildtin_pdf(self.children[1].do())
+            try: 
+                return buildtin_pdf(self.children[1].do())
+            except:
+                print("Error in builtin pdf")
+                raise Exception
     else:      
         #@identifiers.scope
         def do(self, id = None):
+            identifiers.scope_in()
             func = identifiers[self.children[0]]
             try:
                 cnt = 0
@@ -586,11 +639,13 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            result = func.children[2].do() 
+            result = func.children[2].do()
             try:
-            	if result.keys()[0] == "return":            	
-                	return result.values()[0]
+            	if result.keys()[0] == "return":
+                    identifiers.scope_out()
+                    return result.values()[0]
             except:
+                identifiers.scope_out()
             	return result 
     t[0].do = MethodType(do, t[0], Node)
 
@@ -634,8 +689,10 @@ def p_return(t):
     
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
-        # return self.children.do()[0]\
-        return {"return" :  self.children.do()[0]}
+        try: 
+            return {"return" :  self.children.do()[0]}
+        except:
+            print("Error in return statement")
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #----------------------------------------------------#
@@ -647,8 +704,11 @@ def p_break(t):
     
     t[0] = Node('break', t[0], 'break')    
     def do(self, id = None):
-        #print "Entered Break"
-        return {"break" : None}
+        try:
+            return {"break" : None}
+        except:
+            print("Error in break statement")
+            raise Exception
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
@@ -664,6 +724,7 @@ def p_expression(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -685,6 +746,7 @@ def p_unary_expr(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in unary expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -697,6 +759,7 @@ def p_binary_expr(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in binary expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -718,12 +781,14 @@ def p_expression_boolean(t):
             try:
                 return True
             except:
+                print("Error in True boolean expression")
                 raise Exception
     elif t[1] == "False":
         def do(self, id = None):
             try:
                 return False
             except:
+                print("Error in False boolean expression")
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -739,6 +804,7 @@ def p_expression_not_op(t):
         try:
             return not self.children.do(id)
         except:
+            print("Error in not expression")
             raise Exception
         
     t[0].do = MethodType(do, t[0], Node)
@@ -755,6 +821,7 @@ def p_expression_number(t):
         try:
             return self.children
         except:
+            print("Error in number expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -789,6 +856,7 @@ def p_expression_string(t):
         try:
             return self.children
         except:
+            print("Error in string expressions")
             raise Exception
 
     t[0].do = MethodType(do, t[0], Node)  
@@ -806,6 +874,7 @@ def p_expression_list(t):
         try:
             return list( self.children.do(id) )
         except:
+            print("Error in list expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -822,6 +891,7 @@ def p_expression_dictionary(t):
         try:
             return self.children.do(id)
         except:
+            print("Error in dictionary expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -863,6 +933,7 @@ def p_expression_group(t):
         try:
             return self.children.do(id)    
         except:
+            print("There was an error in the group ( ) expression")
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
 
@@ -879,6 +950,7 @@ def p_expression_uplus(t):
             return self.children.do(id)
         except:
             print("There was an error in the unary plus expression")
+            raise Exception
         
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -895,6 +967,7 @@ def p_expression_uminus(t):
             return -self.children.do(id)
         except:
             print("There was an error in the unary minus expression")
+            raise Exception
         
     t[0].do = MethodType(do, t[0], Node) 
     
@@ -950,21 +1023,7 @@ def p_expression_cond_op(t):
 
 
 #----------------------------------------------------#
-# def p_expression_unistring(t):
-#     'expression : ID expression'
-    
-#     t[0] = Node("unistring", [t[1] , t[2]], 'unistring')
-#     def do(self, id = None):
-#         try:
-#             # u is ID, not node
-#             if self.children[0] == 'u':
-#                 return self.children[0] + self.children[1].do(id)
-#             else:
-#                 raise Exception()
-#         except LookupError:
-#             print("Undefined name '%s'" % self.children[0])
-#             raise Exception
-#     t[0].do = MethodType(do, t[0], Node)  
+ 
 #----------------------------------------------------#
 #                     5.4 Error                      #
 #----------------------------------------------------#
