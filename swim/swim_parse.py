@@ -605,17 +605,16 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
-<<<<<<< HEAD
-            return builtin_print(self.children[1].do()[0])
-    if t[1] == "printErr":
-        def do(self, id = None):
-            return builtin_print(self.children[1].do()[0], colorCodes['red'])
-=======
             try:
                 return builtin_print(self.children[1].do()[0])
             except:
                 print("Error in builtin print")
->>>>>>> d5f2275d068cd2f031b1876fcd4e91cd17e75c76
+    elif t[1] == "printErr":
+        def do(self, id = None):            
+            try:
+                return builtin_print(self.children[1].do()[0], colorCodes['red'])
+            except:
+                print("Error in builtin printerr")
     elif t[1] == "pdf":
         def do(self, id = None):
             try: 

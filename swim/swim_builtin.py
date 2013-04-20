@@ -63,7 +63,7 @@ def stripe_quotation(string):
 #-----------------------------------------------------------------------------#
 #                          4.  Built-in Functions                             #
 #-----------------------------------------------------------------------------#
-def builtin_print(result, color='0;30'):
+def builtin_print(result, color=None):
     if isinstance(result, StringType):
         # Escaped sequence handling
         escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
@@ -89,9 +89,15 @@ def builtin_print(result, color='0;30'):
         else:
             result = result.replace("'",'')            
 
-        print "\033["+color+"m"+result+"\033[0m"     
+        if color is None:
+            print result
+        else:    
+            print "\033[" + color + "m" + result + "\033[0m"     
     else:
-        print "\033["+color+"m"+result+"\033[0m"
+        if color is None:
+            print result
+        else:
+            print "\033[" + color + "m" + str(result) + "\033[0m"
 
 
 def builtin_pdf(expr):
