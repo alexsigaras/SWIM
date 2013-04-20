@@ -1,8 +1,0 @@
-print("Testing Boolean assignments...");
-a = True;
-b = False;
-
-if 0 do print("1");
-elif False do print("2");
-else print("yes");
-end  

@@ -1,8 +1,0 @@
-a = 1;
-
-a = a + 1;
-morris = "morris";
-if a==2 do print(morris);
-elif morris do print("2");
-else print("yes");
-end  
