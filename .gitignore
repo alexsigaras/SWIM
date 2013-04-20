@@ -4,3 +4,4 @@ swim/parser.out
 swim/lextab.py
 
 .idea/*
+*.log
