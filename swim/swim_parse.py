@@ -73,7 +73,24 @@ precedence = (
 identifiers = Namespace() 
 
 
-ops = { "+": operator.add, "-": operator.sub, "*": operator.mul, "%": operator.mod, "/": operator.div, "^": operator.pow }
+ops = { "+":    operator.add, 
+        "-":    operator.sub, 
+        "*":    operator.mul, 
+        "%":    operator.mod, 
+        "/":    operator.div, 
+        "^":    operator.pow,
+        "<":    operator.lt,
+        "<=":   operator.le,
+        ">":    operator.gt,
+        ">=":   operator.ge,
+        "!=":   operator.ne,
+        "==":   operator.eq,
+        "and":  operator.and_,
+        "&&":   operator.and_,
+        "or":  operator.or_,
+        "||":   operator.or_,
+        "xor":  operator.xor
+        }
 
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
@@ -889,7 +906,6 @@ def p_expression_arithmetic_op(t):
     t[0].do = MethodType(do, t[0], Node) 
     
 
-
 #----------------------------------------------------#
 
 #----------------------------------------------------#
@@ -908,72 +924,13 @@ def p_expression_cond_op(t):
                         | expression LESS_THAN_OR_EQUAL expression'''
 
     t[0] = Node("conditional_expr", [t[1], t[3]], t[2])
-                    
-    if (t[2] == 'and' or t[2] =='&&'):
-        #t[0] = t[1] and t[3]
-        def do(self, id = None):
+    def do(self, id = None):
             try:
-                return self.children[0].do(id) and self.children[1].do(id)        
+                return ops[self.leaf](self.children[0].do(id), self.children[1].do(id))       
             except TypeError:
                 raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif (t[2] == 'or' or t[2] =='||'):
-        #t[0] = t[1] or t[3]
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) or self.children[1].do(id)        
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == 'xor':
-        #t[0] = (t[1] and not t[3]) or (not t[1] and t[3])
-        def do(self, id = None):
-            try:
-                return (self.children[0].do(id) and not self.children[1].do(id)) or (not self.children[0].do(id) and tself.children[1].do(id))
-            except:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '==':
-        #t[0] = t[1] == t[3] # equal?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) == self.children[1].do(id)
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '!=':
-        #t[0] = t[1] != t[3] # not equal?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) != self.children[1].do(id)
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '>':
-        #t[0] = t[1] > t[3] # greater than?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) > self.children[1].do(id)
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '<':
-        #t[0] = t[1] < t[3] # less than?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) < self.children[1].do(id)                              
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '>=':
-        #t[0] = t[1] >= t[3] # greater than or equal?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) >= self.children[1].do(id)
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-    elif t[2] == '<=':
-        #t[0] = t[1] <= t[3] # less than or equal?
-        def do(self, id = None):
-            try:
-                return self.children[0].do(id) <= self.children[1].do(id)
-            except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
-                    
     t[0].do = MethodType(do, t[0], Node)
+
 
 #----------------------------------------------------#
 # def p_expression_unistring(t):
