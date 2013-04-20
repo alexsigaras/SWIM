@@ -93,6 +93,20 @@ ops = { "+":    operator.add,
         "xor":  operator.xor
         }
 
+# Right now this is only used for error codes but it can be used 
+# to easily extend printing to other colors.
+colorCodes = {
+    'black':    '0;30',     'bright gray':  '0;37',
+    'blue':     '0;34',     'white':        '1;37',
+    'green':    '0;32',     'bright blue':  '1;34',
+    'cyan':     '0;36',     'bright green': '1;32',
+    'red':      '0;31',     'bright cyan':  '1;36',
+    'purple':   '0;35',     'bright red':   '1;31',
+    'yellow':   '0;33',     'bright purple':'1;35',
+    'dark gray':'1;30',     'bright yellow':'1;33',
+    'normal':   '0'
+}
+
 #-----------------------------------------------------------------------------#
 #                                 5. Grammar                                  #
 #-----------------------------------------------------------------------------# 
@@ -116,7 +130,7 @@ def p_start(t):
         except Error as e:
         	#print 1
         	#print e
-            print(t[1].traverse())
+            printErr(t[1].traverse())
             pass
         	#print "[Line :" + str(e.lineno) + "] " + e.msg 
     
@@ -595,6 +609,12 @@ def p_function_call(t):
                 return builtin_print(self.children[1].do()[0])
             except:
                 print("Error in builtin print")
+    elif t[1] == "printErr":
+        def do(self, id = None):            
+            try:
+                return builtin_print(self.children[1].do()[0], colorCodes['red'])
+            except:
+                print("Error in builtin printerr")
     elif t[1] == "pdf":
         def do(self, id = None):
             try: 
@@ -627,37 +647,6 @@ def p_function_call(t):
                 identifiers.scope_out()
             	return result 
     t[0].do = MethodType(do, t[0], Node)
-
-# def p_function_statements(t):
-#     '''function_stmt : statement RETURN statements
-#                      | statement
-#                      |'''
-#     try:
-#             t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
-
-#             def do(self, id = None):
-#                 try:
-#                     return list([self.children[0].do(id)] + self.children[1].do(id))
-#                 except:
-#                     raise Exception
-
-#         except:
-#             try:
-#                 t[0] = Node ("function_stm", t[1], "function_stm")
-
-#                 def do(self, id = None):
-#                     try:
-#                         return [self.children.do(id)]
-#                     except:
-#                         raise Exception
-#             except:
-#                 t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
-#                 def do(self, id = None):
-#                     try:
-#                         return []
-#                     except:
-#                         raise Exception
-#         t[0].do = MethodType(do, t[0], Node)
     
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
@@ -751,18 +740,21 @@ def p_binary_expr(t):
 #----------------------------------------------------#
 def p_expression_boolean(t):
     '''boolean_expr : TRUE
-                    | FALSE'''
+                    | TRUELOWERCASE
+                    | FALSE
+                    | FALSELOWERCASE'''
                   
     t[0] = Node("boolean", t[1], 'boolean')
     
-    if t[1] == "True":
+    # if t[1] == "True" or t[1] == "true":
+    if t[1] in ["True","true"]:
         def do(self, id = None):
             try:
                 return True
             except:
                 print("Error in True boolean expression")
                 raise Exception
-    elif t[1] == "False":
+    elif t[1] in ["False", "false"]:
         def do(self, id = None):
             try:
                 return False
