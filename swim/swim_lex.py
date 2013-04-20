@@ -45,6 +45,7 @@ reserved = {
     'each'     : 'EACH',
     'in'       : 'IN',
     'return'   : 'RETURN',
+    'break'    : 'BREAK',
     'and'      : 'AND',
     'or'       : 'OR',
     'xor'      : 'XOR',

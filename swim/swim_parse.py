@@ -87,9 +87,9 @@ def p_start(t):
         print(t[1].traverse())
     else:
         try:
-	        result = t[1].do(id)
-	        if result is not None:
-	        	print(result)
+            result = t[1].do()
+            #if result is not None:                
+            #	print(result)
         except Error as e:
         	#print 1
         	#print e
@@ -112,8 +112,13 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                self.children[0].do(id)
-                self.children[1].do(id)
+                firstResult = self.children[0].do(id)                              
+                if isinstance(firstResult, dict) and (firstResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
+                    return firstResult
+                else: 
+                    secondResult = self.children[1].do(id)
+                    if isinstance(secondResult, dict) and (secondResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
+                        return secondResult              
             except:
                 raise Exception
 
@@ -121,8 +126,8 @@ def p_statements(t):
         t[0] = Node ("statement", t[1], "statement")
 
         def do(self, id = None):
-            try:
-                self.children.do(id)
+            try:                
+                return self.children.do()
             except:
                 raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -146,8 +151,11 @@ def p_simple_stmt(t):
                    | decrement_stmt
                    | list_stmt
                    | dictionary_stmt
-                   | function_call'''
-
+                   | function_call_stmt
+                   | return_stmt
+                   | break_stmt
+                   '''
+#
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
         try:
@@ -158,9 +166,9 @@ def p_simple_stmt(t):
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
-                 | while_stmt
-                 | for_stmt                 
-                 | function_decl'''
+                     | while_stmt
+                     | for_stmt                 
+                     | function_decl'''
     
     t[0] = Node("stmt", t[1], 'stmt')
     def do(self, id = None):
@@ -191,11 +199,16 @@ def p_statement_expr(t):
 #----------------------------------------------------#
     
 def p_statement_assign(t):
-    'assign_stmt : ID ASSIGN expression SEMICOLON'
+    '''assign_stmt : ID ASSIGN expression SEMICOLON
+                   | ID ASSIGN function_call_stmt SEMICOLON'''
+
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
-        ''' Need to check ID !'''       
-        identifiers[self.children[0]] = self.children[1].do(id)
+        ''' Need to check ID !'''    
+        a =    self.children[1].do()
+        print(a)
+        identifiers[self.children[0]] = a#self.children[1].do()
+        #print(identifiers[self.children[0]])
         return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node)
 
@@ -276,7 +289,7 @@ def p_element(t):
     def do(self, id = None):
         try:
             return self.children.do(id)
-        except:
+        except:  
             raise Exception
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -469,8 +482,12 @@ def p_statement_while(t):
     def do(self, id = None):
         try:            
             while self.children[0].do(): 
-                self.children[1].do()
-                self.do()
+                result = self.children[1].do()
+                if isinstance(result, dict):
+                    if result.keys()[0] == "break":
+                        break
+                    elif result.keys()[0] == "return":
+                        return result
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -484,9 +501,15 @@ def p_statement_for(t):
     t[0] = Node("for", [t[3], t[5], t[7]] , "for")
     def do(self, id = None):
         try:
-            for temp in self.children[1].do(id):
+            for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
-                self.children[2].do(id)
+                result  = self.children[2].do()
+
+                if isinstance(result, dict):
+                    if result.keys()[0] == "break":
+                        break
+                    elif result.keys()[0] == "return":
+                        return result
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -504,7 +527,7 @@ def p_function_decl(t):
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 def p_function_call(t):
-    '''function_call : ID LPAREN elements RPAREN SEMICOLON'''
+    '''function_call_stmt : ID LPAREN elements RPAREN SEMICOLON'''
     t[0] = Node("funcall", [t[1],t[3]], 'funcall')
   
 
@@ -515,7 +538,7 @@ def p_function_call(t):
         def do(self, id = None):
             return buildtin_pdf(self.children[1].do())
     else:      
-        @identifiers.scope
+        #@identifiers.scope
         def do(self, id = None):
             func = identifiers[self.children[0]]
             try:
@@ -529,9 +552,70 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            return identifiers[self.children[0]].children[2].do()
+            result = func.children[2].do() 
+            try:
+            	if result.keys()[0] == "return":            	
+                	return result.values()[0]
+            except:
+            	return result 
     t[0].do = MethodType(do, t[0], Node)
 
+# def p_function_statements(t):
+#     '''function_stmt : statement RETURN statements
+#                      | statement
+#                      |'''
+#     try:
+#             t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
+
+#             def do(self, id = None):
+#                 try:
+#                     return list([self.children[0].do(id)] + self.children[1].do(id))
+#                 except:
+#                     raise Exception
+
+#         except:
+#             try:
+#                 t[0] = Node ("function_stm", t[1], "function_stm")
+
+#                 def do(self, id = None):
+#                     try:
+#                         return [self.children.do(id)]
+#                     except:
+#                         raise Exception
+#             except:
+#                 t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
+#                 def do(self, id = None):
+#                     try:
+#                         return []
+#                     except:
+#                         raise Exception
+#         t[0].do = MethodType(do, t[0], Node)
+    
+#----------------------------------------------------#
+#                    5.2.2.5 Return                  #
+#----------------------------------------------------#
+
+def p_return(t):
+    '''return_stmt : RETURN elements SEMICOLON'''
+    
+    t[0] = Node('return', t[2], 'return')    
+    def do(self, id = None):
+        # return self.children.do()[0]
+        return {"return" :  self.children.do()[0]}
+    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
+
+#----------------------------------------------------#
+#                    5.2.2.5 Break                   #
+#----------------------------------------------------#
+
+def p_break(t):
+    '''break_stmt : BREAK SEMICOLON'''
+    
+    t[0] = Node('break', t[0], 'break')    
+    def do(self, id = None):
+        #print "Entered Break"
+        return {"break" : None}
+    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
@@ -556,6 +640,7 @@ def p_unary_expr(t):
                   | id_expr
                   | string_expr
                   | list_expr
+                  | dictionary_expr
                   | parse_text_expr
                   | group_expr
                   | uplus_expr
@@ -686,6 +771,22 @@ def p_expression_list(t):
     def do(self, id = None):
         try:
             return list( self.children.do(id) )
+        except:
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#               5.3.1.5 Dictionary                   #
+#----------------------------------------------------#
+
+def p_expression_dictionary(t):
+    'dictionary_expr : LCBRACKET dictionary_objects RCBRACKET'
+
+    t[0] = Node("dictionary", t[2], "dictionary")
+
+    def do(self, id = None):
+        try:
+            return self.children.do(id)
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
