@@ -648,37 +648,6 @@ def p_function_call(t):
                 identifiers.scope_out()
             	return result 
     t[0].do = MethodType(do, t[0], Node)
-
-# def p_function_statements(t):
-#     '''function_stmt : statement RETURN statements
-#                      | statement
-#                      |'''
-#     try:
-#             t[0] = Node ("function_stms", [t[1], t[3]], "function_stms")    
-
-#             def do(self, id = None):
-#                 try:
-#                     return list([self.children[0].do(id)] + self.children[1].do(id))
-#                 except:
-#                     raise Exception
-
-#         except:
-#             try:
-#                 t[0] = Node ("function_stm", t[1], "function_stm")
-
-#                 def do(self, id = None):
-#                     try:
-#                         return [self.children.do(id)]
-#                     except:
-#                         raise Exception
-#             except:
-#                 t[0] = Node ("empty_function_stmt", None, "empty_function_stmt")
-#                 def do(self, id = None):
-#                     try:
-#                         return []
-#                     except:
-#                         raise Exception
-#         t[0].do = MethodType(do, t[0], Node)
     
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
