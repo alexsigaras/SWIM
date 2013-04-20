@@ -206,7 +206,6 @@ def p_statement_assign(t):
     def do(self, id = None):
         ''' Need to check ID !'''    
         a =    self.children[1].do()
-        print(a)
         identifiers[self.children[0]] = a#self.children[1].do()
         #print(identifiers[self.children[0]])
         return identifiers[self.children[0]]
