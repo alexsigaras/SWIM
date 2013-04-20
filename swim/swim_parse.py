@@ -112,17 +112,13 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                firstResult = self.children[0].do(id)
-                if firstResult == "break":
-                    return "break"
-                elif firstResult == "return":
-                    return "return"
+                firstResult = self.children[0].do(id)                              
+                if isinstance(firstResult, dict) and (firstResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
+                    return firstResult
                 else: 
                     secondResult = self.children[1].do(id)
-                    if secondResult == "break":
-                        return "break"
-                    elif secondResult == "return":
-                        return "return"                    
+                    if isinstance(secondResult, dict) and (secondResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
+                        return secondResult              
             except:
                 raise Exception
 
@@ -208,8 +204,11 @@ def p_statement_assign(t):
 
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
-        ''' Need to check ID !'''       
-        identifiers[self.children[0]] = self.children[1].do()
+        ''' Need to check ID !'''    
+        a =    self.children[1].do()
+        print(a)
+        identifiers[self.children[0]] = a#self.children[1].do()
+        #print(identifiers[self.children[0]])
         return identifiers[self.children[0]]
     t[0].do = MethodType(do, t[0], Node)
 
@@ -484,10 +483,11 @@ def p_statement_while(t):
         try:            
             while self.children[0].do(): 
                 result = self.children[1].do()
-                if result == "break":
-                    break
-                elif result == "return":
-                    return "return"
+                if isinstance(result, dict):
+                    if result.keys()[0] == "break":
+                        break
+                    elif result.keys()[0] == "return":
+                        return result
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -504,10 +504,12 @@ def p_statement_for(t):
             for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
                 result  = self.children[2].do()
-                if result == "break":
-                    break
-                elif result == "return":
-                    return "return"
+
+                if isinstance(result, dict):
+                    if result.keys()[0] == "break":
+                        break
+                    elif result.keys()[0] == "return":
+                        return result
         except:
             raise Exception
     t[0].do = MethodType(do, t[0], Node)
@@ -536,7 +538,7 @@ def p_function_call(t):
         def do(self, id = None):
             return buildtin_pdf(self.children[1].do())
     else:      
-        @identifiers.scope
+        #@identifiers.scope
         def do(self, id = None):
             func = identifiers[self.children[0]]
             try:
@@ -550,10 +552,12 @@ def p_function_call(t):
             except:
                 print "Function parameter error!"
                 return None 
-            result = identifiers[self.children[0]].children[2].do() 
-            if result == "return":
-                return "return"
-            return result 
+            result = func.children[2].do() 
+            try:
+            	if result.keys()[0] == "return":            	
+                	return result.values()[0]
+            except:
+            	return result 
     t[0].do = MethodType(do, t[0], Node)
 
 # def p_function_statements(t):
@@ -597,7 +601,7 @@ def p_return(t):
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
         # return self.children.do()[0]
-        return "return"
+        return {"return" :  self.children.do()[0]}
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #----------------------------------------------------#
@@ -610,7 +614,7 @@ def p_break(t):
     t[0] = Node('break', t[0], 'break')    
     def do(self, id = None):
         #print "Entered Break"
-        return "break"
+        return {"break" : None}
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
 #--------------------------------------------------------------#
