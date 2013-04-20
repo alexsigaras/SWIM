@@ -103,7 +103,7 @@ def p_start(t):
 #--------------------------------------------------------------#
 #                       5.2 Statements                         #
 #--------------------------------------------------------------#
-
+import traceback
 def p_statements(t):
     '''statements : statement statements
                   | statement'''
@@ -112,14 +112,17 @@ def p_statements(t):
 
         def do(self, id = None):
             try:
-                firstResult = self.children[0].do(id)                              
-                if isinstance(firstResult, dict) and (firstResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
-                    return firstResult
+                firstResult = self.children[0].do(id)                         
+                if isinstance(firstResult, dict):
+                    if firstResult.keys()[0] == "break" or firstResult.keys()[0] == "return":
+                        return firstResult
                 else: 
                     secondResult = self.children[1].do(id)
-                    if isinstance(secondResult, dict) and (secondResult.keys()[0] == "break" or firstResult.keys()[0] == "return"):
-                        return secondResult              
+                    if isinstance(secondResult, dict):
+                        if secondResult.keys()[0] == "break" or secondResult.keys()[0] == "return":
+                            return secondResult              
             except:
+                #print traceback.format_exc()
                 raise Exception
 
     except:
@@ -599,7 +602,7 @@ def p_return(t):
     
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None):
-        # return self.children.do()[0]
+        # return self.children.do()[0]\
         return {"return" :  self.children.do()[0]}
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
