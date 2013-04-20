@@ -720,18 +720,21 @@ def p_binary_expr(t):
 #----------------------------------------------------#
 def p_expression_boolean(t):
     '''boolean_expr : TRUE
-                    | FALSE'''
+                    | TRUELOWERCASE
+                    | FALSE
+                    | FALSELOWERCASE'''
                   
     t[0] = Node("boolean", t[1], 'boolean')
     
-    if t[1] == "True":
+    # if t[1] == "True" or t[1] == "true":
+    if t[1] in ["True","true"]:
         def do(self, id = None):
             try:
                 return True
             except:
                 print("Error in True boolean expression")
                 raise Exception
-    elif t[1] == "False":
+    elif t[1] in ["False", "false"]:
         def do(self, id = None):
             try:
                 return False
