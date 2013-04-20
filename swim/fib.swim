@@ -2,9 +2,9 @@ fun fib(number) do
 	first = 0;
 	second = 1;
 	if number == 0 do
-        print("0");
+        return 0;
 	elif number == 1 do
-        print("1");
+        return 1;
     else
         count = 0;
 		while count<number do
@@ -13,7 +13,8 @@ fun fib(number) do
             second = temp;
             count = count + 1;
         end        
-        print(first);
+        return first;
 	end
 end
-fib(5);
+c = fib(20);;
+print(c);
