@@ -51,7 +51,7 @@ from swim_parse import *
 #-----------------------------------------------------------------------------#
 
 import ply.yacc as yacc
-yacc.yacc(optimize=0)
+yacc.yacc(optimize=0, write_tables=0)
 mode = 2
 if mode == 1:
     s = raw_input("SWIM REPL> ")   

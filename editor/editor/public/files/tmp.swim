@@ -1,4 +1,26 @@
-a=1;
+fun fib(number) do
+    first = 0;
+	second = 1;
+	if number == 0 do
+        print("0");
+	elif number == 1 do
+        print("1");
+    else
+        count = 0;
+		while count<number do
+            temp = first+second;
+            first = second;
+            second = temp;
+            count = count + 1;
+        end        
+        print(first);
+	end
+end
 
-
-b=2;
+i=1;
+x="";
+while i<60 do
+	x=x+fib(i);
+	i++;
+end
+print(x);
