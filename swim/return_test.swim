@@ -1,8 +1,0 @@
-fun foo(a) do
-	for each item in a do
-		if(item==4) do return item; end
-	end
-end
-
-b = foo([3,4,5,6]);;
-print(b);
