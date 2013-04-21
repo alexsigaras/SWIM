@@ -1,14 +1,15 @@
+
 class List do
-	val= 0;
+	val = 0;
 	type="List";
 
 	fun getElement(x) do 
 		i=0; 
 		for each element in val do 
 			if(i==x) do 
-				#print(element); 
 				return element;
-			end i++; 
+			end
+			i++; 
 		end 
 	end
 	fun length() do 
@@ -16,7 +17,7 @@ class List do
 		for each element in val do 
 			i++; 
 		end 
-		print(i); 
+		return i;
 	end
 	fun append(x) do
 	#	val = val + x;
@@ -33,18 +34,18 @@ class Dict do
 	fun getKey(x) do 
 		i=0; 
 		for each element in val do 
-			if(i==x) do 
+			if(i==x) do
+				#return element;
 				print(element); 
 			end i++; 
 		end 
 	end
-
-	
 	fun length() do 
 		i=0; 
 		for each element in val do 
 			i++; 
 		end 
+		#return i;
 		print(i); 
 	end
 end
