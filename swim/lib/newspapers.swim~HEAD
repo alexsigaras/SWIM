@@ -8,8 +8,8 @@ class newspapers do
 	fun getPosts () do
 		for each newspaper in newspapers.val do
 			for each tag in tags.val do
-				print(@(tag, newspaper))
-				#print (@(tag, newspaper));
+				#print(@(tag, newspaper))
+				print (@(tag, newspaper));
 			end
 		end
 	end
