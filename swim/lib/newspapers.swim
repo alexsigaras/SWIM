@@ -2,14 +2,20 @@
 
 class newspapers do
 
-	newspapers = ["http://www.gizmodo.com","http://www.engadget.com","http://www.arstechnica.com"];
+	newspapers = ["big dick", "http://www.gizmodo.com","http://www.engadget.com","http://www.arstechnica.com"];
 	tags = [".post"];
 
 	fun getPosts () do
 		for each newspaper in newspapers.val do
 			for each tag in tags.val do
-				#print(@(tag, newspaper))
-				print (@(tag, newspaper));
+<<<<<<< HEAD:swim/newspapers.swim
+				#print (@(tag, newspaper));
+				print(tag);
+				print(newspaper);
+=======
+				print(@(tag, newspaper))
+				#print (@(tag, newspaper));
+>>>>>>> Added newspapers demo:swim/lib/newspapers.swim
 			end
 		end
 	end
