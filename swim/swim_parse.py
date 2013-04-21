@@ -755,6 +755,10 @@ def p_function_call_expr(t):
             try:
                 cnt = 0
                 # set to true so it returns name and not variable
+
+                for k, v in identifiers[className].attr.iteritems():
+                    identifiers[k] = v
+
                 for name in func.children[1].do(True):
                     # take the name and assign it into the new namespace
                     # pass by ref via python

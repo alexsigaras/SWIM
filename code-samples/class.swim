@@ -1,8 +1,9 @@
 class alex {
 	a=1;
 	b=2;
-	fun foo() do 
-		print(1);
+	fun foo(x, y) do 
+		print(x+y);
+		print(a+b);
 	end
 } end 
 
@@ -11,4 +12,4 @@ c = new alex();
 #print(c.b);
 c.b = 5;
 #print(c.b);
-c.foo()
+c.foo(3, 4)
