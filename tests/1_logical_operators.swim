@@ -1,7 +1,13 @@
-if 1 == 1 do
-	print('-------TEST RUNNING-------');
-end
-
-
 print('TESTING LOGICAL OPERATORS:');
-if True and True do print('worked'); else print('###ERROR ON: True and True'); end
+
+if True and True do x = 0; else print('###FAILED ON: True and True'); end
+if True and False do print('###FAILED ON: True and False'); end
+if False and False do print('###FAILED ON: False and False'); end
+
+if True or True do x = 0; else print('###FAILED ON: True or True'); end
+if True or False do x = 0; else print('###FAILED ON: True or False'); end
+if False or False do print('###FAILED ON: False or False'); end
+
+if True xor True do print('###FAILED ON: True xor True'); end
+if True xor False do x = 0; else print('###FAILED ON: True xor False'); end
+if False xor False do print('###FAILED ON: False xor False'); end

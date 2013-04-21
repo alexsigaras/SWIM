@@ -57,6 +57,7 @@ def main(file=None, mode=2):
     yacc.yacc(optimize=0, write_tables=0)
     
     if file:
+        yacc.yacc(debug=0, errorlog=yacc.NullLogger())
         f = open(file)
         s = f.read().replace('\n',' ')
         yacc.parse(s)
