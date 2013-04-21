@@ -1,4 +1,7 @@
-print('TESTING LOGICAL OPERATORS:');
+print('TESTING LOGICAL OPERATORS');
+
+if not True do print('###FAILED ON: not True'); end
+if not False do x = 0; else print('###FAILED ON: not True'); end
 
 if True and True do x = 0; else print('###FAILED ON: True and True'); end
 if True and False do print('###FAILED ON: True and False'); end
@@ -11,3 +14,14 @@ if False or False do print('###FAILED ON: False or False'); end
 if True xor True do print('###FAILED ON: True xor True'); end
 if True xor False do x = 0; else print('###FAILED ON: True xor False'); end
 if False xor False do print('###FAILED ON: False xor False'); end
+
+if ! True do print('###FAILED ON: ! True'); end
+if ! False do x = 0; else print('###FAILED ON: ! True'); end
+
+if True && True do x = 0; else print('###FAILED ON: True && True'); end
+if True && False do print('###FAILED ON: True && False'); end
+if False && False do print('###FAILED ON: False && False'); end
+
+if True || True do x = 0; else print('###FAILED ON: True || True'); end
+if True || False do x = 0; else print('###FAILED ON: True || False'); end
+if False || False do print('###FAILED ON: False || False'); end
