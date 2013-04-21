@@ -621,7 +621,7 @@ def p_statement_include(t):
     t[0] = Node("include", t[2] , "include")
     def do(self, id = None):
         try:
-            fn = open(self.children + ".swim")
+            fn = open( os.path.join( "lib", self.children + ".swim"))
             s = fn.read()
             yacc.parse(s)
             fn.close()              
@@ -716,15 +716,16 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
-            try:   
-                try:             
-                    if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
-                        val = self.children[1].do()[0].attr['val']
-                except:
-                    val = self.children[1].do()[0]
-                return builtin_print(val)
+            try:             
+                if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
+                    val = self.children[1].do()[0].attr['val']
+                    return builtin_print(val)
             except:
-                print("Error in builtin print")
+                try:
+                    val = self.children[1].do()[0]
+                    return builtin_print(val)                
+                except:
+                    print("Error in builtin print")
     elif t[1] == "printErr":
         def do(self, id = None):            
             try:
