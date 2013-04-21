@@ -243,11 +243,9 @@ def p_statement_assign(t):
     t[0] = Node("assign", [t[1], t[3]], t[2])
     def do(self, id = None):
         ''' Need to check ID !'''
-        try:    
+        try:
             a = self.children[1].do()
             identifiers[self.children[0]] = a
-            #self.children[1].do()
-            #print(identifiers[self.children[0]])
             return identifiers[self.children[0]]
         except:
             print("Error in assignment statement")
@@ -594,7 +592,7 @@ class swimClass():
     pass
 
 def p_class_decl(t):
-    '''class_decl_stmt : CLASS ID LCBRACKET statements RCBRACKET END'''
+    '''class_decl_stmt : CLASS ID DO statements END'''
     t[0] = Node("class", [t[2], t[4]], "class")
     def do(self, id=None):
         try:
