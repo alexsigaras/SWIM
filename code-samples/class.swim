@@ -1,0 +1,5 @@
+class alex {a=1;b=2;} end
+c = new alex();
+print(c.b);
+c.b = 5;
+print(c.b);

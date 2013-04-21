@@ -35,6 +35,10 @@ class Namespace:
 			if table.has_key(var):
 				del table[var]
 
+	def getAllItems(self):
+		'return all items on current namespace scope'
+		return self.stack[-1]
+
 	def scope_in(self):
 		'pushes a new namespace on top of the stack'
 		self.stack.append({})

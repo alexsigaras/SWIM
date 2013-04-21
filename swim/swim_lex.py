@@ -39,7 +39,9 @@ reserved = {
     'elif'     : 'ELIF',
     'do'       : 'DO',
     'True'     : 'TRUE',
+    'true'     : 'TRUELOWERCASE',
     'False'    : 'FALSE',
+    'false'    : 'FALSELOWERCASE',
     'while'    : 'WHILE',
     'for'      : 'FOR',
     'each'     : 'EACH',
@@ -53,6 +55,8 @@ reserved = {
     'end'      : 'END',
     'fun'      : 'FUN', 
     'class'    : 'CLASS',
+    'new'      : 'NEW',
+    'include'  : 'INCLUDE',
 }
 
 #---------------------------------#
@@ -62,7 +66,7 @@ reserved = {
 #---------------------------------#
 
 tokens = [
-    'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'SEMICOLON', 'COLON',
+    'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'DOT', 'SEMICOLON', 'COLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
     'ASSIGN',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
@@ -77,12 +81,13 @@ tokens = [
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
-t_LSBRACKET  = r'\['
-t_RSBRACKET  = r'\]'
+t_LSBRACKET = r'\['
+t_RSBRACKET = r'\]'
 t_LCBRACKET = r'\{'
 t_RCBRACKET = r'\}'
 t_SELECTOR  = r'@'
 t_COMMA     = r','
+t_DOT       = r'\.'
 t_COLON     = r':'
 t_SEMICOLON = r';'
 
