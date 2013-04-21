@@ -148,7 +148,7 @@ import traceback
 def p_statements(t):
     '''statements : statement statements
                   | statement'''
-                  
+
     try:
         t[0] = Node ("statements", [t[1], t[2]], "statements")    
 
@@ -624,6 +624,7 @@ def p_statement_for(t):
 
     def do(self, id = None):
         try:
+            # val = self.children[1].do()[0].attr['val']
             for temp in self.children[1].do():
                 identifiers[self.children[0]] = temp
                 result  = self.children[2].do()
@@ -763,14 +764,16 @@ def p_function_call(t):
   
     if t[1] == "print":
         def do(self, id = None):
-            try:             
+            try:
                 if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
                     val = self.children[1].do()[0].attr['val']
-                    return builtin_print(val)
+                else:
+                    val = self.children[1].do()[0]
+                return builtin_print(val)
             except:
                 try:
                     val = self.children[1].do()[0]
-                    return builtin_print(val)                
+                    return builtin_print(val) 
                 except:
                     print("Error in builtin print")
     elif t[1] == "printErr":
@@ -778,7 +781,7 @@ def p_function_call(t):
             try:
                 return builtin_print(self.children[1].do()[0], colorCodes['red'])
             except:
-                print("Error in builtin printerr")
+                print("Error in builtin printErr")
     elif t[1] == "pdf":
         def do(self, id = None):
             try: 
@@ -790,11 +793,19 @@ def p_function_call(t):
         #@identifiers.scope
         def do(self, id = None):
             identifiers.scope_in()
-            func = identifiers[self.children[0]]
+            # func = identifiers[self.children[0]]
+            if className is not None:
+                func = identifiers[className].attr[self.children[0]]
+            else:
+                func = identifiers[self.children[0]]
 
             try:
                 cnt = 0
                 # set to true so it returns name and not variable
+
+                for k, v in identifiers[className].attr.iteritems():
+                                    identifiers[k] = v
+
                 for name in func.children[1].do(True):
                     # take the name and assign it into the new namespace
                     # pass by ref via python
@@ -828,13 +839,17 @@ def p_function_call_expr(t):
                     val = self.children[1].do()[0]
                 return builtin_print(val)
             except:
-                print("Error in builtin print")
+                try:
+                    val = self.children[1].do()[0]
+                    return builtin_print(val) 
+                except:
+                    print("Error in builtin print")
     elif t[1] == "printErr":
         def do(self, id = None):            
             try:
                 return builtin_print(self.children[1].do()[0], colorCodes['red'])
             except:
-                print("Error in builtin printerr")
+                print("Error in builtin printErr")
     elif t[1] == "pdf":
         def do(self, id = None):
             try: 
