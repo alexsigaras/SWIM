@@ -1,5 +1,27 @@
-class alex {a=1;b=2;} end
+class alex {a=1;b=2;} end # comment
+#comment
+// another comment
+
+/* mutliline comment
+aajhgfjdshk
+hfkjshjfkd
+*/
+
+/* ********************* */
+/* ///////////////////// */
+/* /////////aaaaa******bbbbbb//////////// */
+/* mutliline comment
+aajhgfjdshk
+hfkjshjfkd
+*/
+
 c = new alex();
+
 print(c.b);
 c.b = 5;
 print(c.b);
+
+/* mutliline comment
+aajhgfjdshk
+hfkjshjfkd
+*/

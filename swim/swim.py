@@ -67,7 +67,7 @@ def main(file=None, mode=2):
             s = raw_input("SWIM REPL> ")   
             lex.input(s)
         if mode == 3:
-            s = 'print("good");/* comment; 1 \n bullshit + - hahaha */'
+            s = 'print("good");/* comment; 1 \n + - hahaha */'
             #yacc.parse(s)
             lex.input(s)
             while 1:
@@ -91,8 +91,9 @@ def main(file=None, mode=2):
                 #     else:
                 #         yacc.parse(line)
                 s = fn.read()
-                #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
-                s = s.replace('\n',' ')
+                # #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
+                #s = s.replace('\n',' ')
+                #s = "a=1; # This is a comment \n b=2; print(a); print(b);"
                 #print s
                 #print s
                 yacc.parse(s)
