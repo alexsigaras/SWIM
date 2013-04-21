@@ -1,11 +1,11 @@
-class alex {
+class alex do
 	a=1;
 	b=2;
 	fun foo(x, y) do 
 		print(x+y);
 		print(a+b);
 	end
-} end 
+end 
 
 c = new alex();
 

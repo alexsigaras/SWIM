@@ -56,6 +56,8 @@ def stripe_quotation(string):
     result = string.replace("'","") if string.startswith("'") else string.replace('"', "")
     return result
 
+class swimClass():
+    pass
 #-----------------------------------------------------------------------------#
 #                           4.  Precedence                                    #
 #-----------------------------------------------------------------------------#
@@ -192,7 +194,8 @@ def p_simple_stmt(t):
                    | function_call_stmt
                    | return_stmt
                    | break_stmt
-                   | class_instantiation_stmt'''
+                   | class_instantiation_stmt
+                   | include_stmt'''
     super_do(t, 'stmt')
 
 def p_compound_stmt(t):
@@ -244,8 +247,8 @@ def p_statement_assign(t):
     def do(self, id = None):
         ''' Need to check ID !'''
         try:
-            a = self.children[1].do()
-            identifiers[self.children[0]] = a
+            element = self.children[1].do()
+            identifiers[self.children[0]] = element
             return identifiers[self.children[0]]
         except:
             print("Error in assignment statement")
@@ -289,15 +292,27 @@ def p_statement_decrement(t):
 def p_list(t):
     'list_stmt : ID ASSIGN LSBRACKET elements RSBRACKET SEMICOLON'
 
-    t[0] = Node("list", [t[1],t[4]], "elements")
+    t[0] = Node("list", [t[1],t[4]], "list")
     def do(self, id = None):
         ''' Need to check ID !'''
-        try:
-            identifiers[self.children[0]] = self.children[1].do(id)
-            return identifiers[self.children[0]]
-        except:
-            print("Error in list statement")
-            print traceback.format_exc()
+        if id is not None:
+            return "list"
+        else:
+            try:
+                element = self.children[1].do(id)
+                if isinstance(element, list) or isinstance(element, dict) or isinstance(element, str): 
+                    listObj = swimClass()
+                    identifiers.scope_in()
+                    identifiers["List"].children[1].do()    
+                    listObj.attr = identifiers.getAllItems()
+                    identifiers.scope_out()
+                    listObj.attr["val"] = element
+                    identifiers[self.children[0]] = listObj
+
+                return identifiers[self.children[0]]
+            except:
+                print("Error in list statement")
+                print traceback.format_exc()
     t[0].do = MethodType(do, t[0], Node)
 
 def p_elements(t):
@@ -356,7 +371,15 @@ def p_dictionary(t):
     def do(self, id = None):
         ''' Need to check ID !'''
         try:       
-            identifiers[self.children[0]] = self.children[1].do(id)
+            element = self.children[1].do(id)
+            if isinstance(element, dict): 
+                listObj = swimClass()
+                identifiers.scope_in()
+                identifiers["Dict"].children[1].do()    
+                listObj.attr = identifiers.getAllItems()
+                identifiers.scope_out()
+                listObj.attr["val"] = element
+                identifiers[self.children[0]] = listObj            
             return identifiers[self.children[0]]
         except:
             print("Error in dictionary statement")
@@ -585,15 +608,34 @@ def p_statement_for(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
+#             5.2.2.4 Include                        #
+#----------------------------------------------------#
+import sys
+import os
+sys.path.insert(0,os.path.join("..", "include"))
+
+import ply.yacc as yacc
+
+def p_statement_include(t):
+    'include_stmt : INCLUDE ID SEMICOLON'
+    t[0] = Node("include", t[2] , "include")
+    def do(self, id = None):
+        try:
+            fn = open(self.children + ".swim")
+            s = fn.read()
+            yacc.parse(s)
+            fn.close()              
+        except:
+            print("Error in include")
+            print traceback.format_exc()
+    t[0].do = MethodType(do, t[0], Node)
+#----------------------------------------------------#
 #              5.2.2.4 Classes                       #
 #----------------------------------------------------#
 
-class swimClass():
-    pass
-
 def p_class_decl(t):
     '''class_decl_stmt : CLASS ID DO statements END'''
-    t[0] = Node("class", [t[2], t[4]], "class")
+    t[0] = Node("class", [t[2], t[4]], t[2])
     def do(self, id=None):
         try:
             identifiers[self.children[0]] = self # child 0 is id, adds tree to id ref in symbol table
@@ -674,8 +716,13 @@ def p_function_call(t):
 
     if t[1] == "print":
         def do(self, id = None):
-            try:
-                return builtin_print(self.children[1].do()[0])
+            try:   
+                try:             
+                    if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
+                        val = self.children[1].do()[0].attr['val']
+                except:
+                    val = self.children[1].do()[0]
+                return builtin_print(val)
             except:
                 print("Error in builtin print")
     elif t[1] == "printErr":
@@ -725,7 +772,11 @@ def p_function_call_expr(t):
     if t[1] == "print":
         def do(self, id = None):
             try:
-                return builtin_print(self.children[1].do()[0])
+                if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
+                    val = self.children[1].do()[0].attr['val']
+                else:
+                    val = self.children[1].do()[0]
+                return builtin_print(val)
             except:
                 print("Error in builtin print")
     elif t[1] == "printErr":
@@ -970,7 +1021,7 @@ def p_expression_string(t):
 def p_expression_list(t):
     'list_expr : LSBRACKET elements RSBRACKET'
 
-    t[0] = Node("list", t[2], "list")
+    t[0] = Node("list", t[2], "List")
 
     def do(self, id = None):
         try:

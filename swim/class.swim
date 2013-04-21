@@ -1,15 +1,8 @@
 class List do
 list=[];
+type="list"
 
 fun getElement(x) do i=0; for each element in list do if(i==x) do print(element); end i++; end end
 fun length() do i=0; for each element in list do i++; end print(i); end
 
 end
-
-mylist = new List();
-mylist.list=[1,2,3,4];
-print(mylist.list);
-mylist.getElement(2)
-print("The above must be 3");
-mylist.length()
-print("This should be 4");

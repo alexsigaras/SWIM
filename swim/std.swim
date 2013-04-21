@@ -1,0 +1,41 @@
+class List do
+	val= 0;
+	type="List";
+
+	fun getElement(x) do 
+		i=0; 
+		for each element in val do 
+			if(i==x) do 
+				print(element); 
+			end i++; 
+		end 
+	end
+	fun length() do 
+		i=0; 
+		for each element in val do 
+			i++; 
+		end 
+		print(i); 
+	end
+end
+
+class Dict do
+	val= 0;
+	type="Dict";
+
+	fun getElement(x) do 
+		i=0; 
+		for each element in val do 
+			if(i==x) do 
+				print(element); 
+			end i++; 
+		end 
+	end
+	fun length() do 
+		i=0; 
+		for each element in val do 
+			i++; 
+		end 
+		print(i); 
+	end
+end
