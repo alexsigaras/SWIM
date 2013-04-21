@@ -1,0 +1,21 @@
+# Online Newspapers Library
+
+class newspapers do
+
+	newspapers = ["http://www.gizmodo.com","http://www.engadget.com","http://www.arstechnica.com"];
+	tags = [".post"];
+
+	fun getPosts () do
+		for each newspaper in newspapers do
+			for each tag in tags do
+				print (@(tag, newspaper));
+				#print(tag);
+				#print(newspaper);
+			end
+		end
+	end
+	
+end
+
+myNewspapers = new newspapers();
+myNewspapers.getPosts()
