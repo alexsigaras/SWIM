@@ -1,7 +1,7 @@
 *.pyc
-swim/parsetab.py
-swim/parser.out
-swim/lextab.py
+parsetab.py
+
+lextab.py
 
 .idea/*
 *.log

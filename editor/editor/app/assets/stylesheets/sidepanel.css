@@ -1,55 +1,45 @@
 #sidePanel{
-    width:490px;
+    width:290px;
     position:fixed;
-    left:-447px;
     top:0%;
     height: 100%;
     z-index: 16;    
 }
 
 #panelHandle{
-    background-image: -webkit-linear-gradient(top,#0044cc,#0088cc);
-    background-image: -moz-linear-gradient(center top , #0044cc, #0088cc);
-    background-image: -o-linear-gradient(center top , #0044cc, #0088cc);
-    background-image: -ms-linear-gradient(center top , #0044cc, #0088cc);
-    background-image:linear-gradient(center top , #0044cc, #0088cc);
-
-    height:170px;
-    width:40px;
-    border-radius:0 5px 5px 0;
+    height:30px;
+    width:30px;
     float:left;
     cursor:pointer;
     z-index: 16;
+    margin-left : -30px;
 }
 
 
 #panelContent{
     float:left;
     border:1px solid #333333;
-    width:445px;
+    width:245px;
     height:100%;
     background-color:#EEEEEE;
     z-index: 16;
-
 }
 
+
 #panelHandle p {
-    -moz-transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
-    color: #FFFFFF;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: bold;
     left: -4px;
     margin: 0;
     padding: 0;
     position: relative;
-    top: 26px;
+    top: 16px;
     z-index: 16;
 
 }
 
 #github {
-    width: 445px;
+    width: 245px;
 }
 
 #submitme {
@@ -60,17 +50,17 @@
 }
 
 #controls {
-    width: 435px;
+    width: 225px;
     margin-left: 10px;
 }
 
 
 #resultCode {
     display: inline-block;
-    width: 377px;
+    width: 177px;
     white-space: pre-wrap;       /* css-3 */
- white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
- white-space: -pre-wrap;      /* Opera 4-6 */
- white-space: -o-pre-wrap;    /* Opera 7 */
- word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+    white-space: -pre-wrap;      /* Opera 4-6 */
+    white-space: -o-pre-wrap;    /* Opera 7 */
+    word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }

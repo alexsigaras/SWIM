@@ -1,4 +1,5 @@
 var x = '';
+var text='';
 $(function() {
         // Creating the console.
         var header = 'Welcome to the Swim Editor!\n';
@@ -25,6 +26,7 @@ $(function() {
         jqconsole.RegisterMatching('{', '}', 'brace');
         jqconsole.RegisterMatching('(', ')', 'paran');
         jqconsole.RegisterMatching('[', ']', 'bracket');
+        jqconsole.RegisterMatching('do', 'end', 'loop');
         // Handle a command.
         var handler = function(command) {
           if (command) {
@@ -33,13 +35,20 @@ $(function() {
                 url: "code",
                 type: "GET",
                 async : false,
-                data:{token:command},
+                data:{token:text + command},
                 dataType:"html",
               }).done(function(html) {
-                x = x+ html;
+                x = html;
+                command = command.replace(new RegExp('print\(.*\);|pdf\(.*\);',''));
+                if (command != 'undefined') {
+                  text += command;
+                }
               });
-
-              jqconsole.Write('==> ' + x + '\n');
+              var re = /(\w+)\s?=\s?(.+);/;
+              temp = x.split('\n');
+              if(!command.match(re)){
+                jqconsole.Write('==> ' + temp[temp.length-2] + '\n');
+              }
             } catch (e) {
               jqconsole.Write('ERROR: ' + e.message + '\n');
             }
@@ -57,6 +66,7 @@ $(function() {
             }
             return false;
           });
+
         };
 
         // Initiate the first prompt.
