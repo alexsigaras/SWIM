@@ -1,0 +1,22 @@
+print('TESTING ARITHMETIC OPERATORS');
+
+if 1 + 1 == 2 do x=0; else print('###FAILED ON: 1 + 1'); end
+if 1 + -1 == 0 do x=0; else print('###FAILED ON: 1 + -1'); end
+
+if 1 - 1 == 0 do x=0; else print('###FAILED ON: 1 - 1'); end
+if 1 - -1 == 2 do x=0; else print('###FAILED ON: 1 - -1'); end
+
+if 1 * 2 == 2 do x=0; else print('###FAILED ON: 1 * 2'); end
+if 2 * -1 == -2 do x=0; else print('###FAILED ON: 2 * -1'); end
+
+if 1 / 2 == .5 do x=0; else print('###FAILED ON: 1 / 2'); end
+if 2 / -1 == -2 do x=0; else print('###FAILED ON: 2 / -1'); end
+
+if 2 ^ 2 == 4 do x=0; else print('###FAILED ON: 2 ^ 2'); end
+if 2 ^ -2 == .25 do x=0; else print('###FAILED ON: 2 ^ -2'); end
+
+if 5 % 2 == 1 do x=0; else print('###FAILED ON: 5 % 2'); end
+
+if 5 + 2 * 3 == 11 do x=0; else print('###FAILED ON: 5 + 2 * 3'); end
+
+if 5 / 2 * 3 == 7.5 do x=0; else print('###FAILED ON: 5 / 2 * 3'); end

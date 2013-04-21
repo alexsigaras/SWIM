@@ -1,0 +1,37 @@
+print('TESTING COMPARISON OPERATORS');
+
+if 1 == 1 do x=0; else print('###FAILED ON: 1 == 1'); end
+if 1 == 2 do print('###FAILED ON: 1 == 2'); end
+
+if 1 != 1 do print('###FAILED ON: 1 != 1'); end
+if 1 != 2 do x=0; else print('###FAILED ON: 1 != 2'); end
+
+if 1 < 1 do print('###FAILED ON: 1 < 1'); end
+if 2 < 1 do print('###FAILED ON: 2 < 1'); end
+if 1 < 2 do x=0; else print('###FAILED ON: 1 < 2'); end
+
+if 1 > 1 do print('###FAILED ON: 1 > 1'); end
+if 2 > 1 do x=0; else print('###FAILED ON: 2 > 1'); end
+if 1 > 2 do print('###FAILED ON: 1 > 2'); end
+
+if 'a' >= 'a' do x=0; else print("###FAILED ON: 'a' >= 'a'"); end
+if 'w' >= 'a' do x=0; else print("###FAILED ON: 'w' >= 'a'"); end
+if 'a' >= 'w' do print("###FAILED ON: 'a' >= 'w'"); end
+
+if 'a' == 'a' do x=0; else print("###FAILED ON: 'a' == 'a'"); end
+if 'a' == 'w' do print("###FAILED ON: 'a' == 'w'"); end
+
+if 'a' != 'a' do print("###FAILED ON: 'a' != 'a'"); end
+if 'a' != 'w' do x=0; else print("###FAILED ON: 'a' != 'w'"); end
+
+if 'a' < 'a' do print("###FAILED ON: 'a' < 'a'"); end
+if 'w' < 'a' do print("###FAILED ON: 'w' < 'a'"); end
+if 'a' < 'w' do x=0; else print("'###FAILED ON: 'a' < 'w'"); end
+
+if 'a' > 'a' do print("###FAILED ON: 'a' > 'a'"); end
+if 'w' > 'a' do x=0; else print("###FAILED ON: 'w' > 'a'"); end
+if 'a' > 'w' do print("###FAILED ON: 'a' > 'w'"); end
+
+if 'a' >= 'a' do x=0; else print("###FAILED ON: 'a' >= 'a'"); end
+if 'w' >= 'a' do x=0; else print("###FAILED ON: 'w' >= 'a'"); end
+if 'a' >= 'w' do print("###FAILED ON: 'a' >= 'w'"); end
