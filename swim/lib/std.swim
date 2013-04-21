@@ -6,8 +6,10 @@ class List do
 		i=0; 
 		for each element in val do 
 			if(i==x) do 
-				print(element); 
-			end i++; 
+				#print(element); 
+				return element;
+			end
+			i++; 
 		end 
 	end
 	fun length() do 

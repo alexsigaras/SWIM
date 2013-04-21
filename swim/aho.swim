@@ -3,5 +3,6 @@ include std;
 url = "http://www.cs.columbia.edu/~aho/"; // Professor Aho's website
 tags = ["html", "h1"];				      // A list of tags to use
 
-doc = @(url, tag.getElement(0));
-print(@(url, tag.getElement(1)));
+#print(tags.getElement(0))
+doc = @(tags.getElement(0), url);
+print(@(tags.getElement(1), url));

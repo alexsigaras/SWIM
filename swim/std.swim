@@ -6,7 +6,8 @@ class List do
 		i=0; 
 		for each element in val do 
 			if(i==x) do 
-				print(element); 
+				#print(element); 
+				return element;
 			end i++; 
 		end 
 	end
