@@ -189,14 +189,16 @@ def p_simple_stmt(t):
                    | dictionary_stmt
                    | function_call_stmt
                    | return_stmt
-                   | break_stmt'''
+                   | break_stmt
+                   | class_instantiation_stmt'''
     super_do(t, 'stmt')
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
                      | while_stmt
                      | for_stmt                 
-                     | function_decl'''
+                     | function_decl
+                     | class_decl_stmt '''
     super_do(t, 'stmt')
 
 
@@ -583,6 +585,71 @@ def p_statement_for(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
+#              5.2.2.4 Classes                       #
+#----------------------------------------------------#
+
+class swimClass():
+    pass
+
+def p_class_decl(t):
+    '''class_decl_stmt : CLASS ID LCBRACKET statements RCBRACKET END'''
+    t[0] = Node("class", [t[2], t[4]], "class")
+    def do(self, id=None):
+        try:
+            identifiers[self.children[0]] = self # child 0 is id, adds tree to id ref in symbol table
+            return self
+        except:
+            print("Error in Class declaration")
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node) # adds the method do dynamically to class_declaration method
+
+def p_class_instantiation(t):
+    '''class_instantiation_stmt : ID ASSIGN NEW ID LPAREN RPAREN SEMICOLON '''
+    t[0] = Node("class_instantiation", [t[1],t[4]], "class_instantiation")
+    def do(self, id = None):
+        try:
+            classObj = swimClass();
+
+            identifiers.scope_in()
+            identifiers[self.children[1]].children[1].do()            
+            classObj.attr = identifiers.getAllItems()
+            identifiers.scope_out()
+
+            identifiers[self.children[0]] = classObj
+
+        except:
+            print("Error in class instantiation")
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_class_getAttribute(t):
+    '''class_getAttribute_expr : ID DOT ID'''
+                               #| ID DOT function_call '''
+
+
+    t[0] = Node("classAttribute", [t[1],t[3]], "classChild")
+    def do(self, id = None):
+        try:
+            return identifiers[self.children[0]].attr[self.children[1]]
+        except:
+            print("Error in class get Child")
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_class_setAttribute(t):
+    '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
+    #                               | ID DOT ID ASSIGN function_call_stmt SEMICOLON
+    t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classChild")
+    def do(self, id = None):
+        try:
+            identifiers[self.children[0]].attr[self.children[1]] = self.children[2].do()
+            return identifiers[self.children[0]].attr[self.children[1]]
+        except:
+            print("Error in class get Child")
+            raise Exception
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
 #              5.2.2.4 Functions                     #
 #----------------------------------------------------#
 
@@ -647,6 +714,56 @@ def p_function_call(t):
                 identifiers.scope_out()
             	return result 
     t[0].do = MethodType(do, t[0], Node)
+
+# def p_function_call_expr(t):
+#     '''function_call_expr : ID LPAREN elements RPAREN'''
+#     t[0] = Node("funcallexpr", [t[1],t[3]], 'funcallexpr')
+  
+
+#     if t[1] == "print":
+#         def do(self, id = None):
+#             try:
+#                 return builtin_print(self.children[1].do()[0])
+#             except:
+#                 print("Error in builtin print")
+#     elif t[1] == "printErr":
+#         def do(self, id = None):            
+#             try:
+#                 return builtin_print(self.children[1].do()[0], colorCodes['red'])
+#             except:
+#                 print("Error in builtin printerr")
+#     elif t[1] == "pdf":
+#         def do(self, id = None):
+#             try: 
+#                 return buildtin_pdf(self.children[1].do())
+#             except:
+#                 print("Error in builtin pdf")
+#                 raise Exception
+#     else:      
+#         #@identifiers.scope
+#         def do(self, id = None):
+#             identifiers.scope_in()
+#             func = identifiers[self.children[0]]
+#             try:
+#                 cnt = 0
+#                 # set to true so it returns name and not variable
+#                 for name in func.children[1].do(True):
+#                     # take the name and assign it into the new namespace
+#                     # pass by ref via python
+#                     identifiers[name] = self.children[1].do()[cnt]
+#                     cnt += 1
+#             except:
+#                 print "Function parameter error!"
+#                 return None 
+#             result = func.children[2].do()
+#             try:
+#                 if result.keys()[0] == "return":
+#                     identifiers.scope_out()
+#                     return result.values()[0]
+#             except:
+#                 identifiers.scope_out()
+#                 return result 
+#     t[0].do = MethodType(do, t[0], Node)
     
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
@@ -707,7 +824,9 @@ def p_unary_expr(t):
                   | parse_text_expr
                   | group_expr
                   | uplus_expr
-                  | uminus_expr'''
+                  | uminus_expr
+                  | class_getAttribute_expr
+                  | class_setAttribute_expr'''
 
     t[0] = Node("expr", t[1], 'expr')
     def do(self, id = None):
