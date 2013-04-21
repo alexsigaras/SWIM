@@ -1,0 +1,7 @@
+if 1 == 1 do
+	print('-------TEST RUNNING-------');
+end
+
+
+print('TESTING LOGICAL OPERATORS:');
+if True and True do print('worked'); else print('###ERROR ON: True and True'); end
