@@ -1,27 +1,14 @@
-class alex {a=1;b=2;} end # comment
-#comment
-// another comment
-
-/* mutliline comment
-aajhgfjdshk
-hfkjshjfkd
-*/
-
-/* ********************* */
-/* ///////////////////// */
-/* /////////aaaaa******bbbbbb//////////// */
-/* mutliline comment
-aajhgfjdshk
-hfkjshjfkd
-*/
+class alex {
+	a=1;
+	b=2;
+	fun foo() do 
+		print(1);
+	end
+} end 
 
 c = new alex();
 
-print(c.b);
+#print(c.b);
 c.b = 5;
-print(c.b);
-
-/* mutliline comment
-aajhgfjdshk
-hfkjshjfkd
-*/
+#print(c.b);
+c.foo()

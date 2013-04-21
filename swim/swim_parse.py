@@ -616,7 +616,6 @@ def p_class_instantiation(t):
             identifiers[self.children[1]].children[1].do()            
             classObj.attr = identifiers.getAllItems()
             identifiers.scope_out()
-
             identifiers[self.children[0]] = classObj
 
         except:
@@ -625,8 +624,8 @@ def p_class_instantiation(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_class_getAttribute(t):
-    '''class_getAttribute_expr : ID DOT ID'''
-                               #| ID DOT function_call '''
+    '''class_getAttribute_expr : ID DOT ID
+                               | ID DOT function_call_expr '''
 
 
     t[0] = Node("classAttribute", [t[1],t[3]], "classChild")
@@ -634,8 +633,11 @@ def p_class_getAttribute(t):
         try:
             return identifiers[self.children[0]].attr[self.children[1]]
         except:
-            print("Error in class get Child")
-            print traceback.format_exc()
+            try:       
+                return self.children[1].do(className = self.children[0])
+            except:
+                print("Error in class get Child")
+                print traceback.format_exc()
     t[0].do = MethodType(do, t[0], Node)
 
 def p_class_setAttribute(t):
@@ -696,6 +698,7 @@ def p_function_call(t):
         def do(self, id = None):
             identifiers.scope_in()
             func = identifiers[self.children[0]]
+
             try:
                 cnt = 0
                 # set to true so it returns name and not variable
@@ -717,55 +720,59 @@ def p_function_call(t):
             	return result 
     t[0].do = MethodType(do, t[0], Node)
 
-# def p_function_call_expr(t):
-#     '''function_call_expr : ID LPAREN elements RPAREN'''
-#     t[0] = Node("funcallexpr", [t[1],t[3]], 'funcallexpr')
-  
+def p_function_call_expr(t):
+    '''function_call_expr : ID LPAREN elements RPAREN'''
+    t[0] = Node("funcallexpr", [t[1],t[3]], 'funcallexpr')
 
-#     if t[1] == "print":
-#         def do(self, id = None):
-#             try:
-#                 return builtin_print(self.children[1].do()[0])
-#             except:
-#                 print("Error in builtin print")
-#     elif t[1] == "printErr":
-#         def do(self, id = None):            
-#             try:
-#                 return builtin_print(self.children[1].do()[0], colorCodes['red'])
-#             except:
-#                 print("Error in builtin printerr")
-#     elif t[1] == "pdf":
-#         def do(self, id = None):
-#             try: 
-#                 return buildtin_pdf(self.children[1].do())
-#             except:
-#                 print("Error in builtin pdf")
-#                 print traceback.format_exc()
-#     else:      
-#         #@identifiers.scope
-#         def do(self, id = None):
-#             identifiers.scope_in()
-#             func = identifiers[self.children[0]]
-#             try:
-#                 cnt = 0
-#                 # set to true so it returns name and not variable
-#                 for name in func.children[1].do(True):
-#                     # take the name and assign it into the new namespace
-#                     # pass by ref via python
-#                     identifiers[name] = self.children[1].do()[cnt]
-#                     cnt += 1
-#             except:
-#                 print "Function parameter error!"
-#                 return None 
-#             result = func.children[2].do()
-#             try:
-#                 if result.keys()[0] == "return":
-#                     identifiers.scope_out()
-#                     return result.values()[0]
-#             except:
-#                 identifiers.scope_out()
-#                 return result 
-#     t[0].do = MethodType(do, t[0], Node)
+    if t[1] == "print":
+        def do(self, id = None):
+            try:
+                return builtin_print(self.children[1].do()[0])
+            except:
+                print("Error in builtin print")
+    elif t[1] == "printErr":
+        def do(self, id = None):            
+            try:
+                return builtin_print(self.children[1].do()[0], colorCodes['red'])
+            except:
+                print("Error in builtin printerr")
+    elif t[1] == "pdf":
+        def do(self, id = None):
+            try: 
+                return buildtin_pdf(self.children[1].do())
+            except:
+                print("Error in builtin pdf")
+                print traceback.format_exc()
+    else:      
+        #@identifiers.scope
+        def do(self, id = None, className = None):
+            identifiers.scope_in()
+            if className is not None:
+                func = identifiers[className].attr[self.children[0]]
+            else:
+                func = identifiers[self.children[0]]
+
+            try:
+                cnt = 0
+                # set to true so it returns name and not variable
+                for name in func.children[1].do(True):
+                    # take the name and assign it into the new namespace
+                    # pass by ref via python
+                    identifiers[name] = self.children[1].do()[cnt]
+                    cnt += 1
+            except:
+                print "Function parameter error!"
+                return None 
+                            
+            result = func.children[2].do()            
+            try:
+                if result.keys()[0] == "return":
+                    identifiers.scope_out()
+                    return result.values()[0]
+            except:
+                identifiers.scope_out()
+                return result 
+    t[0].do = MethodType(do, t[0], Node)
     
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
@@ -828,7 +835,8 @@ def p_unary_expr(t):
                   | uplus_expr
                   | uminus_expr
                   | class_getAttribute_expr
-                  | class_setAttribute_expr'''
+                  | class_setAttribute_expr
+                  | function_call_expr'''
 
     t[0] = Node("expr", t[1], 'expr')
     def do(self, id = None):
