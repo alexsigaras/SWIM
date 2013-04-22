@@ -119,27 +119,31 @@ colorCodes = {
 #----------------------------------------------------#
 
 def p_start(t):
-    '''start : statements'''
+    '''start : statements
+             | '''
     
-    # Normal mode
-    showNodeTree = False
-    if(showNodeTree):
-        print(t[1].traverse())
-    else:
-        try:
-            result = t[1].do()
-            # print result
-            if result is not None:                
-            	print(result)
-        except Error as e:
-        	#print 1
-        	#print e
-            printErr(t[1].traverse())
-            pass
-        	#print "[Line :" + str(e.lineno) + "] " + e.msg 
-    
-    # Saving mode for function and class definition
-    ''' TO DO '''
+    try:
+        # Normal mode
+        showNodeTree = False
+        if(showNodeTree):
+            print(t[1].traverse())
+        else:
+            try:
+                result = t[1].do()
+                # print result
+                if result is not None:                
+                	print(result)
+            except Error as e:
+            	#print 1
+            	#print e
+                printErr(t[1].traverse())
+                pass
+            	#print "[Line :" + str(e.lineno) + "] " + e.msg 
+        
+        # Saving mode for function and class definition
+        ''' TO DO '''
+    except:
+        pass
 
 #--------------------------------------------------------------#
 #                       5.2 Statements                         #
