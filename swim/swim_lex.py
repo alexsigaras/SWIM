@@ -57,6 +57,7 @@ reserved = {
     'class'    : 'CLASS',
     'new'      : 'NEW',
     'include'  : 'INCLUDE',
+    'global'   : 'GLOBAL'
 }
 
 #---------------------------------#

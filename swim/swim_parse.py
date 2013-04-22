@@ -189,6 +189,7 @@ def p_statement(t):
 def p_simple_stmt(t):
     '''simple_stmt : expression_stmt
                    | assign_stmt
+                   | assign_global_stmt
                    | increment_stmt
                    | decrement_stmt
                    | list_stmt
@@ -243,8 +244,7 @@ def p_statement_expr(t):
 #----------------------------------------------------#
 
 def p_statement_assign(t):
-    '''assign_stmt : ID ASSIGN expression SEMICOLON
-                   | ID ASSIGN function_call_stmt SEMICOLON'''
+    'assign_stmt : ID ASSIGN expression SEMICOLON'
 
     t[0] = Node("assign", [t[1], t[3]], t[2])
 
@@ -256,6 +256,23 @@ def p_statement_assign(t):
             return identifiers[self.children[0]]
         except:
             print("Error in assignment statement")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_statement_global_assign(t):
+    'assign_global_stmt : GLOBAL ID ASSIGN expression SEMICOLON'
+                          
+    t[0] = Node("global_assign", [t[2], t[4]], t[3])
+
+    def do(self, id = None):
+        ''' Need to check ID !'''
+        try:
+            element = self.children[1].do()
+            identifiers.assign_global(self.children[0], element)
+            return identifiers.access_global(self.children[0])
+        except:
+            print("Error in global assignment statement")
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
@@ -789,9 +806,17 @@ def p_function_call(t):
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()
+    elif t[1] == "global":
+        def do(self, id = None):
+            try:
+                print(identifiers)
+                return identifiers
+            except:
+                print("Parsing identifiers error!")
+                print traceback.format_exc()
     else:      
         #@identifiers.scope
-        def do(self, id = None):
+        def do(self, id = None, className = None):
             identifiers.scope_in()
             # func = identifiers[self.children[0]]
             if className is not None:
@@ -803,8 +828,9 @@ def p_function_call(t):
                 cnt = 0
                 # set to true so it returns name and not variable
 
-                for k, v in identifiers[className].attr.iteritems():
-                                    identifiers[k] = v
+                if className is not None:
+                    for k, v in identifiers[className].attr.iteritems():
+                        identifiers[k] = v
 
                 for name in func.children[1].do(True):
                     # take the name and assign it into the new namespace
@@ -861,16 +887,18 @@ def p_function_call_expr(t):
         #@identifiers.scope
         def do(self, id = None, className = None):
             identifiers.scope_in()
+            # func = identifiers[self.children[0]]
             if className is not None:
                 func = identifiers[className].attr[self.children[0]]
             else:
                 func = identifiers[self.children[0]]
+
             try:
                 cnt = 0
                 # set to true so it returns name and not variable
-
-                for k, v in identifiers[className].attr.iteritems():
-                    identifiers[k] = v
+                if className is not None:
+                    for k, v in identifiers[className].attr.iteritems():
+                        identifiers[k] = v
 
                 for name in func.children[1].do(True):
                     # take the name and assign it into the new namespace
@@ -880,8 +908,7 @@ def p_function_call_expr(t):
             except:
                 print "Function parameter error!"
                 return None 
-                            
-            result = func.children[2].do()            
+            result = func.children[2].do()
             try:
                 if result.keys()[0] == "return":
                     identifiers.scope_out()

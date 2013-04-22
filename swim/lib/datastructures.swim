@@ -20,10 +20,10 @@ class List do
 	end
 	fun append(x) do
 	#print("still not implemented")
-	print(val)
-	val = val + x;
 	#print(val)
-	print(val)
+	global val = val + x;
+	#print(val)
+	#print(val)
 	return val;
 	# return
 	end
