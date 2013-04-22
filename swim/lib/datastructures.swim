@@ -19,17 +19,18 @@ class List do
 		return i;
 	end
 	fun append(x) do
-	#print("still not implemented")
-	#print(val)
-	global val = val + x;
-	#print(val)
-	#print(val)
-	return val;
-	# return
+		#print("still not implemented")
+		#print(val)
+		global val = val + x;
+		#print(val)
+		#print(val)
+		return val;
+		# return
 	end
 	fun prepend(x) do
-	print("still not implemented")
-	#	val = x+val;
+		print("still not implemented");
+		# global val = x + val;
+		#	val = x+val;
 	end
 end
 
@@ -59,9 +60,9 @@ class Dict do
 		#print(i);
 
 		for each element in val do
-		print(x)
-		print(i)
-		print(element)
+		print(x);
+		print(i);
+		print(element);
 			if(x == size-i) do
 				return element;
 			end
@@ -75,23 +76,23 @@ end
 class String do
 
 	fun letters()
-		print("still not implemented")
+		print("still not implemented");
 	end
 
 	fun lowercase()
-		print("still not implemented")
+		print("still not implemented");
 	end
 
 	fun uppercase()
-		print("still not implemented")
+		print("still not implemented");
 	end
 
 	fun digits()
-		print("still not implemented")
+		print("still not implemented");
 	end
 
 	fun whitespace()
-		print("still not implemented")
+		print("still not implemented");
 	end
 
 end

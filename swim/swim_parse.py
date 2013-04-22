@@ -739,10 +739,7 @@ def p_class_getAttribute(t):
 
 def p_class_setAttribute(t):
     '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
-<<<<<<< HEAD
 
-=======
->>>>>>> 5dee7215b737ebf7b7de3b31e5793e2a8d1b49de
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None):
