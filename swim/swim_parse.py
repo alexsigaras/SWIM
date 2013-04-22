@@ -169,9 +169,7 @@ def p_statements(t):
                         if secondResult.keys()[0] == "break" or secondResult.keys()[0] == "return":
                             return secondResult              
             except:
-                #print traceback.format_exc()
                 print("Error in statements")
-                # print traceback.format_exc()
                 print traceback.format_exc()
     except:
         t[0] = Node ("statement", t[1], "statement")
@@ -293,6 +291,7 @@ def p_statement_increment(t):
     def do(self, id = None):
         try:
             identifiers[self.children.do(True)] = self.children.do() + 1
+            return identifiers[self.children.do(True)]
         except:
             print("Error in auto increment statement")
             print traceback.format_exc()
@@ -311,6 +310,7 @@ def p_statement_decrement(t):
     def do(self, id = None):
         try:
             identifiers[self.children.do(True)] = self.children.do() - 1
+            return identifiers[self.children.do(True)]
         except:
             print("Error in auto decrement statement")
             print traceback.format_exc()
@@ -716,7 +716,8 @@ def p_class_instantiation(t):
             identifiers[self.children[1]].children[1].do()            
             class_attributes = identifiers.getAllItems()
             identifiers.scope_out()
-            identifiers[self.children[0]] = Namespace(class_attributes, debug = True)
+            # identifiers[self.children[0]] = Namespace(class_attributes, debug = True)
+            identifiers[self.children[0]] = Namespace(class_attributes)
         except:
             print("Error in class instantiation")
             print traceback.format_exc()
