@@ -708,14 +708,11 @@ def p_class_instantiation(t):
 
     def do(self, id = None):
         try:
-            classObj = swimClass();
-
             identifiers.scope_in()
             identifiers[self.children[1]].children[1].do()            
-            classObj.attr = identifiers.getAllItems()
+            class_attributes = identifiers.getAllItems()
             identifiers.scope_out()
-            identifiers[self.children[0]] = classObj
-
+            identifiers[self.children[0]] = Namespace(class_attributes, debug = True)
         except:
             print("Error in class instantiation")
             print traceback.format_exc()
@@ -730,10 +727,10 @@ def p_class_getAttribute(t):
 
     def do(self, id = None):
         try:
-            return identifiers[self.children[0]].attr[self.children[1]]
+            return identifiers[self.children[0]][self.children[1]]
         except:
             try:       
-                return self.children[1].do(className = self.children[0])
+                return self.children[1].do(object_name = self.children[0])
             except:
                 print("Error in class get Child")
                 print traceback.format_exc()
@@ -742,13 +739,16 @@ def p_class_getAttribute(t):
 
 def p_class_setAttribute(t):
     '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5dee7215b737ebf7b7de3b31e5793e2a8d1b49de
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None):
         try:
-            identifiers[self.children[0]].attr[self.children[1]] = self.children[2].do()
-            return identifiers[self.children[0]].attr[self.children[1]]
+            identifiers[self.children[0]][self.children[1]] = self.children[2].do()
+            return identifiers[self.children[0]][self.children[1]]
         except:
             print("Error in class get Child")
             print traceback.format_exc()
@@ -808,19 +808,19 @@ def p_function_call_expr(t):
                 print traceback.format_exc()
     else:      
         #@identifiers.scope
-        def do(self, id = None, className = None):
+        def do(self, id = None, object_name = None):
             identifiers.scope_in()
             # func = identifiers[self.children[0]]
-            if className is not None:
-                func = identifiers[className].attr[self.children[0]]
+            if object_name is not None:
+                func = identifiers[object_name].attr[self.children[0]]
             else:
                 func = identifiers[self.children[0]]
 
             try:
                 cnt = 0
                 # set to true so it returns name and not variable
-                if className is not None:
-                    for k, v in identifiers[className].attr.iteritems():
+                if object_name is not None:
+                    for k, v in identifiers[object_name].attr.iteritems():
                         identifiers[k] = v
 
                 for name in func.children[1].do(True):
