@@ -73,7 +73,7 @@ precedence = (
 )
 
 # Namespace stack
-identifiers = Namespace(debug=True) 
+identifiers = Namespace() 
 
 # Operators Dictionary
 ops = { "+":    operator.add, 
@@ -744,7 +744,6 @@ def p_class_getAttribute(t):
 
 def p_class_setAttribute(t):
     '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
-
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None):
@@ -809,38 +808,57 @@ def p_function_call_expr(t):
                 print("Error in builtin pdf")
                 print traceback.format_exc()
     else:      
-        #@identifiers.scope
         def do(self, id = None, object_name = None):
-            identifiers.scope_in()
-            # func = identifiers[self.children[0]]
+            
+            #class method
             if object_name is not None:
-                func = identifiers[object_name].attr[self.children[0]]
+                identifiers[object_name].scope_in()
+                func = identifiers[object_name][self.children[0]]
+
+                try:
+                    cnt = 0
+                    # set to true so it returns name and not variable
+                    for name in func.children[1].do(True):
+                        # take the name and assign it into the new namespace
+                        # pass by ref via python
+                        identifiers[object_name][name] = self.children[1].do()[cnt]
+                        cnt += 1
+                except:
+                    print "Function parameter error!"
+                    return None 
+                result = func.children[2].do()
+                try:
+                    if result.keys()[0] == "return":
+                        identifiers[object_name].scope_out()
+                        return result.values()[0]
+                except:
+                    identifiers[object_name].scope_out()
+                    return result 
+
+            
+            #function
             else:
+                identifiers.scope_in()
                 func = identifiers[self.children[0]]
 
-            try:
-                cnt = 0
-                # set to true so it returns name and not variable
-                if object_name is not None:
-                    for k, v in identifiers[object_name].attr.iteritems():
-                        identifiers[k] = v
-
-                for name in func.children[1].do(True):
-                    # take the name and assign it into the new namespace
-                    # pass by ref via python
-                    identifiers[name] = self.children[1].do()[cnt]
-                    cnt += 1
-            except:
-                print "Function parameter error!"
-                return None 
-            result = func.children[2].do()
-            try:
-                if result.keys()[0] == "return":
+                try:
+                    cnt = 0
+                    for name in func.children[1].do(True):
+                        # take the name and assign it into the new namespace
+                        # pass by ref via python
+                        identifiers[name] = self.children[1].do()[cnt]
+                        cnt += 1
+                except:
+                    print "Function parameter error!"
+                    return None 
+                result = func.children[2].do()
+                try:
+                    if result.keys()[0] == "return":
+                        identifiers.scope_out()
+                        return result.values()[0]
+                except:
                     identifiers.scope_out()
-                    return result.values()[0]
-            except:
-                identifiers.scope_out()
-                return result 
+                    return result 
 
     t[0].do = MethodType(do, t[0], Node)
     
