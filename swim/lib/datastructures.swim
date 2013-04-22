@@ -59,9 +59,9 @@ class Dict do
 		#print(i);
 
 		for each element in val do
-		print(x);
-		print(i);
-		print(element);
+		print(x)
+		print(i)
+		print(element)
 			if(x == size-i) do
 				return element;
 			end

@@ -236,7 +236,7 @@ def super_do(t, typestring):
 #----------------------------------------------------#
 
 def p_statement_expr(t):
-    'expression_stmt : expression'
+    'expression_stmt : expression SEMICOLON'
     super_do(t, 'expr')
 
 #----------------------------------------------------#
@@ -742,7 +742,7 @@ def p_class_getAttribute(t):
 
 def p_class_setAttribute(t):
     '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
-    
+
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None):
