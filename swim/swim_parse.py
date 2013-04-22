@@ -128,8 +128,9 @@ def p_start(t):
     else:
         try:
             result = t[1].do()
-            #if result is not None:                
-            #	print(result)
+            # print result
+            if result is not None:                
+            	print(result)
         except Error as e:
         	#print 1
         	#print e
@@ -194,7 +195,6 @@ def p_simple_stmt(t):
                    | decrement_stmt
                    | list_stmt
                    | dictionary_stmt
-                   | function_call_stmt
                    | return_stmt
                    | break_stmt
                    | class_instantiation_stmt
@@ -742,7 +742,7 @@ def p_class_getAttribute(t):
 
 def p_class_setAttribute(t):
     '''class_setAttribute_expr : ID DOT ID ASSIGN expression SEMICOLON'''
-    #                               | ID DOT ID ASSIGN function_call_stmt SEMICOLON
+    
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None):
@@ -773,83 +773,6 @@ def p_function_decl(t):
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
-
-def p_function_call(t):
-    '''function_call_stmt : ID LPAREN elements RPAREN SEMICOLON'''
-
-    t[0] = Node("funcall", [t[1],t[3]], 'funcall')
-  
-    if t[1] == "print":
-        def do(self, id = None):
-            try:
-                if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
-                    val = self.children[1].do()[0].attr['val']
-                else:
-                    val = self.children[1].do()[0]
-                return builtin_print(val)
-            except:
-                try:
-                    val = self.children[1].do()[0]
-                    return builtin_print(val) 
-                except:
-                    print("Error in builtin print")
-    elif t[1] == "printErr":
-        def do(self, id = None):            
-            try:
-                return builtin_print(self.children[1].do()[0], colorCodes['red'])
-            except:
-                print("Error in builtin printErr")
-    elif t[1] == "pdf":
-        def do(self, id = None):
-            try: 
-                return buildtin_pdf(self.children[1].do())
-            except:
-                print("Error in builtin pdf")
-                print traceback.format_exc()
-    elif t[1] == "global":
-        def do(self, id = None):
-            try:
-                print(identifiers)
-                return identifiers
-            except:
-                print("Parsing identifiers error!")
-                print traceback.format_exc()
-    else:      
-        #@identifiers.scope
-        def do(self, id = None, className = None):
-            identifiers.scope_in()
-            # func = identifiers[self.children[0]]
-            if className is not None:
-                func = identifiers[className].attr[self.children[0]]
-            else:
-                func = identifiers[self.children[0]]
-
-            try:
-                cnt = 0
-                # set to true so it returns name and not variable
-
-                if className is not None:
-                    for k, v in identifiers[className].attr.iteritems():
-                        identifiers[k] = v
-
-                for name in func.children[1].do(True):
-                    # take the name and assign it into the new namespace
-                    # pass by ref via python
-                    identifiers[name] = self.children[1].do()[cnt]
-                    cnt += 1
-            except:
-                print "Function parameter error!"
-                return None 
-            result = func.children[2].do()
-            try:
-            	if result.keys()[0] == "return":
-                    identifiers.scope_out()
-                    return result.values()[0]
-            except:
-                identifiers.scope_out()
-            	return result 
-
-    t[0].do = MethodType(do, t[0], Node)
 
 def p_function_call_expr(t):
     '''function_call_expr : ID LPAREN elements RPAREN'''
