@@ -71,6 +71,9 @@ class Namespace:
 		'assign variable to global scope'
 		self.stack[0][var] = val
 
+	def access_global(self, var):
+		'access variable to global scope'
+		return self.stack[0][var]
 
 class ScopeError(Exception):
 	def __init__(self, msg):
