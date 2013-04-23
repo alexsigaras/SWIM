@@ -70,7 +70,7 @@ reserved = {
 tokens = [
     'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'DOT', 'SEMICOLON', 'COLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
-    'ASSIGN',
+    'ASSIGN', 'ASSIGN_PLUS', 'ASSIGN_MINUS','ASSIGN_MULTIPLY','ASSIGN_DIVIDE','ASSIGN_POW', 'ASSIGN_MOD',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
@@ -104,6 +104,12 @@ t_AND                   = r'&&'
 t_OR                    = r'\|\|'
 t_NOT                   = r'!'
 t_ASSIGN                = r'='
+t_ASSIGN_PLUS           = r'\+='
+t_ASSIGN_MINUS          = r'-='
+t_ASSIGN_MULTIPLY       = r'\*='
+t_ASSIGN_DIVIDE         = r'/='
+t_ASSIGN_POW            = r'\^='
+t_ASSIGN_MOD            = r'\%='
 
 # Comparison Operators
 t_EQUALS                = r'=='
