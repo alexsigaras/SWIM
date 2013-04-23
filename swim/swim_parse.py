@@ -722,6 +722,13 @@ def p_function_call_expr(t):
             except:
                 print("Error in builtin log")
                 print traceback.format_exc()
+    elif t[1] == "factorial":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_factorial(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin factorial")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"

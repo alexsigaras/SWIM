@@ -158,6 +158,11 @@ def builtin_log(number):
     try:
         return math.log10(number)
     except:
-        print("Mismatch grammar for sqrt")
+        print("Mismatch grammar for log10")
         raise Exception
-         		
+def builtin_factorial(number):
+    try:
+        return math.factorial(number)
+    except:
+        print("Mismatch grammar for factorial")
+        raise Exception
