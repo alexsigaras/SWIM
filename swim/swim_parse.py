@@ -131,7 +131,7 @@ def p_start(t):
             try:
                 result = t[1].do()
                 # print result                
-                if result is not None and result.__doc__ != "Simple Node":                
+                if result is not None and not isinstance(result, object):
                 	print(result)
             except Error as e:
             	#print 1
@@ -163,6 +163,8 @@ def p_statements(t):
                 if isinstance(firstResult, dict):
                     if firstResult.keys()[0] == "break" or firstResult.keys()[0] == "return":
                         return firstResult
+                    else:
+                        print firstResult
                 else: 
                     secondResult = self.children[1].do(id = id, object_name = object_name)
                     if isinstance(secondResult, dict):
@@ -270,6 +272,8 @@ def p_statement_assign(t):
                 identifiers.scope_out()
                 identifiers[self.children[0]] = Namespace(class_attributes)
                 identifiers[self.children[0]]["val"] = element                   
+                identifiers[self.children[0]]["keys"] = element.keys()
+                identifiers[self.children[0]]["vals"] = element.values()
             else:
                 if object_name is not None:
                     identifiers[object_name][self.children[0]] = element
@@ -504,7 +508,11 @@ def p_statement_for(t):
     def do(self, id = None, object_name = None):
         try:
             # val = self.children[1].do(id = id, object_name = object_name)[0].attr['val']
-            for temp in self.children[1].do(id = id, object_name = object_name):
+            if object_name is not None:                
+                iterable = self.children[1].do(id = id, object_name = object_name)
+            else:
+                iterable = self.children[1].do(id = id, object_name = object_name)['val']
+            for temp in iterable:
                 if object_name is not None:
                     identifiers[object_name][self.children[0]] = temp
                 else:

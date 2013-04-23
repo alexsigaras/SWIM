@@ -28,6 +28,8 @@ end
 
 class Dict do
 	val= 0;
+	keys = 0;
+	vals = 0;
 	type="Dict";
 	
 	fun length() do 
@@ -38,25 +40,20 @@ class Dict do
 		# print(i);
 		return i;
 	end
-	fun getKey(x) do
-		
-		i=0; 
-
+	fun getValue(key) do
+		i = 0;
 		for each element in val do
-			i++; 
-		end 
-
-		size = i;
-		i=0;
-
-		print("size:");
-		print(size);
-		for each element in val do
-			if(x == size-i) do
-				return element;
+			if(key == element) do
+				j = 0;
+				for each value in vals do
+					if(j==i) do
+						return value;
+					end
+					j++;
+				end
 			end
-			i++; 
-		end 
+			i++;			
+		end
 	end
 end
 
