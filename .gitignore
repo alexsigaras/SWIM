@@ -6,3 +6,4 @@ lextab.py
 .idea/*
 *.log
 *.out
+*.DS_Store
