@@ -1,0 +1,8 @@
+class List do
+list=[];
+type="list"
+
+fun getElement(x) do i=0; for each element in list do if(i==x) do print(element); end i++; end end
+fun length() do i=0; for each element in list do i++; end print(i); end
+
+end

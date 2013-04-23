@@ -1,1 +1,8 @@
-print(doc = @("H1", "http://www.cs.columbia.edu/~aho/"););
+include std;
+
+url = "http://www.cs.columbia.edu/~aho/"; // Professor Aho's website
+tags = ["html", "h1"];				      // A list of tags to use
+
+#print(tags.getElement(0))
+doc = @(tags.getElement(0), url);
+print(@(tags.getElement(1), url));
