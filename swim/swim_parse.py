@@ -184,8 +184,8 @@ def p_statements(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_statement(t):
-    '''statement : simple_stmt
-                 | compound_stmt'''
+    '''statement : simple_stmt SEMICOLON
+                 | compound_stmt END'''
     super_do(t, 'stmt')
 
 
@@ -239,7 +239,7 @@ def super_do(t, typestring):
 #----------------------------------------------------#
 
 def p_statement_expr(t):
-    'expression_stmt : expression SEMICOLON'
+    'expression_stmt : expression'
     super_do(t, 'expr')
 
 #----------------------------------------------------#
@@ -247,7 +247,7 @@ def p_statement_expr(t):
 #----------------------------------------------------#
 
 def p_statement_assign(t):
-    'assign_stmt : ID ASSIGN expression SEMICOLON'
+    'assign_stmt : ID ASSIGN expression'
 
     t[0] = Node("assign", [t[1], t[3]], t[2])
 
@@ -288,7 +288,7 @@ def p_statement_assign(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_statement_global_assign(t):
-    'assign_global_stmt : GLOBAL ID ASSIGN expression SEMICOLON'
+    'assign_global_stmt : GLOBAL ID ASSIGN expression'
                           
     t[0] = Node("global_assign", [t[2], t[4]], t[3])
 
@@ -305,7 +305,7 @@ def p_statement_global_assign(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_statement_this_assign(t):
-    'assign_this_stmt : THIS DOT ID ASSIGN expression SEMICOLON'
+    'assign_this_stmt : THIS DOT ID ASSIGN expression'
                           
     t[0] = Node("this_assign", [t[3], t[5]], t[4])
 
@@ -326,7 +326,7 @@ def p_statement_this_assign(t):
 #----------------------------------------------------# 
 
 def p_statement_increment(t):
-    'increment_stmt : expression PLUS PLUS SEMICOLON'
+    'increment_stmt : expression PLUS PLUS'
 
     t[0] = Node("increment", t[1], "++")
 
@@ -349,7 +349,7 @@ def p_statement_increment(t):
 #----------------------------------------------------# 
 
 def p_statement_decrement(t):
-    'decrement_stmt : expression MINUS MINUS SEMICOLON'
+    'decrement_stmt : expression MINUS MINUS'
 
     t[0] = Node("decrement", t[1], "--")
 
@@ -376,7 +376,7 @@ def p_statement_decrement(t):
 #----------------------------------------------------#
 
 def p_statement_if(t):
-    'if_stmt : IF expression DO statements elif_blocks END'
+    'if_stmt : IF expression DO statements elif_blocks'
 
     t[0] = Node ("if", [t[2],t[4],t[5]])
 
@@ -476,7 +476,7 @@ def p_statement_else_block(t):
 #----------------------------------------------------#
 
 def p_statement_while(t):
-    'while_stmt : WHILE expression DO statements END'
+    'while_stmt : WHILE expression DO statements'
 
     t[0] = Node("while", [t[2],t[4],t[1]])
 
@@ -500,7 +500,7 @@ def p_statement_while(t):
 #----------------------------------------------------#
 
 def p_statement_for(t):
-    'for_stmt : FOR EACH ID IN element DO statements END'
+    'for_stmt : FOR EACH ID IN element DO statements'
 
     t[0] = Node("for", [t[3], t[5], t[7]] , "for")
 
@@ -539,7 +539,7 @@ sys.path.insert(0,os.path.join("..", "include"))
 import ply.yacc as yacc
 
 def p_statement_include(t):
-    'include_stmt : INCLUDE ID SEMICOLON'
+    'include_stmt : INCLUDE ID'
 
     t[0] = Node("include", t[2] , "include")
 
@@ -562,7 +562,7 @@ def p_statement_include(t):
 #----------------------------------------------------#
 
 def p_class_decl(t):
-    'class_decl_stmt : CLASS ID DO statements END'
+    'class_decl_stmt : CLASS ID DO statements'
 
     t[0] = Node("class", [t[2], t[4]], t[2])
 
@@ -577,7 +577,7 @@ def p_class_decl(t):
     t[0].do = MethodType(do, t[0], Node) # adds the method do dynamically to class_declaration method
 
 def p_class_instantiation(t):
-    'class_instantiation_stmt : ID ASSIGN NEW ID LPAREN RPAREN SEMICOLON '
+    'class_instantiation_stmt : ID ASSIGN NEW ID LPAREN RPAREN '
 
     t[0] = Node("class_instantiation", [t[1],t[4]], "class_instantiation")
 
@@ -613,7 +613,7 @@ def p_class_getAttribute(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_class_setAttribute(t):
-    '''class_setAttribute_stmt : ID DOT ID ASSIGN expression SEMICOLON'''
+    '''class_setAttribute_stmt : ID DOT ID ASSIGN expression'''
     t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
 
     def do(self, id = None, object_name = None):
@@ -631,7 +631,7 @@ def p_class_setAttribute(t):
 #----------------------------------------------------#
 
 def p_function_decl(t):
-    'function_decl : FUN ID LPAREN elements RPAREN DO statements END'
+    'function_decl : FUN ID LPAREN elements RPAREN DO statements'
 
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
 
@@ -773,7 +773,7 @@ def p_lambda_function_expr(t):
 #----------------------------------------------------#
 
 def p_return(t):
-    '''return_stmt : RETURN elements SEMICOLON'''
+    '''return_stmt : RETURN elements'''
     
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None, object_name = None):
@@ -789,7 +789,7 @@ def p_return(t):
 #----------------------------------------------------#
 
 def p_break(t):
-    '''break_stmt : BREAK SEMICOLON'''
+    '''break_stmt : BREAK'''
     
     t[0] = Node('break', t[0], 'break') 
 
