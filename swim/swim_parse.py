@@ -684,6 +684,44 @@ def p_function_call_expr(t):
             except:
                 print("Error in builtin abs")
                 print traceback.format_exc()
+    elif t[1] == "sin":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_sin(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin sin")
+                print traceback.format_exc()
+
+    elif t[1] == "cos":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_cos(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin cos")
+                print traceback.format_exc()
+
+    elif t[1] == "tan":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_tan(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin tan")
+                print traceback.format_exc()
+
+    elif t[1] == "sqrt":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_sqrt(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin sqrt")
+                print traceback.format_exc()
+    elif t[1] == "log":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_log(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin log")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
