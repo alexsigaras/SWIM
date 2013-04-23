@@ -51,55 +51,70 @@ from swim_parse import *
 #-----------------------------------------------------------------------------#
 
 import ply.yacc as yacc
-yacc.yacc(optimize=0, write_tables=0)
-mode = 2
-if mode == 1:
-    s = raw_input("SWIM REPL> ")   
-    lex.input(s)
-if mode == 3:
-    s = 'print("good");/* comment; 1 \n bullshit + - hahaha */'
-    #yacc.parse(s)
-    lex.input(s)
-    while 1:
-        tok = lex.token()
-        print tok
-        if not tok:
-            break
-else:
 
-    if len(sys.argv) > 1:
-        fn = open(sys.argv[1])
-        # for line in fn.readlines():
-        #     if line == "\n": continue
-        #     if mode == 1:
-        #         lex.input(line)
-        #         while 1:
-        #             tok = lex.token()
-        #             print tok
-        #             if not tok:
-        #                 break
-        #     else:
-        #         yacc.parse(line)
-        s = fn.read()
-        #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
-        s = s.replace('\n',' ')
-        #print s
-        #print s
+def main(file=None, mode=2):
+
+    yacc.yacc(optimize=0, write_tables=0)
+    
+    if file:
+        yacc.yacc(debug=0, errorlog=yacc.NullLogger())
+        f = open(file)
+        s = f.read().replace('\n',' ')
         yacc.parse(s)
-        fn.close()  
+        f.close()
     else:
-        while 1:
-            if mode == 1:
+
+        if mode == 1:
+            s = raw_input("SWIM REPL> ")   
+            lex.input(s)
+        if mode == 3:
+            s = 'print("good");/* comment; 1 \n + - hahaha */'
+            #yacc.parse(s)
+            lex.input(s)
+            while 1:
                 tok = lex.token()
                 print tok
                 if not tok:
                     break
-            else:
-                try:
-                    s = raw_input('SWIM REPL> ')
-                    
-                except EOFError:
-                    break
+        else:
+
+            if len(sys.argv) > 1:
+                fn = open(sys.argv[1])
+                # for line in fn.readlines():
+                #     if line == "\n": continue
+                #     if mode == 1:
+                #         lex.input(line)
+                #         while 1:
+                #             tok = lex.token()
+                #             print tok
+                #             if not tok:
+                #                 break
+                #     else:
+                #         yacc.parse(line)
+                s = fn.read()
+                # #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
+                #s = s.replace('\n',' ')
+                #s = "a=1; # This is a comment \n b=2; print(a); print(b);"
+                #print s
+                #print s
                 yacc.parse(s)
+                fn.close()  
+            else:
+                while 1:
+                    if mode == 1:
+                        tok = lex.token()
+                        print tok
+                        if not tok:
+                            break
+                    else:
+                        try:
+                            s = raw_input('SWIM REPL> ')
+                            
+                        except EOFError:
+                            break
+                        yacc.parse(s)
     
+
+if __name__ == "__main__":
+    main()
 #-----------------------------------------------------------------------------#

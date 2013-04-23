@@ -39,7 +39,9 @@ reserved = {
     'elif'     : 'ELIF',
     'do'       : 'DO',
     'True'     : 'TRUE',
+    'true'     : 'TRUELOWERCASE',
     'False'    : 'FALSE',
+    'false'    : 'FALSELOWERCASE',
     'while'    : 'WHILE',
     'for'      : 'FOR',
     'each'     : 'EACH',
@@ -53,6 +55,10 @@ reserved = {
     'end'      : 'END',
     'fun'      : 'FUN', 
     'class'    : 'CLASS',
+    'new'      : 'NEW',
+    'include'  : 'INCLUDE',
+    'global'   : 'GLOBAL',
+    'this'     : 'THIS'
 }
 
 #---------------------------------#
@@ -62,9 +68,9 @@ reserved = {
 #---------------------------------#
 
 tokens = [
-    'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'SEMICOLON', 'COLON',
+    'LPAREN','RPAREN', 'LSBRACKET', 'RSBRACKET', 'LCBRACKET', 'RCBRACKET', 'SELECTOR', 'COMMA', 'DOT', 'SEMICOLON', 'COLON',
     'STRING1', 'STRING2', 'ID','NUMBER',
-    'ASSIGN',
+    'ASSIGN', 'ASSIGN_PLUS', 'ASSIGN_MINUS','ASSIGN_MULTIPLY','ASSIGN_DIVIDE','ASSIGN_POW', 'ASSIGN_MOD',
     'EQUALS', 'NOT_EQUALS', 'LESS_THAN', 'GREATER_THAN', 'LESS_THAN_OR_EQUAL', 'GREATER_THAN_OR_EQUAL',
     'PLUS','MINUS','MULTIPLY','DIVIDE','POW','MOD'
     ] + list(reserved.values())
@@ -77,12 +83,13 @@ tokens = [
 
 t_LPAREN    = r'\('
 t_RPAREN    = r'\)'
-t_LSBRACKET  = r'\['
-t_RSBRACKET  = r'\]'
+t_LSBRACKET = r'\['
+t_RSBRACKET = r'\]'
 t_LCBRACKET = r'\{'
 t_RCBRACKET = r'\}'
 t_SELECTOR  = r'@'
 t_COMMA     = r','
+t_DOT       = r'\.'
 t_COLON     = r':'
 t_SEMICOLON = r';'
 
@@ -97,6 +104,12 @@ t_AND                   = r'&&'
 t_OR                    = r'\|\|'
 t_NOT                   = r'!'
 t_ASSIGN                = r'='
+t_ASSIGN_PLUS           = r'\+='
+t_ASSIGN_MINUS          = r'-='
+t_ASSIGN_MULTIPLY       = r'\*='
+t_ASSIGN_DIVIDE         = r'/='
+t_ASSIGN_POW            = r'\^='
+t_ASSIGN_MOD            = r'\%='
 
 # Comparison Operators
 t_EQUALS                = r'=='
@@ -161,7 +174,7 @@ def t_error(t):
 #---------------------------------#
 
 def t_COMMENT(t):
-    r'\#.*|//.*|/\*(.*[^\*/]|\n|\t)*\*/'
+    r'(/\*(.|\n)*?\*/)|(//.*)|(\#.*)'
     pass
     # No return value. Token Discarded
 
@@ -174,6 +187,6 @@ def t_COMMENT(t):
 #-----------------------------------------------------------------------------#
     
 import ply.lex as lex
-lex.lex(optimize=1)
+lex.lex(optimize=0)
 
 #-----------------------------------------------------------------------------#

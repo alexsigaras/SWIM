@@ -35,12 +35,16 @@ class Namespace:
 			if table.has_key(var):
 				del table[var]
 
+	def getAllItems(self):
+		'return all items on current namespace scope'
+		return self.stack[-1]
+
 	def scope_in(self):
 		'pushes a new namespace on top of the stack'
 		self.stack.append({})
 		if self.debug:
 			self.level += 1
-			print "Namespace on level " + str(self.level) + ": "+ str(self)
+			print "Namespace on start of level " + str(self.level) + ": "+ str(self)
 
 	def scope_out(self):
 		'removes the top namespace from the stack'
@@ -67,6 +71,9 @@ class Namespace:
 		'assign variable to global scope'
 		self.stack[0][var] = val
 
+	def access_global(self, var):
+		'access variable to global scope'
+		return self.stack[0][var]
 
 class ScopeError(Exception):
 	def __init__(self, msg):

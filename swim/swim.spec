@@ -1,5 +1,5 @@
 # -*- mode: python -*-
-a = Analysis(['../pyinstaller-2.0/swim2/swim.py'],
+a = Analysis(['../SWIM-Executables/Unix/pyinstaller-2.0/swim2/swim.py'],
              pathex=['/Users/morrishopkins/Dropbox/Spring2013/PLT/PLT-SLAMM/swim'],
              hiddenimports=[],
              hookspath=None)

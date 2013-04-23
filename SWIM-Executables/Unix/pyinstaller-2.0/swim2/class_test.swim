@@ -1,0 +1,17 @@
+class dog do name="dogs name"; height = 10; fun setName(string) do this.name = string; end end
+
+d = new dog();
+d.setName("a");
+print(d.name);
+
+class cat do name = "kitty"; weight=10; fun setName(string) do this.name = string; end fun setWeight(value) do this.weight = value; end end
+
+print("Cat's Example:");
+
+c = new cat();
+c.setName("Morris");
+print("Cat's name:");
+print(c.name);
+print("Cat's name 2 :");
+c.name = "alex";
+print(c.name);

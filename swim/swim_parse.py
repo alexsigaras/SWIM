@@ -546,7 +546,10 @@ def p_statement_include(t):
 
     def do(self, id = None, object_name = None):
         try:
-            fn = open( os.path.join( "lib", self.children + ".swim"))
+            try:
+                fn = open( os.path.join( "lib", self.children + ".swim"))
+            except:
+                fn = open( os.path.join( os.getcwd(), "public", "bin", "lib", self.children + ".swim"))
             s = fn.read()
             yacc.parse(s)
             fn.close()              
