@@ -32,22 +32,25 @@ class Dict do
 	
 	fun length() do 
 		i=0; 
-		for each element in val do 
+		for each element in val do
 			i++; 
 		end 
+		# print(i);
 		return i;
 	end
 	fun getKey(x) do
 		
 		i=0; 
 
-		for each element in val do 
+		for each element in val do
 			i++; 
 		end 
 
 		size = i;
 		i=0;
 
+		print("size:");
+		print(size);
 		for each element in val do
 			if(x == size-i) do
 				return element;

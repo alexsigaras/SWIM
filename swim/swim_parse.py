@@ -201,8 +201,7 @@ def p_simple_stmt(t):
                    | class_setAttribute_stmt
                    | include_stmt'''
     super_do(t, 'simple_stmt')
-    #                   | list_stmt
-                       # | dictionary_stmt
+
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
@@ -1036,7 +1035,6 @@ def p_dictionary_objects(t):
             except:
                 print("Error in empty dictionary objects")
                 print traceback.format_exc()
-
     except:
         try:
             t[0] = Node ("dictionary_object", t[1], "dictionary_object")
