@@ -130,8 +130,7 @@ def p_start(t):
         else:
             try:
                 result = t[1].do()
-                # print result                
-                if result is not None and not isinstance(result, object):
+                if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
                 	print(result)
             except Error as e:
             	#print 1
@@ -675,6 +674,13 @@ def p_function_call_expr(t):
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()
+    elif t[1] == "abs":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_abs(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin abs")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
@@ -711,7 +717,6 @@ def p_function_call_expr(t):
                     identifiers[object_name].scope_out()
                     return result 
 
-            
             #function
             else:
                 identifiers.scope_in()
@@ -737,7 +742,29 @@ def p_function_call_expr(t):
                     return result 
 
     t[0].do = MethodType(do, t[0], Node)
-    
+
+def p_lambda_function_expr(t):
+    'lambda_function_expr : LPAREN LAMBDA elements DO statements RPAREN LPAREN elements RPAREN'
+
+    t[0] = Node('lambda', [t[3], t[5],t[8]], 'lambda')
+    def do(self, id = None, object_name = None):
+        try: 
+            identifiers.scope_in()
+            i = 0
+            param = self.children[2].do(id = id, object_name = object_name)
+            for e in self.children[0].do(id = True, object_name = object_name):
+                identifiers[e] = param[i]
+
+            result = self.children[1].do(id = id, object_name = object_name)
+            identifiers.scope_out()
+
+            return result
+        except:
+            print("Error in lambda expression")
+
+    t[0].do = MethodType(do, t[0], Node)  
+
+ 
 #----------------------------------------------------#
 #                    5.2.2.5 Return                  #
 #----------------------------------------------------#
@@ -804,7 +831,8 @@ def p_unary_expr(t):
                   | uplus_expr
                   | uminus_expr
                   | class_getAttribute_expr
-                  | function_call_expr'''
+                  | function_call_expr
+                  | lambda_function_expr'''
 
     t[0] = Node("expr", t[1], 'expr')
 

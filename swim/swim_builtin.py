@@ -117,6 +117,13 @@ def builtin_pdf(expr):
         print("Mismatch grammar for pdf output!")
         raise Exception    
 
+def builtin_abs(number):
+    try:
+        return abs(number)
+    except:
+        print("Mismatch grammar for abs")
+        raise Exception
+
          		
 # def p_function(t):
 #     '''function_stmt : ID LPAREN statement RPAREN SEMICOLON'''
