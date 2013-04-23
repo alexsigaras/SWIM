@@ -9,7 +9,7 @@ class List do
 				return element;
 			end
 			i++; 
-		end 
+		end
 	end
 	fun length() do 
 		i=0; 
@@ -19,25 +19,16 @@ class List do
 		return i;
 	end
 	fun append(x) do
-		#print("still not implemented")
-		#print(val)
-		global val = val + x;
-		#print(val)
-		#print(val)
-		return val;
-		# return
+		this.val = val + [x];
 	end
 	fun prepend(x) do
-		print("still not implemented");
-		# global val = x + val;
-		#	val = x+val;
+		this.val = [x] + val;
 	end
 end
 
 class Dict do
 	val= 0;
 	type="Dict";
-
 	
 	fun length() do 
 		i=0; 
@@ -55,14 +46,9 @@ class Dict do
 		end 
 
 		size = i;
-		#print(size);
 		i=0;
-		#print(i);
 
 		for each element in val do
-		print(x);
-		print(i);
-		print(element);
 			if(x == size-i) do
 				return element;
 			end

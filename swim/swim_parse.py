@@ -130,8 +130,8 @@ def p_start(t):
         else:
             try:
                 result = t[1].do()
-                # print result
-                if result is not None:                
+                # print result                
+                if result is not None and result.__doc__ != "Simple Node":                
                 	print(result)
             except Error as e:
             	#print 1
@@ -170,7 +170,7 @@ def p_statements(t):
                             return secondResult              
             except:
                 print("Error in statements")
-                print traceback.format_exc()
+                #print traceback.format_exc()
     except:
         t[0] = Node ("statement", t[1], "statement")
 
@@ -178,7 +178,6 @@ def p_statements(t):
             try:                
                 return self.children.do(id = id, object_name = object_name)
             except:
-                print traceback.format_exc()
                 print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
@@ -196,14 +195,14 @@ def p_simple_stmt(t):
                    | assign_this_stmt
                    | increment_stmt
                    | decrement_stmt
-                   | list_stmt
-                   | dictionary_stmt
                    | return_stmt
                    | break_stmt
                    | class_instantiation_stmt
                    | class_setAttribute_stmt
                    | include_stmt'''
-    super_do(t, 'stmt')
+    super_do(t, 'simple_stmt')
+    #                   | list_stmt
+                       # | dictionary_stmt
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
@@ -211,7 +210,7 @@ def p_compound_stmt(t):
                      | for_stmt                 
                      | function_decl
                      | class_decl_stmt '''
-    super_do(t, 'stmt')
+    super_do(t, 'compound_stmt')
 
 
 # This statement do refactors duplicate code
@@ -255,9 +254,31 @@ def p_statement_assign(t):
     def do(self, id = None, object_name = None):
         ''' Need to check ID !'''
         try:
-            element = self.children[1].do()
-            identifiers[self.children[0]] = element
-            return identifiers[self.children[0]]
+            element = self.children[1].do(id = id, object_name = object_name)
+            if isinstance(element, list):
+                # If the expr is a list
+                identifiers.scope_in()
+                identifiers["List"].children[1].do(id = id, object_name = object_name)    
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element                
+            elif isinstance(element, dict):
+                #If the expr is a dictionary
+                identifiers.scope_in()
+                identifiers["Dict"].children[1].do(id = id, object_name = object_name)   
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element                   
+            else:
+                if object_name is not None:
+                    identifiers[object_name][self.children[0]] = element
+                    return identifiers[object_name][self.children[0]]
+                else:
+                    identifiers[self.children[0]] = element
+                    return identifiers[self.children[0]]
+            return identifiers[self.children[0]]        
         except:
             print("Error in assignment statement")
             print traceback.format_exc()
@@ -272,7 +293,7 @@ def p_statement_global_assign(t):
     def do(self, id = None, object_name = None):
         ''' Need to check ID !'''
         try:
-            element = self.children[1].do()
+            element = self.children[1].do(id = id, object_name = object_name)
             identifiers.assign_global(self.children[0], element)
             return identifiers.access_global(self.children[0])
         except:
@@ -309,8 +330,12 @@ def p_statement_increment(t):
 
     def do(self, id = None, object_name = None):
         try:
-            identifiers[self.children.do(True)] = self.children.do() + 1
-            return identifiers[self.children.do(True)]
+            if object_name is not None:
+                identifiers[object_name][self.children.do(id = True, object_name = object_name)] = self.children.do(id = id, object_name = object_name) + 1
+                return identifiers[object_name][self.children.do(id = True, object_name = object_name)]                
+            else:
+                identifiers[self.children.do(id = True, object_name = object_name)] = self.children.do(id = id, object_name = object_name) + 1
+                return identifiers[self.children.do(id = True, object_name = object_name)]
         except:
             print("Error in auto increment statement")
             print traceback.format_exc()
@@ -328,202 +353,17 @@ def p_statement_decrement(t):
 
     def do(self, id = None, object_name = None):
         try:
-            identifiers[self.children.do(True)] = self.children.do() - 1
-            return identifiers[self.children.do(True)]
+            if object_name is not None:
+                identifiers[object_name][self.children.do(id = True, object_name = object_name)] = self.children.do(id = id, object_name = object_name) - 1
+                return identifiers[object_name][self.children.do(id = True, object_name = object_name)]                                
+            else:
+                identifiers[self.children.do(id = True, object_name = object_name)] = self.children.do(id = id, object_name = object_name) - 1
+                return identifiers[self.children.do(id = True, object_name = object_name)]
         except:
             print("Error in auto decrement statement")
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node) 
-
-#----------------------------------------------------#
-#                  5.2.1.5 List                      #
-#----------------------------------------------------#
-
-def p_list(t):
-    'list_stmt : ID ASSIGN LSBRACKET elements RSBRACKET SEMICOLON'
-
-    t[0] = Node("list", [t[1],t[4]], "list")
-
-    def do(self, id = None, object_name = None):
-        ''' Need to check ID !'''
-        if id is not None:
-            return "list"
-        else:
-            try:
-                element = self.children[1].do(id)
-                if isinstance(element, list) or isinstance(element, dict) or isinstance(element, str): 
-                    listObj = swimClass()
-                    identifiers.scope_in()
-                    identifiers["List"].children[1].do()    
-                    listObj.attr = identifiers.getAllItems()
-                    identifiers.scope_out()
-                    listObj.attr["val"] = element
-                    identifiers[self.children[0]] = listObj
-
-                return identifiers[self.children[0]]
-            except:
-                print("Error in list statement")
-                print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_elements(t):
-    '''elements : element COMMA elements
-                | element
-                | '''
-
-    try:
-        t[0] = Node ("elements", [t[1], t[3]], "elements")    
-
-        def do(self, id = None, object_name = None):
-            try:
-                return list([self.children[0].do(id)] + self.children[1].do(id))
-            except:
-                print("Error in elements")
-                print traceback.format_exc()
-    except:
-        try:
-            t[0] = Node ("element", t[1], "element")
-
-            def do(self, id = None, object_name = None):
-                try:
-                    return [self.children.do(id)]
-                except:
-                    print("Error in element")
-                    print traceback.format_exc()
-        except:
-            t[0] = Node ("empty_element", None, "empty_element")
-            def do(self, id = None, object_name = None):
-                try:
-                    return []
-                except:
-                    print("Error in empty element")
-                    print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_element(t):
-    'element : expression'
-    
-    t[0] = Node("expr", t[1], 'expr')
-
-    def do(self, id = None, object_name = None):
-        try:
-            return self.children.do(id)
-        except:  
-            print("Error in element")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node) 
-
-#----------------------------------------------------#
-#                 5.2.1.6 Dictionary                 #
-#----------------------------------------------------#
-
-def p_dictionary(t):
-    'dictionary_stmt : ID ASSIGN LCBRACKET dictionary_objects RCBRACKET SEMICOLON'
-    
-    t[0] = Node("dictionary", [t[1],t[4]], "dictionary")
-
-    def do(self, id = None, object_name = None):
-        ''' Need to check ID !'''
-        try:       
-            element = self.children[1].do(id)
-            if isinstance(element, dict): 
-                listObj = swimClass()
-                identifiers.scope_in()
-                identifiers["Dict"].children[1].do()    
-                listObj.attr = identifiers.getAllItems()
-                identifiers.scope_out()
-                listObj.attr["val"] = element
-                identifiers[self.children[0]] = listObj            
-            return identifiers[self.children[0]]
-        except:
-            print("Error in dictionary statement")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-
-def p_dictionary_objects(t):
-    '''dictionary_objects : dictionary_object COMMA dictionary_objects
-                          | dictionary_object
-                          | '''
-    try:
-        t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
-
-        def do(self, id = None, object_name = None):
-            try:
-                temp  = self.children[0].do(id)
-                temp.update(self.children[1].do(id))
-                return temp
-            except:
-                print("Error in empty dictionary objects")
-                print traceback.format_exc()
-
-    except:
-        try:
-            t[0] = Node ("dictionary_object", t[1], "dictionary_object")
-            def do(self, id = None, object_name = None):
-                try:
-                    return self.children.do(id)
-                except:
-                    print("Error in dictionary object")
-                    print traceback.format_exc()
-        except:
-            t[0] = Node ("empty_dictionary_object", None, "empty_dictionary_object")
-            def do(self, id = None, object_name = None):
-                try:
-                    return {}
-                except:
-                    print("Error in empty dictionary object")
-                    print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_dictionary_object(t):
-    'dictionary_object : key COLON value'
-
-    t[0] = Node("dictionary_object", [t[1], t[3]], "dictionary_object")
-
-    def do(self, id = None, object_name = None):
-        try:
-            return {self.children[0].do(id) : self.children[1].do(id)}
-        except:
-            print("Error in dictionary object")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_dictionary_key(t):
-    '''key : STRING1
-           | STRING2'''
-
-    t[0] = Node("key", stripe_quotation(t[1]), 'key')
-
-    def do(self, id = None, object_name = None):
-        try:
-            return self.children
-        except:
-            print("Error in dictionary key")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
-def p_dictionary_value(t):
-    'value : expression'
-
-    t[0] = Node("value", t[1], 'value')
-
-    def do(self, id = None, object_name = None):
-        try:
-            return self.children.do(id)
-        except:
-            print("Error in dictionary value")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
 
 #--------------------------------------------------------------#
 #                   5.2.2 Compound Statements                  #
@@ -539,15 +379,15 @@ def p_statement_if(t):
     t[0] = Node ("if", [t[2],t[4],t[5]])
 
     def do(self, id = None, object_name = None):
-        if self.children[0].do(id):
+        if self.children[0].do(id = id, object_name = object_name):
             try:
-                return self.children[1].do(id)
+                return self.children[1].do(id = id, object_name = object_name)
             except:
                 print("Error in if statement")
                 print traceback.format_exc()
         else:
             try:
-                return self.children[2].do(id)
+                return self.children[2].do(id = id, object_name = object_name)
             except:
                 print("Error in if statement")
                 print traceback.format_exc()
@@ -562,14 +402,14 @@ def p_statement_elif_blocks(t):
         t[0] = Node ("elifs", [t[1], t[2]], "elifs")
 
         def do(self, id = None, object_name = None):
-            if self.children[0].do(id):
+            if self.children[0].do(id = id, object_name = object_name):
                 try:
-                    return self.children[0].do(id)
+                    return self.children[0].do(id = id, object_name = object_name)
                 except:
                     print traceback.format_exc()
             else:
                 try:
-                    return self.children[1].do(id)
+                    return self.children[1].do(id = id, object_name = object_name)
                 except:
                     print("Error in elif blocks")
                     print traceback.format_exc()
@@ -579,7 +419,7 @@ def p_statement_elif_blocks(t):
 
             def do(self, id = None, object_name = None):
                 try:
-                    return self.children.do(id)
+                    return self.children.do(id = id, object_name = object_name)
                 except:
                     print("Error in elif blocks")
                     print traceback.format_exc()
@@ -600,7 +440,7 @@ def p_statement_elif_block(t):
     t[0] = Node ("elif", [t[2], t[4]])
 
     def do(self, id = None, object_name = None):
-        if self.children[0].do(id):
+        if self.children[0].do(id = id, object_name = object_name):
             try:
                 return self.children[1].do
             except:
@@ -622,7 +462,7 @@ def p_statement_else_block(t):
 
     def do(self, id = None, object_name = None):
         try:
-            return self.children.do(id)
+            return self.children.do(id = id, object_name = object_name)
         except:
             print("Error in else block")
             print traceback.format_exc()
@@ -640,8 +480,8 @@ def p_statement_while(t):
 
     def do(self, id = None, object_name = None):
         try:            
-            while self.children[0].do(): 
-                result = self.children[1].do()
+            while self.children[0].do(id = id, object_name = object_name): 
+                result = self.children[1].do(id = id, object_name = object_name)
                 if isinstance(result, dict):
                     if result.keys()[0] == "break":
                         break
@@ -664,10 +504,13 @@ def p_statement_for(t):
 
     def do(self, id = None, object_name = None):
         try:
-            # val = self.children[1].do()[0].attr['val']
-            for temp in self.children[1].do():
-                identifiers[self.children[0]] = temp
-                result  = self.children[2].do()
+            # val = self.children[1].do(id = id, object_name = object_name)[0].attr['val']
+            for temp in self.children[1].do(id = id, object_name = object_name):
+                if object_name is not None:
+                    identifiers[object_name][self.children[0]] = temp
+                else:
+                    identifiers[self.children[0]] = temp
+                result  = self.children[2].do(id = id, object_name = object_name)
 
                 if isinstance(result, dict):
                     if result.keys()[0] == "break":
@@ -732,10 +575,9 @@ def p_class_instantiation(t):
     def do(self, id = None, object_name = None):
         try:
             identifiers.scope_in()
-            identifiers[self.children[1]].children[1].do()            
+            identifiers[self.children[1]].children[1].do(id = id, object_name = object_name)            
             class_attributes = identifiers.getAllItems()
             identifiers.scope_out()
-            # identifiers[self.children[0]] = Namespace(class_attributes, debug = True)
             identifiers[self.children[0]] = Namespace(class_attributes)
         except:
             print("Error in class instantiation")
@@ -745,7 +587,7 @@ def p_class_instantiation(t):
 
 def p_class_getAttribute(t):
     '''class_getAttribute_expr : ID DOT ID
-                               | ID DOT function_call_expr '''
+                               | ID DOT function_call_expr'''
 
     t[0] = Node("classAttribute", [t[1],t[3]], "classAttribute")
 
@@ -767,7 +609,7 @@ def p_class_setAttribute(t):
 
     def do(self, id = None, object_name = None):
         try:
-            identifiers[self.children[0]][self.children[1]] = self.children[2].do()
+            identifiers[self.children[0]][self.children[1]] = self.children[2].do(id = id, object_name = object_name)
             return identifiers[self.children[0]][self.children[1]]
         except:
             print("Error in class get Child")
@@ -802,48 +644,58 @@ def p_function_call_expr(t):
     if t[1] == "print":
         def do(self, id = None, object_name = None):
             try:
-                if self.children[1].do()[0].attr["type"] == 'List' or self.children[1].do()[0].attr["type"] == 'Dict' or self.children[1].do()[0].attr["type"] == 'Str':
-                    val = self.children[1].do()[0].attr['val']
+                if self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Dict' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Str':
+                    val = self.children[1].do(id = id, object_name = object_name)[0]['val']
                 else:
-                    val = self.children[1].do()[0]
+                    val = self.children[1].do(id = id, object_name = object_name)[0]
                 return builtin_print(val)
             except:
                 try:
-                    val = self.children[1].do()[0]
+                    val = self.children[1].do(id = id, object_name = object_name)[0]
                     return builtin_print(val) 
                 except:
                     print("Error in builtin print")
     elif t[1] == "printErr":
         def do(self, id = None, object_name = None):            
             try:
-                return builtin_print(self.children[1].do()[0], colorCodes['red'])
+                return builtin_print(self.children[1].do(id = id, object_name = object_name)[0], colorCodes['red'])
             except:
                 print("Error in builtin printErr")
     elif t[1] == "pdf":
         def do(self, id = None, object_name = None):
             try: 
-                return buildtin_pdf(self.children[1].do())
+                return buildtin_pdf(self.children[1].do(id = id, object_name = object_name))
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
-            #class method
+            #class method"
             if object_name is not None:
                 identifiers[object_name].scope_in()
-                func = identifiers[object_name][self.children[0]]
+                try:
+                    func = identifiers[object_name][self.children[0]]
+                except:
+                    print "Namespce does not have the function!"
+                    identifiers[object_name].scope_out()
+                    return None
                 try:
                     cnt = 0
                     # set to true so it returns name and not variable
                     for name in func.children[1].do(True):
                         # take the name and assign it into the new namespace
                         # pass by ref via python
-                        identifiers[object_name][name] = self.children[1].do()[cnt]
+                        identifiers[object_name][name] = self.children[1].do(id = id, object_name = object_name)[cnt]
                         cnt += 1
                 except:
                     print "Function parameter error!"
                     return None             
-                result = func.children[2].do(id = id, object_name = object_name)
+                try:
+                    result = func.children[2].do(id = id, object_name = object_name)
+                except:
+                    print "function call error"
+                    identifiers[object_name].scope_out()
+                    return None
                 try:
                     if result.keys()[0] == "return":
                         identifiers[object_name].scope_out()
@@ -863,12 +715,12 @@ def p_function_call_expr(t):
                     for name in func.children[1].do(True):
                         # take the name and assign it into the new namespace
                         # pass by ref via python
-                        identifiers[name] = self.children[1].do()[cnt]
+                        identifiers[name] = self.children[1].do(id = id, object_name = object_name)[cnt]
                         cnt += 1
                 except:
                     print "Function parameter error!"
                     return None 
-                result = func.children[2].do()
+                result = func.children[2].do(id = id, object_name = object_name)
                 try:
                     if result.keys()[0] == "return":
                         identifiers.scope_out()
@@ -889,7 +741,7 @@ def p_return(t):
     t[0] = Node('return', t[2], 'return')    
     def do(self, id = None, object_name = None):
         try: 
-            return {"return" :  self.children.do()[0]}
+            return {"return" :  self.children.do(id = id, object_name = object_name)[0]}
         except:
             print("Error in return statement")
 
@@ -966,7 +818,7 @@ def p_binary_expr(t):
 
     def do(self, id = None, object_name = None):
         try:
-            return self.children.do(id)
+            return self.children.do(id = id, object_name = object_name)
         except:
             print("Error in binary expression")
             print traceback.format_exc()
@@ -1016,7 +868,7 @@ def p_expression_not_op(t):
     t[0] = Node("logop", t[2], t[1])
     def do(self, id = None, object_name = None):
         try:
-            return not self.children.do(id)
+            return not self.children.do(id = id, object_name = object_name)
         except:
             print("Error in not expression")
             print traceback.format_exc()
@@ -1095,12 +947,61 @@ def p_expression_list(t):
 
     def do(self, id = None, object_name = None):
         try:
-            return list( self.children.do(id) )
+            return list( self.children.do(id = id, object_name = object_name) )
         except:
             print("Error in list expression")
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
+
+def p_elements(t):
+    '''elements : element COMMA elements
+                | element
+                | '''
+
+    try:
+        t[0] = Node ("elements", [t[1], t[3]], "elements")    
+
+        def do(self, id = None, object_name = None):
+            try:
+                return list([self.children[0].do(id = id, object_name = object_name)] + self.children[1].do(id = id, object_name = object_name))
+            except:
+                print("Error in elements")
+                print traceback.format_exc()
+    except:
+        try:
+            t[0] = Node ("element", t[1], "element")
+
+            def do(self, id = None, object_name = None):
+                try:
+                    return [self.children.do(id = id, object_name = object_name)]
+                except:
+                    print("Error in element")
+                    print traceback.format_exc()
+        except:
+            t[0] = Node ("empty_element", None, "empty_element")
+            def do(self, id = None, object_name = None):
+                try:
+                    return []
+                except:
+                    print("Error in empty element")
+                    print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_element(t):
+    'element : expression'
+    
+    t[0] = Node("expr", t[1], 'expr')
+
+    def do(self, id = None, object_name = None):
+        try:
+            return self.children.do(id = id, object_name = object_name)
+        except:  
+            print("Error in element")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
 #               5.3.1.7 Dictionary                   #
@@ -1113,9 +1014,88 @@ def p_expression_dictionary(t):
 
     def do(self, id = None, object_name = None):
         try:
-            return self.children.do(id)
+            return self.children.do(id = id, object_name = object_name)
         except:
             print("Error in dictionary expression")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_objects(t):
+    '''dictionary_objects : dictionary_object COMMA dictionary_objects
+                          | dictionary_object
+                          | '''
+    try:
+        t[0] = Node ("dictionary_objects", [t[1], t[3]], "dictionary_objects")
+
+        def do(self, id = None, object_name = None):
+            try:
+                temp  = self.children[0].do(id = id, object_name = object_name)
+                temp.update(self.children[1].do(id =id, object_name = object_name))
+                return temp
+            except:
+                print("Error in empty dictionary objects")
+                print traceback.format_exc()
+
+    except:
+        try:
+            t[0] = Node ("dictionary_object", t[1], "dictionary_object")
+            def do(self, id = None, object_name = None):
+                try:
+                    return self.children.do(id = id, object_name = object_name)
+                except:
+                    print("Error in dictionary object")
+                    print traceback.format_exc()
+        except:
+            t[0] = Node ("empty_dictionary_object", None, "empty_dictionary_object")
+            def do(self, id = None, object_name = None):
+                try:
+                    return {}
+                except:
+                    print("Error in empty dictionary object")
+                    print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_object(t):
+    'dictionary_object : key COLON value'
+
+    t[0] = Node("dictionary_object", [t[1], t[3]], "dictionary_object")
+
+    def do(self, id = None, object_name = None):
+        try:
+            return {self.children[0].do(id = id, object_name = object_name) : self.children[1].do(id = id, object_name = object_name)}
+        except:
+            print("Error in dictionary object")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_key(t):
+    '''key : STRING1
+           | STRING2'''
+
+    t[0] = Node("key", stripe_quotation(t[1]), 'key')
+
+    def do(self, id = None, object_name = None):
+        try:
+            return self.children
+        except:
+            print("Error in dictionary key")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_dictionary_value(t):
+    'value : expression'
+
+    t[0] = Node("value", t[1], 'value')
+
+    def do(self, id = None, object_name = None):
+        try:
+            return self.children.do(id = id, object_name = object_name)
+        except:
+            print("Error in dictionary value")
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
@@ -1130,9 +1110,9 @@ def p_expression_parse_text(t):
     t[0] = Node("selector", t[3], t[1])
     def do(self, id = None, object_name = None):
         try:
-            raw_selector = self.children.do(id)[0]
+            raw_selector = self.children.do(id = id, object_name = object_name)[0]
             selector = stripe_quotation(raw_selector)
-            raw_url = self.children.do(id)[1]
+            raw_url = self.children.do(id = id, object_name = object_name)[1]
 
             if type(raw_url) == str:
                 url = stripe_quotation(raw_url)
@@ -1156,7 +1136,7 @@ def p_expression_group(t):
     t[0] = Node("group", t[2], 'group')
     def do(self, id = None, object_name = None):
         try:
-            return self.children.do(id)    
+            return self.children.do(id = id, object_name = object_name)    
         except:
             print("There was an error in the group ( ) expression")
             print traceback.format_exc()
@@ -1173,7 +1153,7 @@ def p_expression_uplus(t):
     t[0] = Node("uplus", t[2], 'uplus')
     def do(self, id = None, object_name = None):
         try:
-            return self.children.do(id)
+            return self.children.do(id = id, object_name = object_name)
         except:
             print("There was an error in the unary plus expression")
             print traceback.format_exc()
@@ -1190,7 +1170,7 @@ def p_expression_uminus(t):
     t[0] = Node("uminus", t[2], 'uminus')
     def do(self, id = None, object_name = None):
         try:
-            return -self.children.do(id)
+            return -self.children.do(id = id, object_name = object_name)
         except:
             print("There was an error in the unary minus expression")
             print traceback.format_exc()
@@ -1216,9 +1196,9 @@ def p_expression_arithmetic_op(t):
     t[0] = Node("arithmetic_op", [t[1], t[3]], t[2])
     def do(self, id = None, object_name = None):
             try:        
-                return ops[self.leaf](self.children[0].do(id), self.children[1].do(id))
+                return ops[self.leaf](self.children[0].do(id = id, object_name = object_name), self.children[1].do(id = id, object_name = object_name))
             except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id))) 
+                raise TypeException(t.lexer.lineno, str(self.children[0].do(id = id, object_name = object_name)) + " " + self.leaf + " " + str(self.children[1].do(id = id, object_name = object_name))) 
 
     t[0].do = MethodType(do, t[0], Node) 
 
@@ -1240,9 +1220,9 @@ def p_expression_cond_op(t):
     t[0] = Node("conditional_expr", [t[1], t[3]], t[2])
     def do(self, id = None, object_name = None):
             try:
-                return ops[self.leaf](self.children[0].do(id), self.children[1].do(id))       
+                return ops[self.leaf](self.children[0].do(id = id, object_name = object_name), self.children[1].do(id = id, object_name = object_name))       
             except TypeError:
-                raise TypeException(t.lexer.lineno, str(self.children[0].do(id)) + " " + self.leaf + " " + str(self.children[1].do(id)))
+                raise TypeException(t.lexer.lineno, str(self.children[0].do(id = id, object_name = object_name)) + " " + self.leaf + " " + str(self.children[1].do(id = id, object_name = object_name)))
 
     t[0].do = MethodType(do, t[0], Node)
 
