@@ -1,0 +1,5 @@
+# Mathematics Library
+
+PI = 3.14159265;
+fun abs(x) do if x <0 do return - x; else return x; end end # Returns the absolute value
+//fun sin(param) do return sin(param * PI/180); end

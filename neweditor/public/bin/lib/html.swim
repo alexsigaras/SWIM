@@ -1,0 +1,6 @@
+class HTML do
+	fun getHTML(url) do return(@("html", url)); end
+	fun getByClass(c, url) do return (@("."+c, url)); end
+	fun getByID(i, url) do return (@("#"+i, url)); end
+	fun getByElement(element, url) do return (@(element, url)); end
+end

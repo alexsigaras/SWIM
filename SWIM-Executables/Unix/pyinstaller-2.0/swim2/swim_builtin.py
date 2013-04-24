@@ -41,6 +41,7 @@ from types import *
 from pyquery import PyQuery as pq
 import urllib, getpass
 import re
+import math
 
 # PDF
 from fpdf import fpdf as pdf
@@ -117,62 +118,51 @@ def builtin_pdf(expr):
         print("Mismatch grammar for pdf output!")
         raise Exception    
 
-         		
-# def p_function(t):
-#     '''function_stmt : ID LPAREN statement RPAREN SEMICOLON'''
-#     t[0] = Node("function", t[3], t[1])
+# Mathematical Functions
 
-#     def do(self):   
-#         result = self.children.do() 
-#         if self.leaf == "print" :
-#             if isinstance(result, StringType):
-#                 # Escaped sequence handling
-#                 escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-                
-#                 for seq in escaped_sequences:
-#                     if result.find(seq) != -1:      
-#                         result = result.decode('string-escape')
-                    
-#                 # string containing ""              
-#                 # 2 byte unicode with unicode characters
-#                 if re.match(r'u"\\u', result):
-#                     result = unichr(int(result[4:8], 16))
-#                 # 2 byte unicode with strings
-#                 elif re.match(r'^u"', result):
-#                     result =  result.replace('"','')[1:].decode("utf-8")
-                    
-#                 # string containing ''          
-#                 elif re.match(r"u'\\u", result):
-#                     result = unichr(int(result[4:8], 16))
-#                 # 2 byte unicode with strings
-#                 elif re.match(r"^u'", result):
-#                     result = result.replace("'",'')[1:].decode("utf-8")         
-#                 else:
-#                     result = result.replace("'",'')            
+def builtin_abs(number):
+    try:
+        return abs(number)
+    except:
+        print("Mismatch grammar for abs")
+        raise Exception
 
-#                 print result       
-#             else:
-#                 print result        
-     
-#         elif self.leaf == "pdf":
-#             try:
-#                 #print stripe_quotation(t[3][0])
-#                 f = pdf.FPDF()
-#                 f.add_page()
-#                 f.set_font('Arial','B',16)          
-#                 f.multi_cell(w=200,h=5,txt = stripe_quotation(self.children.do()[0])) 
-                
-#                 # for our user test
-#                 filename = stripe_quotation(self.children.do()[1])
-#                 filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-                
-#                 f.output(os.path.join("..","doc",filename),'F')
-#             except:
-#                 print("Mismatch grammar for pdf output!")
-#                 raise Exception     
-        
-#     t[0].do = MethodType(do, t[0], Node)     
+def builtin_sin(number):
+    try:
+        return math.sin(math.pi*number/180)
+    except:
+        print("Mismatch grammar for sin")
+        raise Exception
 
+def builtin_cos(number):
+    try:
+        return math.cos(math.pi*number/180)
+    except:
+        print("Mismatch grammar for cos")
+        raise Exception
 
+def builtin_tan(number):
+    try:
+        return math.tan(math.pi*number/180)
+    except:
+        print("Mismatch grammar for tan")
+        raise Exception
 
-
+def builtin_sqrt(number):
+    try:
+        return math.sqrt(number)
+    except:
+        print("Mismatch grammar for sqrt")
+        raise Exception
+def builtin_log(number):
+    try:
+        return math.log10(number)
+    except:
+        print("Mismatch grammar for log10")
+        raise Exception
+def builtin_factorial(number):
+    try:
+        return math.factorial(number)
+    except:
+        print("Mismatch grammar for factorial")
+        raise Exception

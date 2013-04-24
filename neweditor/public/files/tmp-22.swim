@@ -1,0 +1,21 @@
+include std;
+fun fib(number) do
+  first = 0;
+  second = 1;
+  if number == 0 do
+        return 0;
+  elif number == 1 do
+        return 1;
+    else
+        count = 0;
+    while count < number do
+            temp = first+second;
+            first = second;
+            second = temp;
+            count = count + 1;
+        end        
+        return first;
+  end
+end
+c = fib(20);
+print(c);

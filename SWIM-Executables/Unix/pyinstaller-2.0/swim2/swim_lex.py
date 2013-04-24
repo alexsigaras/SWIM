@@ -58,7 +58,9 @@ reserved = {
     'new'      : 'NEW',
     'include'  : 'INCLUDE',
     'global'   : 'GLOBAL',
-    'this'     : 'THIS'
+    'this'     : 'THIS',
+    'lambda'   : 'LAMBDA'
+
 }
 
 #---------------------------------#

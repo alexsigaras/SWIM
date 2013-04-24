@@ -1,0 +1,123 @@
+#Recursive fibonacci
+include std;
+fun fib(n) do
+    if(n == 0) do
+        return 0;
+    end
+    if(n == 1) do
+        return 1;
+    end
+    return fib(n-1) + fib(n-2);
+end
+
+fun fib1(num) do
+  return fibHelper(num, 1, 0);
+end
+
+fun fibHelper(num, val, prev) do
+    if(num == 0) do 
+      return prev 
+    end
+    if(num == 1) 
+      return val;
+    end
+    return fibHelper(num - 1, val+prev, val);
+end
+
+
+
+
+print(fib1(10));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

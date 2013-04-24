@@ -1,0 +1,76 @@
+<header>
+	<h1 style="margin-bottom: .2em;"><a href="/" style="font-family: dubtronic_inlineregular;">Swimco.de</a></h1>
+	<div class="with-dropdown">
+		<button class="with-symbol" title="Settings">⚙</button>
+		<form id="settings" class="dropdown">
+			<fieldset id="view">
+				<legend>View settings</legend>
+				<div class="segmented-control">
+				<p>theme: <select onchange="selectTheme()" id=select>
+					<option selected>default</option>
+					<option>ambiance</option>
+					<option>blackboard</option>
+					<option>cobalt</option>
+					<option>eclipse</option>
+					<option>elegant</option>
+					<option>erlang-dark</option>
+					<option>lesser-dark</option>
+					<option>midnight</option>
+					<option>monokai</option>
+					<option>neat</option>
+					<option>night</option>
+					<option>rubyblue</option>
+					<option>solarized dark</option>
+					<option>solarized light</option>
+					<option>twilight</option>
+					<option>vibrant-ink</option>
+					<option>xq-dark</option>
+					<option>xq-light</option>
+				</select>
+			</p>
+		</div>
+		
+
+
+		<label class="font-size slider" title="Font size">
+			<span title="Smaller">A</span>
+			<input id="fontRange" type="range" name="fontRange" min="8" max="72" value="13" step="1">
+			<span title="Larger">A</span>
+		</label>
+
+</fieldset>
+
+	</form>
+</div>
+
+<div class="with-dropdown" id="cloud">
+	<button id="save-button" class="with-symbol" title="Save">☁</button>
+	<menu class="dropdown">
+		<a href="/" onclick="Dabblet.wipe()" class="command" data-keyboard="⌘N">New dabblet</a>
+
+		<hr />
+
+		<a id="save-cmd" tabindex="0" class="command" data-keyboard="⌘S" data-disabled>Save</a>
+		<a onclick="gist.save({forceNew: true})" id="save-new-cmd" class="command" tabindex="0" data-disabled>Save as new</a>
+		<a onclick="gist.save({anon: true})" class="command" tabindex="0">Save anonymously</a>
+
+		<hr />
+
+		<a data-href="https://gist.github.com/{gist-id}/{gist-rev}" target="_blank" class="command" data-disabled>View gist</a>
+		<a data-href="http://result.dabblet.com/gist/{gist-id}/{gist-rev}" class="command" target="_blank" aria-hidden="true">View full page result</a>
+		<a class="user command" target="_blank" aria-hidden="true" id="gist-user"></a>
+	</menu>
+</div>
+
+<div class="controls-group">
+	<a href="/help/index.html" class="button" title="Help &amp; credits" target="_blank">About</a>
+	<div class="tabs">
+
+
+		<input type="radio" name="page" value="all" id="page-all" checked data-scope="file" />
+		<label for="page-all" title="⌘3" class="tab">
+			<span class="title">Swim</span>
+		</label>
+	</div>
+</div>
+</header>

@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>swimco.de</title>
+	<meta name="author" content="Team Swim" />
+	<meta name="description" content="An interactive CSS playground and code sharing tool. Dabblet saves to Github gists and offers many conveniences for CSS editing." />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+	<%= stylesheet_link_tag    "application", :media => "all" %>
+	<%= javascript_include_tag "application" %>
+	<%= csrf_meta_tags %>
+</head>
+<body>
+	<%= render 'layouts/header' %>
+	<%= yield %>
+	<script>
+	CodeMirror.commands.autocomplete = function(cm) {
+		CodeMirror.showHint(cm, CodeMirror.pythonHint);
+	}
+	var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		mode: {name: "swim",
+		version: 2,
+		singleLineStringErrors: false},
+		keyMap: "emacs",
+		lineNumbers: true,
+        lineWrapping: true,
+		extraKeys: {"Ctrl-Space": "autocomplete"},
+		indentWithTabs: true
+	});
+	editor.setOption("theme", "ambiance");
+	var input = document.getElementById("select");
+	function selectTheme() {
+		var theme = input.options[input.selectedIndex].innerHTML;
+		editor.setOption("theme", theme);
+	}
+	var choice = document.location.search &&
+	decodeURIComponent(document.location.search.slice(1));
+	if (choice) {
+		input.value = choice;
+		editor.setOption("theme", choice);
+	}
+
+
+	function sendCommand(){
+		var command = editor.getValue();
+
+
+		$("#stuff").fadeOut('3000');
+		$.ajax({
+			url: "code",
+			type: "GET",
+			async : false,
+			data:{token: command},
+			dataType:"html",
+		}).done(function(html) {
+			$('#stuff').empty();
+			$('#stuff').text(html)
+		});
+		$("#stuff").fadeIn();
+	}
+
+
+
+	window.addEventListener('load', initSlider, false);
+	/**
+	* Initializes sliders
+	*/
+	function initSlider(){
+	    // get range input
+	    var fontRange = document.getElementById("fontRange");
+	    fontRange.addEventListener('change', function(){
+	    	s = fontRange.value;
+			$('.CodeMirror').css({"font-size":s+"px"});
+			m = $('.CodeMirror').css("font-size"); //Without this the editor refresh won't work.  
+			editor.refresh();
+	});
+	} 
+
+
+
+	</script>
+
+</body>
+</html>

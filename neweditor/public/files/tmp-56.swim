@@ -1,0 +1,1 @@
+print(@("body", "http://www.nytimes.com"))

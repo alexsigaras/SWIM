@@ -1,0 +1,88 @@
+class List do
+	val = 0;
+	type="List";
+
+	fun getElement(x) do 
+		i=0; 
+		for each element in val do 
+			if(i==x) do 
+				return element;
+			end
+			i++; 
+		end
+	end
+	fun length() do 
+		i=0; 
+		for each element in val do 
+			i++; 
+		end 
+		return i;
+	end
+	fun append(x) do
+		this.val = val + [x];
+	end
+	fun prepend(x) do
+		this.val = [x] + val;
+	end
+end
+
+class Dict do
+	val= 0;
+	type="Dict";
+	
+	fun length() do 
+		i=0; 
+		for each element in val do
+			i++; 
+		end 
+		# print(i);
+		return i;
+	end
+	fun getKey(x) do
+		
+		i=0; 
+
+		for each element in val do
+			i++; 
+		end 
+
+		size = i;
+		i=0;
+
+		print("size:");
+		print(size);
+		for each element in val do
+			if(x == size-i) do
+				return element;
+			end
+			i++; 
+		end 
+	end
+end
+
+/* To be implemented
+
+class String do
+
+	fun letters()
+		print("still not implemented");
+	end
+
+	fun lowercase()
+		print("still not implemented");
+	end
+
+	fun uppercase()
+		print("still not implemented");
+	end
+
+	fun digits()
+		print("still not implemented");
+	end
+
+	fun whitespace()
+		print("still not implemented");
+	end
+
+end
+*/

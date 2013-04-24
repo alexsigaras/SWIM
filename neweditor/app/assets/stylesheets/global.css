@@ -1,0 +1,622 @@
+/**
+ * Variables
+ */
+header,
+.popup,
+.dropdown {
+	background: hsla(200, 10%, 20%, .9) url(noise.png);
+	color: white;
+	text-shadow: 0 -1px 1px black, 0 -1px 2px black;
+}
+
+.popup,
+.dropdown {
+	border: 1px solid rgba(0,0,0,.4);
+	border-radius: .5em;
+	box-shadow: 0 1px rgba(255,255,255,.3) inset,
+				.2em .2em .6em black;
+}
+
+.popup > .content {
+	background: hsl(24, 20%, 95%) url(noise.png);
+	color: black;
+	text-shadow: 0 1px white;
+	box-shadow: 0 .1em .5em rgba(0,0,0,.8) inset;
+}
+
+.popup > .close,
+menu > .command:not([data-disabled]) {
+	transition: .5s box-shadow;
+}
+
+.popup > .close:hover,
+menu > .command:not([data-disabled]):hover {
+	background: rgba(0,0,0,.3);
+	box-shadow: .05em .05em .25em black inset;
+}
+
+.popup > .close:active,
+menu > .command:not([data-disabled]):active {
+	background: rgba(0,0,0,.4);
+	box-shadow: .15em .15em .15em black inset;
+}
+
+@font-face {
+    font-family: 'dubtronic_inlineregular';
+    src: url('dubtronic-inline-webfont.eot');
+    src: url('dubtronic-inline-webfont.eot?#iefix') format('embedded-opentype'),
+         url('dubtronic-inline-webfont.woff') format('woff'),
+         url('dubtronic-inline-webfont.ttf') format('truetype'),
+         url('dubtronic-inline-webfont.svg#dubtronic_inlineregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+@keyframes bugfix { from { padding: 0; } to { padding: 0; } }
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+	font: 100%/1.5 "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+body {
+	position: relative;
+	height: 100%;
+	border-top: 10px solid transparent;
+	box-sizing: border-box;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.button,
+button,
+.tab {
+	padding: .45em .6em;
+	border: 0;
+	border-radius: .3em;
+	color: inherit;
+	font: inherit;
+	text-align: center;
+	text-decoration: none;
+	cursor: pointer;
+	text-shadow: inherit;
+}
+
+.button,
+button {
+	float: left;
+	border: 1px solid rgba(0,0,0,.4);
+	margin: 0 .2em ;
+	margin-top: .2em;
+	background: url(noise.png);
+	white-space: nowrap;
+	box-shadow: rgba(255, 255, 255, .4) 0 1px 0 inset, 
+				rgba(255, 255, 255, .3) 0 25px 30px -12px inset, 
+				rgba(0, 0, 0, .6) 0 1px 2px;
+}
+
+button.with-symbol,
+.button.with-symbol {
+	font-family: Dabblet, sans-serif;
+	font-weight: normal;
+}
+
+.button:hover,
+.button:active,
+button:hover,
+button:active,
+.tab:hover,
+.tab:active {
+	background-color: black;
+}
+
+header ~ * button,
+header ~ * .button,
+header ~ button,
+header ~ .button {
+	color: black;
+	text-shadow: 0 1px 1px white;
+}
+
+header ~ * button:hover,
+header ~ * .button:hover,
+header ~ button:hover,
+header ~ .button:hover,
+header ~ * button:active,
+header ~ * .button:active,
+header ~ button:active,
+header ~ .button:active {
+	color: white;
+	text-shadow: 0 -1px 1px black, 0 -1px 2px black;
+}
+
+body > header {
+	position: absolute;
+	bottom: 100%;
+	right: 0;
+	left: 0;
+	z-index: 10;
+	padding: .4em .5em 0;
+	border-bottom: 10px solid linear-gradient(hsl(24, 10%, 25%), hsla(200, 10%, 20%, .9));
+	background: url(noise.png), linear-gradient(hsl(24, 10%, 95%), hsla(200, 10%, 20%, .9));
+	color: white;
+	line-height: 1.1;
+	font-weight: bold;
+	text-shadow: 0 -1px 1px black, 0 -1px 2px black;
+	transition: .5s 1s transform;
+}
+
+body > header:hover,
+body > header:active,
+body > header.focus {
+	transform: translateY(-10px) translateY(100%);
+	transition-delay: 0s;
+}
+
+	body > header > h1 {
+		float: left;
+		height: 1.3em;
+		margin-right: .1em;
+		font: 190%/1.6 Dabblet, sans-serif;
+		text-shadow: .05em .05em .1em black;
+		-webkit-transform: translateZ(0); /* fix for chopped letters */
+	}
+	
+	body > header > .with-dropdown {
+		float: left;
+	}
+	
+		.tabs input {
+			position: absolute;
+			z-index: 1;
+			opacity: 0;
+		}
+	
+		.tabs {
+			display: inline-block;
+			height: .75em;
+			margin: 0 33px 0 -.5em;
+			white-space: nowrap;
+			font-size: 110%;
+			line-height: 1.4;
+			-webkit-font-smoothing: antialiased; /* fix for WebKit inconsistency */
+			-webkit-transform: translateZ(0); /* fix for unhoverable tabs */
+		}
+		
+		.controls-group {
+			float: right;
+			min-width: 15em;
+			white-space: nowrap;
+		}
+	
+				
+		body[data-unsaved] button[title="Save"] {
+			text-shadow: 0 0 .2em #6cf, 0 0 .4em #6cf;
+		}
+		
+		header > .with-dropdown > button:after,
+		header > .with-dropdown > .button:after {
+			content: ' ▾';
+		}
+		
+		.button:active,
+		button:active,
+		input:checked + label.button {
+			box-shadow: 0 2px 6px black inset;
+		}
+		
+		input:checked + label.button {
+			background-color: rgba(0,0,0,.3);
+		}
+		
+		#currentuser {
+			max-width: 12em;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		
+		.no-cors #currentuser {
+			display: none;
+		}
+		
+		@media (max-width: 1000px) {
+			#currentuser {
+				max-width: 8em;
+			}
+		}
+		
+		@media (max-width: 800px) {
+			#currentuser {
+				max-width: 3em;
+			}
+		}
+		
+		@media (max-width: 800px) and (min-width: 400px) {
+			#currentuser {
+				max-width: none;
+			}
+		}
+		
+		#currentuser:not(:hover) {
+			background-color: transparent;
+		}
+		
+			header .user > img {
+				max-height: 1.4em;
+				margin: -.2em .3em -.2em -1.6em;
+				vertical-align:bottom;
+				border-radius: 1px;
+				box-shadow: 0 0 0 1px rgba(0,0,0,.2);
+			}
+			
+			#currentuser > img {
+				margin-left: -.3em;
+			}
+			
+		a.button[href^="/help/"] {
+			position: absolute;
+			right: 3px;
+			bottom: 5px;
+			background-color: transparent;
+		}
+		
+		@keyframes flip {
+			from { transform: perspective(600px) rotate3d(1,0,0,180deg); }
+			  to { transform: perspective(600px) rotate3d(1,0,0,  0deg); }
+		}
+		
+		.tab {
+			position: relative;
+			top: 0;
+			display: inline-block;
+			padding: .5em .6em;
+			border: 0;
+			margin: 0 0 -5px;
+			background: rgba(0,0,0,.2);
+			cursor: pointer;
+			transform-origin: bottom;
+			border-radius: 5px;
+			box-shadow: .05em .1em .2em rgba(0,0,0,.7) inset;
+			text-shadow: inherit;
+			animation: flip .5s;
+		}
+		
+		.tabs > input:checked + .tab,
+		.tab.active {
+			background: black;
+			top: 2.5em;
+			animation: flip .6s;
+			transform-origin: top;
+		}
+		
+			body[data-view="separate"] .tab .if-not-separate {
+				display: none;
+			}
+			
+			.tabs > label > .title {
+				overflow: hidden;
+				transition: 1s max-width;
+				font-family: "dubtronic_inlineregular";
+			}
+		
+		.dropdown {
+			display: none;
+			position: absolute;
+			z-index: 2;
+			min-width: 12em;
+			max-width: 400px;
+			padding: .3em;
+			margin: 2.2em 0 0 -1em;
+			font-family: sans-serif;
+			text-align: left;
+			-webkit-transform: translateZ(0); /* fix for unhoverable dropdowns */
+		}
+		
+		/* pointer */
+		.dropdown:before {
+			content: '';
+			position: absolute;
+			z-index: -1;
+			top: -6px;
+			left: 2.5em;
+			width: 12px;
+			height: 12px;
+			border: inherit;
+			border-bottom-width:0;
+			border-right-width:0;
+			margin-left: -9px;
+			background-origin: border-box;
+			transform: rotate(45deg);
+			box-shadow: 1px 0 rgba(255,255,255,.3) inset;
+			background: url(noise.png), linear-gradient(-45deg, hsl(200, 10%, 20%) 52%, hsla(200, 10%, 20%, 0) 55%);
+		}
+		
+		.with-dropdown {
+			padding-bottom: 0px;	
+		}
+		
+		.with-dropdown:hover > .dropdown,
+		.with-dropdown.focus > .dropdown,
+		.with-dropdown:active > .dropdown,
+		.dropdown:hover,
+		.dropdown:active,
+		.dropdown.focus {
+			display: block;
+		}
+		
+		header fieldset {
+			font-size: 90%;
+		}
+		
+			header fieldset > legend {
+				font-size: 110%;
+			}
+			
+			#view > .segmented-control {
+				margin: .1em 0 .8em;
+			}
+			
+			#view label.font-size {
+				margin: .5em;
+			}
+			
+				#view label.font-size span {
+					display: inline-block;
+					vertical-align: middle;
+					font: 100% 'dubtronic_inlineregular';
+				}
+				
+				#view label.font-size span:first-child {
+					font-size: 50%;
+				}
+				
+				#view label.font-size span:last-child {
+					font-size: 200%;
+				}
+				
+				#view label.font-size input {
+					width: 220px;
+					vertical-align: middle;
+				}
+					
+			fieldset > label.checkbox {
+				display: block;
+				margin: .2em 0;
+				font-weight: normal;
+			}
+		
+			menu > .command {
+				display: block;
+				padding: .4em;
+				border-radius: .3em;
+				cursor: pointer;
+			}
+			
+			menu > .command[data-disabled] {
+				opacity: .5;
+				cursor: not-allowed;
+			}
+				
+				menu > .command:before {
+					content: '';
+					display: inline-block;
+					width: 1.4em;
+				}
+				
+				menu > .command[data-keyboard]:after {
+					content: attr(data-keyboard);
+					float: right;
+					opacity: .6;
+				}
+				
+				menu > input:checked + label.command:before {
+					content: '✔';
+					color: hsla(0,0%,100%,.5);
+				}
+			
+			menu > hr {
+				height: 2px;
+				border: 0;
+				margin: .1em 0;
+				background: rgba(255,255,255,.5);
+				background: linear-gradient(90deg, transparent, black 50%, transparent) top,
+							linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.5) 50%, rgba(255,255,255,0)) bottom;
+				background-repeat: repeat-x;
+				background-size: 100% 1px;
+			}
+
+@keyframes loader {
+	from {
+		background-position: 0 0;
+	}
+	
+	to {
+		background-position: -700px 0;
+	}
+}
+
+#loader {
+	display: none;
+	position: fixed;
+	z-index: 100;
+	top: 50%;
+	left: 50%;
+	width: 100px;
+	padding-top: 100px;
+	margin-top: -50px;
+	margin-left: -50px;
+	background: url(loader.png) no-repeat left top;
+	color: rgba(0,0,0,.5);
+	font-weight: bold;
+	text-align: center;
+	text-shadow: 0 1px white;
+	
+	animation: loader 1s infinite steps(7);
+}
+
+body[data-loading] > #loader {
+	display: block;
+}
+
+/**
+ * Responsive shit
+ */
+@media (max-width: 400px) {
+	html {
+		font-size: 90%;
+	}
+}
+
+@media (max-width: 620px) {
+	header > .with-dropdown button:after {
+		content: '';
+		content: none;
+	}
+	
+	.dropdown {
+		max-width: 200px;
+		margin-left: -9em;
+	}
+	
+	.dropdown:before {
+		left: 10.5em;
+	}
+	
+	.segmented-control > input[type="radio"] + label {
+		padding: .1em .5em;
+		font-size: .8em;
+	}
+}
+
+@media (max-width: 800px) {
+	html {
+		font-size: 95%;
+	}
+	
+	.controls-group {
+		margin-top: .2em;
+	}
+	
+	.tabs {
+		height: 2.2em;
+	}
+	
+	.popup {
+		width: 290px;
+		padding: .5em .5em 5em;
+		margin-left: -145px;
+		top: 2%;
+		bottom: 2%;
+	}
+}
+
+@media (min-width: 1000px) {
+	.popup {
+		width: 800px;
+		margin-left: -400px;
+	}
+	
+		.popup > .content > div {
+			column-count: 2;
+			column-gap: 2em;
+			column-rule: 3px dotted slategray;
+			column-fill: balance;
+		}
+}
+
+
+@media (min-height: 799px) and (min-width: 1000px) {
+	body {
+		border-top-width: 3.4em;
+	}
+	
+	body > header,
+	body > header:hover,
+	body > header:active,
+	body > header.focus {
+		transform: none;
+	}
+	
+	.tabs > input + label,
+	.tabs > input:checked + .tab,
+	.tab.active {
+		animation: none;
+	}
+	
+	.tabs > input:checked + .tab,
+	.tab.active {
+		top: 0;
+	}
+}
+
+html.document > body {
+	border-top-width: 3.4em;
+}
+
+	html.document > body > header,
+	html.document > body > header:hover,
+	html.document > body > header:active,
+	html.document > body > header.focus {
+		position: fixed;
+		transform: translateY(100%);
+	}
+	
+	html.document .tabs > input + label,
+	html.document .tabs > input:checked + .tab,
+	html.document .tab.active {
+		animation: none;
+	}
+	
+	html.document .tabs > input:checked + .tab,
+	html.document .tab.active {
+		top: 0;
+	}
+
+::selection {
+	background-color: hsla(24, 20%, 50%,.5);
+	color: white;
+	text-shadow: 0 -1px 1px hsl(24, 20%, 50%);
+}
+
+/**
+ * Style scrollbars in Webkit
+ * Warning: nonstandard CSS ahead
+ */
+::-webkit-scrollbar {
+	width: 20px;
+	height: 20px;
+}
+
+section.page:not(.focus):not(:hover)::-webkit-scrollbar {
+	display: none;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb {
+	border-radius: 999px;
+	border: 5px solid transparent;
+}
+
+::-webkit-scrollbar-track {
+	box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;
+}
+
+::-webkit-scrollbar-thumb {
+	background: url(noise.png);
+	min-height: 20px;
+	background-clip: content-box;
+	box-shadow: 0 0 0 5px hsla(24, 20%, 50%,.4) inset;
+}
+
+::-webkit-scrollbar-corner {
+	background: transparent;
+}

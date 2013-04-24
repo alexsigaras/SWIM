@@ -24,9 +24,10 @@
 # File: AST.py 		                                                          #
 # Description: Abstract Syntax Tree                                           #
 #-----------------------------------------------------------------------------#
+
 import types
 
-class Node:
+class Node(object):
 	'Simple Node'
 	
 	def __init__(self, type, children = None, leaf = None):
@@ -73,4 +74,4 @@ class Node:
 				childTree = self.children
 		return [self.leaf, childTree]
 
-#-----------------------------------------------------------------------------#		
+#-----------------------------------------------------------------------------#
