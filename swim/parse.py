@@ -1203,7 +1203,7 @@ def p_expression_parse_text(t):
             if type(raw_url) == str:
                 url = stripe_quotation(raw_url)
                 d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-                return d(selector)
+                return d(selector).text()
             else:
                 return raw_url(selector)
         except Exception:

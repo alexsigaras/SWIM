@@ -1,0 +1,4 @@
+#install brew
+brew install libxml2
+brew install libxslt
+easy_install lxml
