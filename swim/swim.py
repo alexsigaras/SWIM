@@ -39,10 +39,10 @@ if sys.version_info[0] >= 3:
     raw_input = input
 
 # Import Lexical Analyzer
-from swim_lex import *
+from lex import *
 
 # Import Parse Analyzer
-from swim_parse import *
+from parse import *
 
 #-----------------------------------------------------------------------------#
 
@@ -80,23 +80,7 @@ def main(file=None, mode=2):
 
             if len(sys.argv) > 1:
                 fn = open(sys.argv[1])
-                # for line in fn.readlines():
-                #     if line == "\n": continue
-                #     if mode == 1:
-                #         lex.input(line)
-                #         while 1:
-                #             tok = lex.token()
-                #             print tok
-                #             if not tok:
-                #                 break
-                #     else:
-                #         yacc.parse(line)
                 s = fn.read()
-                # #s = re.sub(r'\#.*|/\*(.*[^\*/]|\n|\t)*\*/', '', s)
-                #s = s.replace('\n',' ')
-                #s = "a=1; # This is a comment \n b=2; print(a); print(b);"
-                #print s
-                #print s
                 yacc.parse(s)
                 fn.close()  
             else:
@@ -113,8 +97,8 @@ def main(file=None, mode=2):
                         except EOFError:
                             break
                         yacc.parse(s)
-    
 
 if __name__ == "__main__":
     main()
+    
 #-----------------------------------------------------------------------------#

@@ -21,7 +21,7 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-# File: swim_parse.py                                                         #
+# File: parse.py                                                              #
 # Description: Swim Parse Analyzer                                            #
 #-----------------------------------------------------------------------------#
 
@@ -29,7 +29,9 @@
 #                     1. Common Library Import                                #
 #-----------------------------------------------------------------------------#
 
-from core import *
+# Abstract Syntax Tree
+from AST import Node
+
 from namespace import Namespace
 from types import *
 
@@ -43,10 +45,17 @@ import re
 import operator
 
 # Error handling
-from swim_exception import *
+from exception import *
 
 # Builtin functions
-from swim_builtin import *
+from builtin import *
+
+# Libraries for include
+import sys
+import os
+sys.path.insert(0,os.path.join("..", "include"))
+
+import ply.yacc as yacc
 
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
@@ -58,6 +67,7 @@ def stripe_quotation(string):
 
 class swimClass():
     pass
+
 #-----------------------------------------------------------------------------#
 #                           4.  Tables & Dictionaries                         #
 #-----------------------------------------------------------------------------#
@@ -133,14 +143,8 @@ def p_start(t):
                 if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
                 	print(result)
             except Error as e:
-            	#print 1
-            	#print e
                 printErr(t[1].traverse())
                 pass
-            	#print "[Line :" + str(e.lineno) + "] " + e.msg 
-        
-        # Saving mode for function and class definition
-        ''' TO DO '''
     except:
         pass
 
@@ -171,7 +175,6 @@ def p_statements(t):
                             return secondResult              
             except:
                 print("Error in statements")
-                #print traceback.format_exc()
     except:
         t[0] = Node ("statement", t[1], "statement")
 
@@ -191,6 +194,7 @@ def p_statement(t):
 
 def p_simple_stmt(t):
     '''simple_stmt : expression_stmt
+                   | include_stmt
                    | assign_stmt
                    | assign_global_stmt
                    | assign_this_stmt
@@ -199,16 +203,14 @@ def p_simple_stmt(t):
                    | return_stmt
                    | break_stmt
                    | class_instantiation_stmt
-                   | class_setAttribute_stmt
-                   | include_stmt'''
+                   | class_setAttribute_stmt'''
     super_do(t, 'simple_stmt')
-
 
 def p_compound_stmt(t):
     '''compound_stmt : if_stmt
                      | while_stmt
                      | for_stmt                 
-                     | function_decl
+                     | function_decl_stmt
                      | class_decl_stmt '''
     super_do(t, 'compound_stmt')
 
@@ -235,7 +237,7 @@ def super_do(t, typestring):
 #--------------------------------------------------------------#
 
 #----------------------------------------------------#
-#               5.2.1.1 Expression                   #
+#               5.2.1.1 Expression Statement         #
 #----------------------------------------------------#
 
 def p_statement_expr(t):
@@ -243,7 +245,31 @@ def p_statement_expr(t):
     super_do(t, 'expr')
 
 #----------------------------------------------------#
-#               5.2.1.2 Assignment                   #
+#             5.2.2.2 Include Statement              #
+#----------------------------------------------------#
+
+def p_statement_include(t):
+    'include_stmt : INCLUDE ID'
+
+    t[0] = Node("include", t[2] , "include")
+
+    def do(self, id = None, object_name = None):
+        try:
+            try:
+                fn = open( os.path.join( "lib", self.children + ".swim"))
+            except:
+                fn = open( os.path.join( os.getcwd(), "public", "bin", "lib", self.children + ".swim"))
+            s = fn.read()
+            yacc.parse(s)
+            fn.close()              
+        except:
+            print("Error in include")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#          5.2.1.2 Assignment Statement              #
 #----------------------------------------------------#
 
 def p_statement_assign(t):
@@ -279,13 +305,16 @@ def p_statement_assign(t):
                     return identifiers[object_name][self.children[0]]
                 else:
                     identifiers[self.children[0]] = element
-                    return identifiers[self.children[0]]
-            return identifiers[self.children[0]]        
+                    return identifiers[self.children[0]]      
         except:
             print("Error in assignment statement")
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#        5.2.1.3 Global Assignment Statement         #
+#----------------------------------------------------#
 
 def p_statement_global_assign(t):
     'assign_global_stmt : GLOBAL ID ASSIGN expression'
@@ -303,6 +332,10 @@ def p_statement_global_assign(t):
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#        5.2.1.4 This. Assignment Statement          #
+#----------------------------------------------------#
 
 def p_statement_this_assign(t):
     'assign_this_stmt : THIS DOT ID ASSIGN expression'
@@ -322,7 +355,7 @@ def p_statement_this_assign(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                5.2.1.3 Auto Increment              #
+#                5.2.1.5 Auto Increment              #
 #----------------------------------------------------# 
 
 def p_statement_increment(t):
@@ -345,7 +378,7 @@ def p_statement_increment(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#                5.2.1.4 Auto Decrement              #
+#                5.2.1.6 Auto Decrement              #
 #----------------------------------------------------# 
 
 def p_statement_decrement(t):
@@ -366,6 +399,40 @@ def p_statement_decrement(t):
             print traceback.format_exc()
 
     t[0].do = MethodType(do, t[0], Node) 
+
+#----------------------------------------------------#
+#              5.2.1.7 Return Statement              #
+#----------------------------------------------------#
+
+def p_statement_return(t):
+    '''return_stmt : RETURN elements'''
+    
+    t[0] = Node('return', t[2], 'return')    
+    def do(self, id = None, object_name = None):
+        try: 
+            return {"return" :  self.children.do(id = id, object_name = object_name)[0]}
+        except:
+            print("Error in return statement")
+
+    t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#                    5.2.2.5 Break                   #
+#----------------------------------------------------#
+
+def p_statement_break(t):
+    '''break_stmt : BREAK'''
+    
+    t[0] = Node('break', t[0], 'break') 
+
+    def do(self, id = None, object_name = None):
+        try:
+            return {"break" : None}
+        except:
+            print("Error in break statement")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
 
 #--------------------------------------------------------------#
 #                   5.2.2 Compound Statements                  #
@@ -530,38 +597,10 @@ def p_statement_for(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #----------------------------------------------------#
-#             5.2.2.4 Include                        #
-#----------------------------------------------------#
-import sys
-import os
-sys.path.insert(0,os.path.join("..", "include"))
-
-import ply.yacc as yacc
-
-def p_statement_include(t):
-    'include_stmt : INCLUDE ID'
-
-    t[0] = Node("include", t[2] , "include")
-
-    def do(self, id = None, object_name = None):
-        try:
-            try:
-                fn = open( os.path.join( "lib", self.children + ".swim"))
-            except:
-                fn = open( os.path.join( os.getcwd(), "public", "bin", "lib", self.children + ".swim"))
-            s = fn.read()
-            yacc.parse(s)
-            fn.close()              
-        except:
-            print("Error in include")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-#----------------------------------------------------#
 #              5.2.2.4 Classes                       #
 #----------------------------------------------------#
 
-def p_class_decl(t):
+def p_statement_class_decl(t):
     'class_decl_stmt : CLASS ID DO statements'
 
     t[0] = Node("class", [t[2], t[4]], t[2])
@@ -576,7 +615,7 @@ def p_class_decl(t):
 
     t[0].do = MethodType(do, t[0], Node) # adds the method do dynamically to class_declaration method
 
-def p_class_instantiation(t):
+def p_statement_class_instantiation(t):
     'class_instantiation_stmt : ID ASSIGN NEW ID LPAREN RPAREN '
 
     t[0] = Node("class_instantiation", [t[1],t[4]], "class_instantiation")
@@ -594,7 +633,21 @@ def p_class_instantiation(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-def p_class_getAttribute(t):
+def p_statement_class_setAttribute(t):
+    '''class_setAttribute_stmt : ID DOT ID ASSIGN expression'''
+    t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
+
+    def do(self, id = None, object_name = None):
+        try:
+            identifiers[self.children[0]][self.children[1]] = self.children[2].do(id = id, object_name = object_name)
+            return identifiers[self.children[0]][self.children[1]]
+        except:
+            print("Error in class get Child")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_expression_class_getAttribute(t):
     '''class_getAttribute_expr : ID DOT ID
                                | ID DOT function_call_expr'''
 
@@ -612,26 +665,12 @@ def p_class_getAttribute(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-def p_class_setAttribute(t):
-    '''class_setAttribute_stmt : ID DOT ID ASSIGN expression'''
-    t[0] = Node("classAttribute", [t[1],t[3],t[5]], "classAttribute")
-
-    def do(self, id = None, object_name = None):
-        try:
-            identifiers[self.children[0]][self.children[1]] = self.children[2].do(id = id, object_name = object_name)
-            return identifiers[self.children[0]][self.children[1]]
-        except:
-            print("Error in class get Child")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)
-
 #----------------------------------------------------#
-#              5.2.2.4 Functions                     #
+#              5.2.2.5 Functions                     #
 #----------------------------------------------------#
 
-def p_function_decl(t):
-    'function_decl : FUN ID LPAREN elements RPAREN DO statements'
+def p_statement_function_decl(t):
+    'function_decl_stmt : FUN ID LPAREN elements RPAREN DO statements'
 
     t[0] = Node('fundef', [t[2],t[4],t[7]], 'fundef')
 
@@ -645,7 +684,7 @@ def p_function_decl(t):
 
     t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
 
-def p_function_call_expr(t):
+def p_expression_function_call(t):
     '''function_call_expr : ID LPAREN elements RPAREN'''
 
     t[0] = Node("funcallexpr", [t[1],t[3]], 'funcallexpr')
@@ -791,7 +830,7 @@ def p_function_call_expr(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-def p_lambda_function_expr(t):
+def p_expression_lambda_function(t):
     'lambda_function_expr : LPAREN LAMBDA elements DO statements RPAREN LPAREN elements RPAREN'
 
     t[0] = Node('lambda', [t[3], t[5],t[8]], 'lambda')
@@ -812,41 +851,6 @@ def p_lambda_function_expr(t):
 
     t[0].do = MethodType(do, t[0], Node)  
 
- 
-#----------------------------------------------------#
-#                    5.2.2.5 Return                  #
-#----------------------------------------------------#
-
-def p_return(t):
-    '''return_stmt : RETURN elements'''
-    
-    t[0] = Node('return', t[2], 'return')    
-    def do(self, id = None, object_name = None):
-        try: 
-            return {"return" :  self.children.do(id = id, object_name = object_name)[0]}
-        except:
-            print("Error in return statement")
-
-    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
-
-#----------------------------------------------------#
-#                    5.2.2.5 Break                   #
-#----------------------------------------------------#
-
-def p_break(t):
-    '''break_stmt : BREAK'''
-    
-    t[0] = Node('break', t[0], 'break') 
-
-    def do(self, id = None, object_name = None):
-        try:
-            return {"break" : None}
-        except:
-            print("Error in break statement")
-            print traceback.format_exc()
-
-    t[0].do = MethodType(do, t[0], Node)      # adds the method do dynamically to function_declaration method
-
 #--------------------------------------------------------------#
 #                       5.3 Expressions                        #
 #--------------------------------------------------------------#
@@ -866,7 +870,7 @@ def p_expression(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-def p_unary_expr(t):
+def p_expression_unary(t):
     '''unary_expr : boolean_expr
                   | not_expr
                   | number_expr
@@ -893,7 +897,7 @@ def p_unary_expr(t):
 
     t[0].do = MethodType(do, t[0], Node)
 
-def p_binary_expr(t):
+def p_expression_binary(t):
     '''binary_expr : arithmetic_expr
                    | conditional_expr'''
     
@@ -909,7 +913,7 @@ def p_binary_expr(t):
     t[0].do = MethodType(do, t[0], Node)
 
 #--------------------------------------------------------------#
-#                   5.3.1 Simple Expressions                   #
+#                   5.3.1 Unary Expressions                    #
 #--------------------------------------------------------------#
 
 #----------------------------------------------------#
@@ -1260,11 +1264,11 @@ def p_expression_uminus(t):
     t[0].do = MethodType(do, t[0], Node) 
     
 #--------------------------------------------------------------#
-#                   5.3.1 Compound Expressions                 #
+#                   5.3.2 Binary Expressions                   #
 #--------------------------------------------------------------#
 
 #----------------------------------------------------#
-#            5.3.1.1 Arithmetic Operations           #
+#            5.3.2.1 Arithmetic Expressions          #
 #----------------------------------------------------#
 
 def p_expression_arithmetic_op(t):
@@ -1285,7 +1289,7 @@ def p_expression_arithmetic_op(t):
     t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
-#        5.3.1.2 Conditional Operations              #
+#        5.3.2.2 Conditional Expressions             #
 #----------------------------------------------------#
 
 def p_expression_cond_op(t):
@@ -1307,8 +1311,6 @@ def p_expression_cond_op(t):
                 raise TypeException(t.lexer.lineno, str(self.children[0].do(id = id, object_name = object_name)) + " " + self.leaf + " " + str(self.children[1].do(id = id, object_name = object_name)))
 
     t[0].do = MethodType(do, t[0], Node)
-
-#--------------------------------------------------------------#
  
 #----------------------------------------------------#
 #                     5.4 Error                      #
@@ -1319,7 +1321,5 @@ def p_error(t):
         print("Syntax error at '%s'" % t.value)
     else:
         print("Syntax error at EOF")
-
-#----------------------------------------------------#
 
 #-----------------------------------------------------------------------------#

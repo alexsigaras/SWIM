@@ -21,15 +21,17 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-# File: swim_parse.py                                                         #
-# Description: Swim Parse Analyzer                                            #
+# File: builtin.py                                                            #
+# Description: Swim Built in libraries                                        #
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
 #                     1. Common Library Import                                #
 #-----------------------------------------------------------------------------#
 
-from core import *
+# Abstract Syntax Tree
+from AST import Node
+
 from namespace import Namespace
 from types import *
 
@@ -47,11 +49,7 @@ import math
 from fpdf import fpdf as pdf
 
 # Error handling
-from swim_exception import *
-
-
-
-
+from exception import *
 
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
@@ -64,61 +62,10 @@ def stripe_quotation(string):
 #-----------------------------------------------------------------------------#
 #                          4.  Built-in Functions                             #
 #-----------------------------------------------------------------------------#
-def builtin_print(result, color=None):
-    if isinstance(result, StringType):
-        # Escaped sequence handling
-        escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
-        
-        for seq in escaped_sequences:
-            if result.find(seq) != -1:      
-                result = result.decode('string-escape')
-            
-        # string containing ""              
-        # 2 byte unicode with unicode characters
-        if re.match(r'u"\\u', result):
-            result = unichr(int(result[4:8], 16))
-        # 2 byte unicode with strings
-        elif re.match(r'^u"', result):
-            result =  result.replace('"','')[1:].decode("utf-8")
-            
-        # string containing ''          
-        elif re.match(r"u'\\u", result):
-            result = unichr(int(result[4:8], 16))
-        # 2 byte unicode with strings
-        elif re.match(r"^u'", result):
-            result = result.replace("'",'')[1:].decode("utf-8")         
-        else:
-            result = result.replace("'",'')            
 
-        if color is None:
-            print result
-        else:    
-            print "\033[" + color + "m" + result + "\033[0m"     
-    else:
-        if color is None:
-            print result
-        else:
-            print "\033[" + color + "m" + str(result) + "\033[0m"
-
-
-def builtin_pdf(expr):
-    try:
-        #print stripe_quotation(t[3][0])
-        f = pdf.FPDF()
-        f.add_page()
-        f.set_font('Arial','B',16)          
-        f.multi_cell(w=200,h=5,txt = stripe_quotation(expr[0])) 
-        
-        # for our user test
-        filename = stripe_quotation(self.children.do()[1])
-        filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-        
-        f.output(os.path.join("..","doc",filename),'F')
-    except:
-        print("Mismatch grammar for pdf output!")
-        raise Exception    
-
-# Mathematical Functions
+#----------------------------------------------------#
+#           4.1  Mathematical Functions              #
+#----------------------------------------------------#
 
 def builtin_abs(number):
     try:
@@ -166,3 +113,66 @@ def builtin_factorial(number):
     except:
         print("Mismatch grammar for factorial")
         raise Exception
+
+#----------------------------------------------------#
+#            4.2  Print Function                     #
+#----------------------------------------------------#
+
+def builtin_print(result, color=None):
+    if isinstance(result, StringType):
+        # Escaped sequence handling
+        escaped_sequences = (r"\newline", r"\\", r"\'", r'\"', r"\a", r"\b", r"\f", r"\n", r"\r", r"\t", r"\v")
+        
+        for seq in escaped_sequences:
+            if result.find(seq) != -1:      
+                result = result.decode('string-escape')
+            
+        # string containing ""              
+        # 2 byte unicode with unicode characters
+        if re.match(r'u"\\u', result):
+            result = unichr(int(result[4:8], 16))
+        # 2 byte unicode with strings
+        elif re.match(r'^u"', result):
+            result =  result.replace('"','')[1:].decode("utf-8")
+            
+        # string containing ''          
+        elif re.match(r"u'\\u", result):
+            result = unichr(int(result[4:8], 16))
+        # 2 byte unicode with strings
+        elif re.match(r"^u'", result):
+            result = result.replace("'",'')[1:].decode("utf-8")         
+        else:
+            result = result.replace("'",'')            
+
+        if color is None:
+            print result
+        else:    
+            print "\033[" + color + "m" + result + "\033[0m"     
+    else:
+        if color is None:
+            print result
+        else:
+            print "\033[" + color + "m" + str(result) + "\033[0m"
+
+#----------------------------------------------------#
+#             4.2  PDF Function                      #
+#----------------------------------------------------#
+
+def builtin_pdf(expr):
+    try:
+        #print stripe_quotation(t[3][0])
+        f = pdf.FPDF()
+        f.add_page()
+        f.set_font('Arial','B',16)          
+        f.multi_cell(w=200,h=5,txt = stripe_quotation(expr[0])) 
+        
+        # for our user test
+        filename = stripe_quotation(self.children.do()[1])
+        filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
+        
+        f.output(os.path.join("..","doc",filename),'F')
+    except:
+        print("Mismatch grammar for pdf output!")
+        raise Exception    
+
+#-----------------------------------------------------------------------------#

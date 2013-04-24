@@ -21,12 +21,43 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-# File: core.py                                 	                          #
-# Description: Swim core library 				                              #
+# File: exception.py                                                     	  #
+# Description: Swim Exception Handling                                        #
 #-----------------------------------------------------------------------------#
 
-import types
-from types import MethodType
+#-----------------------------------------------------------------------------#
+#                          1. Exception Handling                              #
+#-----------------------------------------------------------------------------#
 
-# Abstract Syntax Tree
-from AST import Node
+class Error(Exception):
+	'''Basic exception class'''
+	def __init__(self, lineno, msg):
+		self.lineno = lineno
+		self.msg = msg 
+
+	def __str__(self):
+		return "[Line :" + str(self.lineno) + "] " + self.msg 
+	
+	def addMsg(self, newMsg):
+		self.msg += newMsg
+
+class TypeException(Error):
+	''' Unsupported value type'''
+	def __init__(self, lineno, msg):
+		self.msg = "Unsupported value type in expression, " + msg
+		self.lineno = lineno
+			
+
+class NameException(Error):
+	''' Undefined name'''
+	def __init__(self, lineno, msg):
+		self.msg = "Undefined name is used in expression, " + msg
+		self.lineno = lineno
+	
+class BooleanException(Error):
+	''' Boolean Problem'''
+	def __init__(self, lineno, msg):
+		self.msg = "Boolean is needed in expression, " + msg
+		self.lineno = lineno
+
+#-----------------------------------------------------------------------------#
