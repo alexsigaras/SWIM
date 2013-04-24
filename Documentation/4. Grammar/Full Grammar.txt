@@ -1,81 +1,107 @@
 Rule 0     S' -> start
 Rule 1     start -> statements
-Rule 2     statements -> statement statements
-Rule 3     statements -> statement
-Rule 4     statement -> simple_stmt
-Rule 5     statement -> compound_stmt
-Rule 6     simple_stmt -> expression_stmt
-Rule 7     simple_stmt -> assign_stmt
-Rule 8     simple_stmt -> increment_stmt
-Rule 9     simple_stmt -> decrement_stmt
-Rule 10    simple_stmt -> list_stmt
-Rule 11    simple_stmt -> dictionary_stmt
-Rule 12    compound_stmt -> if_stmt
-Rule 13    compound_stmt -> while_stmt
-Rule 14    compound_stmt -> for_stmt
-Rule 15    compound_stmt -> function_stmt
-Rule 16    expression_stmt -> expression
-Rule 17    assign_stmt -> ID ASSIGN expression SEMICOLON
-Rule 18    increment_stmt -> expression PLUS PLUS SEMICOLON
-Rule 19    decrement_stmt -> expression MINUS MINUS SEMICOLON
-Rule 20    list_stmt -> ID ASSIGN LSBRACKET elements RSBRACKET SEMICOLON
-Rule 21    elements -> element COMMA elements
-Rule 22    elements -> element
-Rule 23    element -> expression
-Rule 24    dictionary_stmt -> ID ASSIGN LCBRACKET dictionary_objects RCBRACKET SEMICOLON
-Rule 25    dictionary_objects -> dictionary_object COMMA dictionary_objects
-Rule 26    dictionary_objects -> dictionary_object
-Rule 27    dictionary_object -> key COLON value
-Rule 28    key -> STRING1
-Rule 29    key -> STRING2
-Rule 30    value -> expression
-Rule 31    if_stmt -> IF expression DO statements elif_blocks END
-Rule 32    elif_blocks -> elif_block elif_blocks
-Rule 33    elif_blocks -> else_block
-Rule 34    elif_blocks -> <empty>
-Rule 35    elif_block -> ELIF expression DO statements
-Rule 36    else_block -> ELSE statements
-Rule 37    while_stmt -> WHILE expression DO statements END
-Rule 38    for_stmt -> FOR EACH ID IN element DO statements END
-Rule 39    function_stmt -> ID LPAREN statement RPAREN SEMICOLON
-Rule 40    expression -> simple_expr
-Rule 41    expression -> compound_expr
-Rule 42    simple_expr -> boolean_expr
-Rule 43    simple_expr -> not_expr
-Rule 44    simple_expr -> number_expr
-Rule 45    simple_expr -> id_expr
-Rule 46    simple_expr -> string_expr
-Rule 47    simple_expr -> list_expr
-Rule 48    simple_expr -> parse_text_expr
-Rule 49    simple_expr -> group_expr
-Rule 50    simple_expr -> uplus_expr
-Rule 51    simple_expr -> uminus_expr
-Rule 52    compound_expr -> arithmetic_expr
-Rule 53    compound_expr -> conditional_expr
-Rule 54    boolean_expr -> TRUE
-Rule 55    boolean_expr -> FALSE
-Rule 56    not_expr -> NOT expression
-Rule 57    number_expr -> NUMBER
-Rule 58    id_expr -> ID
-Rule 59    string_expr -> STRING1
-Rule 60    string_expr -> STRING2
-Rule 61    list_expr -> LSBRACKET elements RSBRACKET
-Rule 62    parse_text_expr -> SELECTOR LPAREN elements RPAREN
-Rule 63    group_expr -> LPAREN expression RPAREN
-Rule 64    uplus_expr -> PLUS expression
-Rule 65    uminus_expr -> MINUS expression
-Rule 66    arithmetic_expr -> expression PLUS expression
-Rule 67    arithmetic_expr -> expression MINUS expression
-Rule 68    arithmetic_expr -> expression MULTIPLY expression
-Rule 69    arithmetic_expr -> expression DIVIDE expression
-Rule 70    arithmetic_expr -> expression POW expression
-Rule 71    arithmetic_expr -> expression MOD expression
-Rule 72    conditional_expr -> expression AND expression
-Rule 73    conditional_expr -> expression OR expression
-Rule 74    conditional_expr -> expression XOR expression
-Rule 75    conditional_expr -> expression EQUALS expression
-Rule 76    conditional_expr -> expression NOT_EQUALS expression
-Rule 77    conditional_expr -> expression GREATER_THAN expression
-Rule 78    conditional_expr -> expression LESS_THAN expression
-Rule 79    conditional_expr -> expression GREATER_THAN_OR_EQUAL expression
-Rule 80    conditional_expr -> expression LESS_THAN_OR_EQUAL expression
+Rule 2     start -> <empty>
+Rule 3     statements -> statement statements
+Rule 4     statements -> statement
+Rule 5     statement -> simple_stmt SEMICOLON
+Rule 6     statement -> compound_stmt END
+Rule 7     simple_stmt -> expression_stmt
+Rule 8     simple_stmt -> include_stmt
+Rule 9     simple_stmt -> assign_stmt
+Rule 10    simple_stmt -> assign_global_stmt
+Rule 11    simple_stmt -> assign_this_stmt
+Rule 12    simple_stmt -> increment_stmt
+Rule 13    simple_stmt -> decrement_stmt
+Rule 14    simple_stmt -> return_stmt
+Rule 15    simple_stmt -> break_stmt
+Rule 16    simple_stmt -> class_instantiation_stmt
+Rule 17    simple_stmt -> class_setAttribute_stmt
+Rule 18    compound_stmt -> if_stmt
+Rule 19    compound_stmt -> while_stmt
+Rule 20    compound_stmt -> for_stmt
+Rule 21    compound_stmt -> function_decl_stmt
+Rule 22    compound_stmt -> class_decl_stmt
+Rule 23    expression_stmt -> expression
+Rule 24    include_stmt -> INCLUDE ID
+Rule 25    assign_stmt -> ID ASSIGN expression
+Rule 26    assign_global_stmt -> GLOBAL ID ASSIGN expression
+Rule 27    assign_this_stmt -> THIS DOT ID ASSIGN expression
+Rule 28    increment_stmt -> expression PLUS PLUS
+Rule 29    decrement_stmt -> expression MINUS MINUS
+Rule 30    return_stmt -> RETURN elements
+Rule 31    break_stmt -> BREAK
+Rule 32    if_stmt -> IF expression DO statements elif_blocks
+Rule 33    elif_blocks -> elif_block elif_blocks
+Rule 34    elif_blocks -> else_block
+Rule 35    elif_blocks -> <empty>
+Rule 36    elif_block -> ELIF expression DO statements
+Rule 37    else_block -> ELSE statements
+Rule 38    while_stmt -> WHILE expression DO statements
+Rule 39    for_stmt -> FOR EACH ID IN element DO statements
+Rule 40    class_decl_stmt -> CLASS ID DO statements
+Rule 41    class_instantiation_stmt -> ID ASSIGN NEW ID LPAREN RPAREN
+Rule 42    class_setAttribute_stmt -> ID DOT ID ASSIGN expression
+Rule 43    class_getAttribute_expr -> ID DOT ID
+Rule 44    class_getAttribute_expr -> ID DOT function_call_expr
+Rule 45    function_decl_stmt -> FUN ID LPAREN elements RPAREN DO statements
+Rule 46    function_call_expr -> ID LPAREN elements RPAREN
+Rule 47    lambda_function_expr -> LPAREN LAMBDA elements DO statements RPAREN LPAREN elements RPAREN
+Rule 48    expression -> unary_expr
+Rule 49    expression -> binary_expr
+Rule 50    unary_expr -> boolean_expr
+Rule 51    unary_expr -> not_expr
+Rule 52    unary_expr -> number_expr
+Rule 53    unary_expr -> id_expr
+Rule 54    unary_expr -> string_expr
+Rule 55    unary_expr -> list_expr
+Rule 56    unary_expr -> dictionary_expr
+Rule 57    unary_expr -> parse_text_expr
+Rule 58    unary_expr -> group_expr
+Rule 59    unary_expr -> uplus_expr
+Rule 60    unary_expr -> uminus_expr
+Rule 61    unary_expr -> class_getAttribute_expr
+Rule 62    unary_expr -> function_call_expr
+Rule 63    unary_expr -> lambda_function_expr
+Rule 64    binary_expr -> arithmetic_expr
+Rule 65    binary_expr -> conditional_expr
+Rule 66    boolean_expr -> TRUE
+Rule 67    boolean_expr -> TRUELOWERCASE
+Rule 68    boolean_expr -> FALSE
+Rule 69    boolean_expr -> FALSELOWERCASE
+Rule 70    not_expr -> NOT expression
+Rule 71    number_expr -> NUMBER
+Rule 72    id_expr -> ID
+Rule 73    string_expr -> STRING1
+Rule 74    string_expr -> STRING2
+Rule 75    list_expr -> LSBRACKET elements RSBRACKET
+Rule 76    elements -> element COMMA elements
+Rule 77    elements -> element
+Rule 78    elements -> <empty>
+Rule 79    element -> expression
+Rule 80    dictionary_expr -> LCBRACKET dictionary_objects RCBRACKET
+Rule 81    dictionary_objects -> dictionary_object COMMA dictionary_objects
+Rule 82    dictionary_objects -> dictionary_object
+Rule 83    dictionary_objects -> <empty>
+Rule 84    dictionary_object -> key COLON value
+Rule 85    key -> STRING1
+Rule 86    key -> STRING2
+Rule 87    value -> expression
+Rule 88    parse_text_expr -> SELECTOR LPAREN elements RPAREN
+Rule 89    group_expr -> LPAREN expression RPAREN
+Rule 90    uplus_expr -> PLUS expression
+Rule 91    uminus_expr -> MINUS expression
+Rule 92    arithmetic_expr -> expression PLUS expression
+Rule 93    arithmetic_expr -> expression MINUS expression
+Rule 94    arithmetic_expr -> expression MULTIPLY expression
+Rule 95    arithmetic_expr -> expression DIVIDE expression
+Rule 96    arithmetic_expr -> expression POW expression
+Rule 97    arithmetic_expr -> expression MOD expression
+Rule 98    conditional_expr -> expression AND expression
+Rule 99    conditional_expr -> expression OR expression
+Rule 100   conditional_expr -> expression XOR expression
+Rule 101   conditional_expr -> expression EQUALS expression
+Rule 102   conditional_expr -> expression NOT_EQUALS expression
+Rule 103   conditional_expr -> expression GREATER_THAN expression
+Rule 104   conditional_expr -> expression LESS_THAN expression
+Rule 105   conditional_expr -> expression GREATER_THAN_OR_EQUAL expression
+Rule 106   conditional_expr -> expression LESS_THAN_OR_EQUAL expression
