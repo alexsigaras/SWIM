@@ -31,3 +31,5 @@ url = "http://nytimes.com"; # Set the url to crawl information
 selector = "html";			# Set the jQuery style selector
 doc = @(selector, url);		# Parse the given url with selector and return the appropriate object
 print(doc);					# returns the html from the url
+
+#-----------------------------------------------------------------------------#

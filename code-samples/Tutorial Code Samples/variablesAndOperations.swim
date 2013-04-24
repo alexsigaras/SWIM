@@ -55,3 +55,5 @@ elif (a < b) do 							// else if a is smaller than b then execute statements in
 else										// execute the statements in this scope if no other condition is true
 	print("Greate than or equal\n")			// print the line: Greater than or equal
 end 										// end multi-conditional if statement
+
+#-----------------------------------------------------------------------------#
