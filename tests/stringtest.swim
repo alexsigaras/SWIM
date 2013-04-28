@@ -1,0 +1,23 @@
+include std;
+
+print("Testing Strings");
+a="FirstString";
+a="FirstStringa";
+a= a+"alex";
+b="SecondString";
+c="a,b,c,d,e";
+
+print(a+b);
+
+print(a.startswith("F"));
+print(a.endswith("g"));
+print(c.contains("c"));
+print(c.split(","));
+print(c);
+print(a.length());
+print(a.replace("String","Int"));
+print(a.matches("First"));
+print(a);
+print(a.uppercase());
+print(a.lowercase());
+
