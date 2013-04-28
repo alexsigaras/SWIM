@@ -1341,7 +1341,7 @@ def p_expression_cond_op(t):
 
 def p_url(p):
     '''url : MULTIPLY expression MULTIPLY'''
-    t[0] = Node("get_url", stripe_quotation(t[2]), 'get')
+    t[0] = Node("url", stripe_quotation(t[2]), 'get')
     def do(self, id = None, object_name = None):
         try:
             return self.children
