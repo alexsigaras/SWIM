@@ -1102,7 +1102,14 @@ def p_expression_name(t):
                 if object_name is not None:
                     return identifiers[object_name][self.children]
                 else:
-                    return identifiers[self.children]
+                    result = identifiers[self.children]
+                    try:
+                        # String case
+                        if result['type'] == 0:
+                            result = result['val']
+                            return result
+                    except:
+                        return result                    
         except LookupError:
             print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
             raise NameException(t.lexer.lineno, str(self.children))
@@ -1118,7 +1125,6 @@ def p_expression_string(t):
                    | STRING2'''
 
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
-
     def do(self, id = None, object_name = None):
         try:
             return self.children

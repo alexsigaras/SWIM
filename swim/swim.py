@@ -80,6 +80,7 @@ def main(file=None, mode=2):
         else:
 
             if len(sys.argv) > 1:
+                yacc.parse("include std;")
                 fn = open(sys.argv[1])
                 s = fn.read()
                 yacc.parse(s)

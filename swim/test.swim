@@ -1,0 +1,2 @@
+a = 'hello';
+if a != 'hello' do print('###FAILED ON: string assignment'); end
