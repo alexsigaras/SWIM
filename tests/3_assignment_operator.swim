@@ -1,0 +1,9 @@
+print('TESTING ASSIGNMENT OPERATOR');
+
+a = 4;
+if a != 4 do print('###FAILED ON: number assignment'); end
+
+
+a = 'hello';
+if a != 'hello' do print('###FAILED ON: string assignment'); end
+

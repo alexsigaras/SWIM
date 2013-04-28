@@ -30,3 +30,6 @@ if a != 6 do print('###FAILED ON: post increment "a++"'); end
 b = 4;
 b--;
 if b != 3 do print('###FAILED ON: post decrement "b--"'); end
+
+
+if 'a' + 'b' != 'ab' do print('###FAILED ON: string concatenation'); end
