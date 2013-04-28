@@ -121,6 +121,10 @@ class Str do
 	fun endswith(x) do
 		return endwith(val, x);
 	end
+
+	fun matches(regex) do
+		return match(val, regex);
+	end
 end
 
 # class Url do

@@ -234,5 +234,11 @@ def builtin_endswith(string, string1):
     except Exception, e:
         print ("Mismatch grammar for ends with")
         raise Exception
+def builtin_matches(string, string1):
+    try:
+        return bool(re.match(string1, string))
+    except Exception, e:
+        print ("Mismatch grammar for ends with")
+        raise Exception
 
 #-----------------------------------------------------------------------------#

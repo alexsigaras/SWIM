@@ -863,6 +863,16 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin ends with")
                 print traceback.format_exc()
+    elif t[1] == "match":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_matches(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin match")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
@@ -871,7 +881,7 @@ def p_expression_function_call(t):
                 try:
                     func = identifiers[object_name][self.children[0]]
                 except:
-                    print "Namespce does not have the function!"
+                    print "Namespace does not have the function!"
                     identifiers[object_name].scope_out()
                     return None
                 try:
@@ -1292,11 +1302,11 @@ def p_expression_parse_text(t):
     def do(self, id = None, object_name = None):
         try:
             raw_selector = self.children.do(id = id, object_name = object_name)[0]
-            selector = stripe_quotation(raw_selector)
+            #selector = stripe_quotation(raw_selector)
             raw_url = self.children.do(id = id, object_name = object_name)[1]
 
             if type(raw_url) == str:
-                url = stripe_quotation(raw_url)
+                #url = stripe_quotation(raw_url)
                 d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
                 return d(selector)
             else:
