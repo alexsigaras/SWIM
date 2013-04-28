@@ -700,10 +700,15 @@ def p_expression_function_call(t):
     if t[1] == "print":
         def do(self, id = None, object_name = None):
             try:
-                if self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Dict' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Str':
-                    val = self.children[1].do(id = id, object_name = object_name)[0]['val']
-                else:
-                    val = self.children[1].do(id = id, object_name = object_name)[0]
+                try:    
+                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'Dict':
+                        val = self.children[1].do(id = id, object_name = object_name)[0]['val']
+                except:
+                    try:
+                        if self.children[1].do(id = id, object_name = object_name)[0]["type"] == 0:
+                            val = self.children[1].do(id = id, object_name = object_name)[0]['val']
+                    except:
+                        raise Exception
                 return builtin_print(val)
             except:
                 try:

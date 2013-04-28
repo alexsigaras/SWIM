@@ -87,8 +87,8 @@ end
 
 class Str do
 
-	val = '';
-
+	val = "";
+	type = 0;
 	fun letters() do
 		print("still not implemented");
 	end
