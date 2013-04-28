@@ -1329,6 +1329,34 @@ def p_expression_cond_op(t):
                 raise TypeException(t.lexer.lineno, str(self.children[0].do(id = id, object_name = object_name)) + " " + self.leaf + " " + str(self.children[1].do(id = id, object_name = object_name)))
 
     t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#        5.3.2.2 Selector and URL stuff!             #
+#----------------------------------------------------#
+
+def p_url(p):
+    '''url : MULTIPLY expression MULTIPLY'''
+    t[0] = Node("get_url", stripe_quotation(t[2]), 'get')
+    def do(self, id = None, object_name = None):
+        try:
+            return self.children
+        except:
+            print("Error in url expression")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[1], Node)
+
+
+
+def p_select_op(t):
+    '''select_op : url LESS_THAN expression GREATER_THAN
+                 | ID LESS_THAN expression GREATER_THAN'''
+    t[0] = Node('select_op', [t[1], t[3]], 'select')
+
+def p_find_op(t):
+    '''find_op : url LCBRACKET expression RCBRACKET
+               | ID LSBRACKET expression RCBRACKET'''
+    t[0] = Node('find_op', [t[1], t[3]], 'find')
  
 #----------------------------------------------------#
 #                     5.4 Error                      #
