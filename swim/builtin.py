@@ -173,6 +173,13 @@ def builtin_pdf(expr):
         f.output(os.path.join("..","doc",filename),'F')
     except:
         print("Mismatch grammar for pdf output!")
-        raise Exception    
+        raise Exception
+
+def builtin_lowercase(string):
+    try:
+        return string.lower()
+    except Exception, e:
+        print ("Mismatch grammar for lowercase")
+        raise Exception
 
 #-----------------------------------------------------------------------------#

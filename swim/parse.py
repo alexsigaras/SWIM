@@ -56,7 +56,7 @@ import os
 sys.path.insert(0,os.path.join("..", "include"))
 
 import ply.yacc as yacc
-
+from string import *
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
@@ -299,6 +299,14 @@ def p_statement_assign(t):
                 identifiers[self.children[0]]["val"] = element                   
                 identifiers[self.children[0]]["keys"] = element.keys()
                 identifiers[self.children[0]]["vals"] = element.values()
+            elif isinstance(element, StringType):
+                # If the expr is a string
+                identifiers.scope_in()
+                identifiers["Str"].children[1].do(id = id, object_name = object_name)    
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element                     
             else:
                 if object_name is not None:
                     identifiers[object_name][self.children[0]] = element
@@ -718,7 +726,7 @@ def p_expression_function_call(t):
                 print traceback.format_exc()
     elif t[1] == "abs":
         def do(self, id = None, object_name = None):
-            try: 
+            try:                 
                 return builtin_abs(self.children[1].do(id = id, object_name = object_name)[0])
             except:
                 print("Error in builtin abs")
@@ -768,6 +776,16 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin factorial")
                 print traceback.format_exc()
+    elif t[1] == "lower":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_lowercase(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin lowercase")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
@@ -793,7 +811,7 @@ def p_expression_function_call(t):
                 try:
                     result = func.children[2].do(id = id, object_name = object_name)
                 except:
-                    print "function call error"
+                    print "Function call error"
                     identifiers[object_name].scope_out()
                     return None
                 try:
@@ -1203,7 +1221,7 @@ def p_expression_parse_text(t):
             if type(raw_url) == str:
                 url = stripe_quotation(raw_url)
                 d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-                return d(selector).text()
+                return d(selector)
             else:
                 return raw_url(selector)
         except Exception:

@@ -83,31 +83,59 @@ class Dict do
 	end
 end
 
-/* To be implemented
+/* To be implemented*/
 
-class String do
+class Str do
 
-	fun letters()
+	val = '';
+
+	fun letters() do
 		print("still not implemented");
 	end
 
-	fun lowercase()
+	fun lowercase() do
+		return lower(val);
+	end
+
+	fun uppercase() do
 		print("still not implemented");
 	end
 
-	fun uppercase()
+	fun digits() do
 		print("still not implemented");
 	end
 
-	fun digits()
-		print("still not implemented");
-	end
-
-	fun whitespace()
+	fun whitespace() do
 		print("still not implemented");
 	end
 
 end
-*/
+
+# class Url do
+
+# 	val = '';
+
+# 	# fun letters() do
+# 	# 	print("still not implemented");
+# 	# end
+
+# 	# fun lowercase() do
+# 	# 	return lower(val);
+# 	# end
+
+# 	# fun uppercase() do
+# 	# 	print("still not implemented");
+# 	# end
+
+# 	# fun digits() do
+# 	# 	print("still not implemented");
+# 	# end
+
+# 	# fun whitespace() do
+# 	# 	print("still not implemented");
+# 	# end
+
+# end
+
 
 #-----------------------------------------------------------------------------#
