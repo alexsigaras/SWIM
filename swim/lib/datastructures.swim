@@ -89,26 +89,38 @@ class Str do
 
 	val = "";
 	type = 0;
-	fun letters() do
-		print("still not implemented");
-	end
-
+	
 	fun lowercase() do
 		return lower(val);
 	end
 
 	fun uppercase() do
-		print("still not implemented");
+		return upper(val);
 	end
 
-	fun digits() do
-		print("still not implemented");
+	fun length() do
+		return len(val);
 	end
 
-	fun whitespace() do
-		print("still not implemented");
+	fun split(x) do
+		return splt(val, x);
 	end
 
+	fun replace(x,y) do
+		return repl(val, x, y);
+	end
+
+	fun contains(x) do
+		return cnt(val, x);
+	end
+
+	fun startswith(x) do
+		return strtwith(val, x);
+	end
+
+	fun endswith(x) do
+		return endwith(val, x);
+	end
 end
 
 # class Url do

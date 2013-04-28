@@ -175,11 +175,64 @@ def builtin_pdf(expr):
         print("Mismatch grammar for pdf output!")
         raise Exception
 
+#----------------------------------------------------#
+#             4.3  String Functions                  #
+#----------------------------------------------------#
+
 def builtin_lowercase(string):
     try:
         return string.lower()
     except Exception, e:
         print ("Mismatch grammar for lowercase")
+        raise Exception
+
+def builtin_uppercase(string):
+    try:
+        return string.upper()
+    except Exception, e:
+        print ("Mismatch grammar for uppercase")
+        raise Exception
+
+def builtin_length(string):
+    try:
+        return len(string)
+    except Exception, e:
+        print ("Mismatch grammar for length")
+        raise Exception
+
+def builtin_split(string, string1):
+    try:
+        return string.split(string1)
+    except Exception, e:
+        print ("Mismatch grammar for split")
+        raise Exception
+
+def builtin_replace(string, string1, string2):
+    try:
+        return string.replace(string1,string2)
+    except Exception, e:
+        print ("Mismatch grammar for replace")
+        raise Exception
+
+def builtin_contains(string, string1):
+    try:
+        return string1 in string
+    except Exception, e:
+        print ("Mismatch grammar for contains")
+        raise Exception
+
+def builtin_startswith(string, string1):
+    try:
+        return string.startswith(string1)
+    except Exception, e:
+        print ("Mismatch grammar for starts with")
+        raise Exception
+
+def builtin_endswith(string, string1):
+    try:
+        return string.endswith(string1)
+    except Exception, e:
+        print ("Mismatch grammar for ends with")
         raise Exception
 
 #-----------------------------------------------------------------------------#

@@ -791,6 +791,78 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin lowercase")
                 print traceback.format_exc()
+    elif t[1] == "upper":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_uppercase(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin uppercase")
+                print traceback.format_exc()
+    elif t[1] == "len":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_length(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin length")
+                print traceback.format_exc()
+    elif t[1] == "repl":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):           
+                    return builtin_replace(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1],self.children[1].do(id = id, object_name = object_name)[2])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin replace")
+                print traceback.format_exc()
+    elif t[1] == "splt":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_split(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin split")
+                print traceback.format_exc()
+    elif t[1] == "cnt":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_contains(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin split")
+                print traceback.format_exc()
+
+    elif t[1] == "strtwith":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_startswith(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin starts with")
+                print traceback.format_exc()
+
+    elif t[1] == "endwith":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_endswith(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin ends with")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
