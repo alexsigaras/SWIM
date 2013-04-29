@@ -45,10 +45,15 @@ class Namespace:
 
 	def __getitem__(self, var):
 		'access the variable in innermost scope that it was defined in'
-		for table in reversed(self.stack):
-			if table.has_key(var):
-				return table[var]
-		raise KeyError
+		try:
+			for table in reversed(self.stack):
+				if table.has_key(var):
+					return table[var]
+			raise KeyError
+		except Exception:
+			print("Error: Identifier '%s' is not defined" % var)
+
+
 
 	def __contains__(self, var):
 		for table in self.stack:
