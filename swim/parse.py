@@ -994,6 +994,7 @@ def p_expression_lambda_function(t):
             param = self.children[2].do(id = id, object_name = object_name)
             for e in self.children[0].do(id = True, object_name = object_name):
                 identifiers[e] = param[i]
+                i += 1
 
             result = self.children[1].do(id = id, object_name = object_name)
             identifiers.scope_out()
@@ -1480,7 +1481,7 @@ def p_expression_cond_op(t):
 #----------------------------------------------------#
 
 def p_url_expression(t):
-    '''url_expr : MULTIPLY string_expr MULTIPLY'''
+    '''url_expr : MULTIPLY expression MULTIPLY'''
 
     t[0] = Node("url", t[2], 'get')
 
