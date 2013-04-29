@@ -1,0 +1,3 @@
+print('TESTING CONDITIONALS');
+
+if(true) do x=0; else print('###FAILED ON : Simple If'); end
