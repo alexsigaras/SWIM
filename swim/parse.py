@@ -966,8 +966,9 @@ def p_expression_function_call(t):
         def do(self, id = None, object_name = None):
             try: 
                 # if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
-                    return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
+                #     print("pyquery")
                 # else:
+                return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
                 #     print ("Invalid type provided")
             except:
                 print("Error in builtin ToString")
