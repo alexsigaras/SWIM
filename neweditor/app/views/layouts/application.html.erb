@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<title>swimco.de</title>
 	<meta name="author" content="Team Swim" />
-	<meta name="description" content="An interactive CSS playground and code sharing tool. Dabblet saves to Github gists and offers many conveniences for CSS editing." />
+	<meta name="description" content="The awesome swim language online editor" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 	<%= stylesheet_link_tag    "application", :media => "all" %>
@@ -25,11 +25,16 @@
 		singleLineStringErrors: false},
 		keyMap: "emacs",
 		lineNumbers: true,
-        lineWrapping: true,
+		lineWrapping: true,
+		autoCloseBrackets: true,
+		enableSearchTools: true,
+		enableCodeFolding: true,
+		enableCodeFormatting: true,
+		autoFormatOnStart: true,
 		extraKeys: {"Ctrl-Space": "autocomplete"},
 		indentWithTabs: true
 	});
-	editor.setOption("theme", "ambiance");
+	editor.setOption("theme", "ambiance-light");
 	var input = document.getElementById("select");
 	function selectTheme() {
 		var theme = input.options[input.selectedIndex].innerHTML;
@@ -47,16 +52,16 @@
 		var command = editor.getValue();
 
 
-		$("#stuff").fadeOut('3000');
+		$("#stuff").fadeOut('1000');
 		$.ajax({
 			url: "code",
 			type: "GET",
 			async : false,
 			data:{token: command},
-			dataType:"html",
+			dataType:"text",
 		}).done(function(html) {
 			$('#stuff').empty();
-			$('#stuff').html(html)
+			$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\">"+html+"</div></div></div>")
 		});
 		$("#stuff").fadeIn();
 	}
@@ -72,15 +77,40 @@
 	    var fontRange = document.getElementById("fontRange");
 	    fontRange.addEventListener('change', function(){
 	    	s = fontRange.value;
-			$('.CodeMirror').css({"font-size":s+"px"});
+	    	$('.CodeMirror').css({"font-size":s+"px"});
 			m = $('.CodeMirror').css("font-size"); //Without this the editor refresh won't work.  
 			editor.refresh();
-	});
+		});
 	} 
 
+	function wipeEditor(){
+		editor.setValue("#include std;" + 
+			"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+
+			"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"+
+			"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	}
+
+	function loadProgram(progr){
+		alert("in here")
+		$.ajax({
+			url : "samples/"+progr,
+			dataType: "text",
+			success : function (data) {
+				editor.setValue(data);
+			}
+		});
+	}
 
 
-	</script>
+	$(document).ready(function() {
+		loadProgram('fibonacci');
+	});
+
+		
+
+
+
+</script>
 
 </body>
 </html>

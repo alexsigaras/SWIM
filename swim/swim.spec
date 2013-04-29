@@ -1,10 +1,6 @@
 # -*- mode: python -*-
 a = Analysis(['../SWIM-Executables/Unix/pyinstaller-2.0/swim2/swim.py'],
-<<<<<<< HEAD
              pathex=['/Users/morrishopkins/Dropbox/Spring2013/PLT/PLT-SLAMM/swim'],
-=======
-             pathex=['/Users/alex/Dropbox/Github/Private/PLT-SLAMM/swim'],
->>>>>>> merge
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)

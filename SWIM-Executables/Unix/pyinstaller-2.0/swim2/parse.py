@@ -56,7 +56,7 @@ import os
 sys.path.insert(0,os.path.join("..", "include"))
 
 import ply.yacc as yacc
-
+from string import *
 #-----------------------------------------------------------------------------#
 #                          3.  External Functions                             #
 #-----------------------------------------------------------------------------#
@@ -141,7 +141,8 @@ def p_start(t):
             try:
                 result = t[1].do()
                 if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
-                	print(result)
+                    pass
+                	#print(result)
             except Error as e:
                 printErr(t[1].traverse())
                 pass
@@ -281,7 +282,16 @@ def p_statement_assign(t):
         ''' Need to check ID !'''
         try:
             element = self.children[1].do(id = id, object_name = object_name)
-            if isinstance(element, list):
+            if element.__doc__.startswith("PyQuery Object"):
+                # If the expr is a pyquery
+                identifiers.scope_in()
+                identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element
+                identifiers[self.children[0]]["url"] = element.url
+            elif isinstance(element, list):
                 # If the expr is a list
                 identifiers.scope_in()
                 identifiers["List"].children[1].do(id = id, object_name = object_name)    
@@ -299,6 +309,15 @@ def p_statement_assign(t):
                 identifiers[self.children[0]]["val"] = element                   
                 identifiers[self.children[0]]["keys"] = element.keys()
                 identifiers[self.children[0]]["vals"] = element.values()
+            elif isinstance(element, StringType):
+                # If the expr is a string
+                identifiers.scope_in()
+                identifiers["Str"].children[1].do(id = id, object_name = object_name)    
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element                     
+
             else:
                 if object_name is not None:
                     identifiers[object_name][self.children[0]] = element
@@ -511,7 +530,7 @@ def p_statement_elif_block(t):
     def do(self, id = None, object_name = None):
         if self.children[0].do(id = id, object_name = object_name):
             try:
-                return self.children[1].do
+                return self.children[1].do(id = id, object_name = object_name)
             except:
                 print("Error in elif block")
                 print traceback.format_exc()
@@ -692,10 +711,15 @@ def p_expression_function_call(t):
     if t[1] == "print":
         def do(self, id = None, object_name = None):
             try:
-                if self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Dict' or self.children[1].do(id = id, object_name = object_name)[0]["type"] == 'Str':
-                    val = self.children[1].do(id = id, object_name = object_name)[0]['val']
-                else:
-                    val = self.children[1].do(id = id, object_name = object_name)[0]
+                try:
+                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'Dict':
+                        val = self.children[1].do(id = id, object_name = object_name)[0]['val']
+                except:
+                    try:
+                        if self.children[1].do(id = id, object_name = object_name)[0]["type"] == 0:
+                            val = self.children[1].do(id = id, object_name = object_name)[0]['val']
+                    except:
+                        raise Exception
                 return builtin_print(val)
             except:
                 try:
@@ -718,7 +742,7 @@ def p_expression_function_call(t):
                 print traceback.format_exc()
     elif t[1] == "abs":
         def do(self, id = None, object_name = None):
-            try: 
+            try:                 
                 return builtin_abs(self.children[1].do(id = id, object_name = object_name)[0])
             except:
                 print("Error in builtin abs")
@@ -768,6 +792,98 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin factorial")
                 print traceback.format_exc()
+    elif t[1] == "lower":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_lowercase(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin lowercase")
+                print traceback.format_exc()
+    elif t[1] == "upper":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_uppercase(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin uppercase")
+                print traceback.format_exc()
+    elif t[1] == "len":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_length(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin length")
+                print traceback.format_exc()
+    elif t[1] == "repl":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):           
+                    return builtin_replace(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1],self.children[1].do(id = id, object_name = object_name)[2])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin replace")
+                print traceback.format_exc()
+    elif t[1] == "splt":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_split(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin split")
+                print traceback.format_exc()
+    elif t[1] == "cnt":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_contains(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin split")
+                print traceback.format_exc()
+
+    elif t[1] == "strtwith":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_startswith(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin starts with")
+                print traceback.format_exc()
+
+    elif t[1] == "endwith":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_endswith(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin ends with")
+                print traceback.format_exc()
+    elif t[1] == "match":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_matches(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin match")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
@@ -776,7 +892,7 @@ def p_expression_function_call(t):
                 try:
                     func = identifiers[object_name][self.children[0]]
                 except:
-                    print "Namespce does not have the function!"
+                    print "Namespace does not have the function!"
                     identifiers[object_name].scope_out()
                     return None
                 try:
@@ -793,7 +909,7 @@ def p_expression_function_call(t):
                 try:
                     result = func.children[2].do(id = id, object_name = object_name)
                 except:
-                    print "function call error"
+                    print "Function call error"
                     identifiers[object_name].scope_out()
                     return None
                 try:
@@ -811,11 +927,16 @@ def p_expression_function_call(t):
 
                 try:
                     cnt = 0
+                    param_dic = {}
                     for name in func.children[1].do(True):
                         # take the name and assign it into the new namespace
                         # pass by ref via python
-                        identifiers[name] = self.children[1].do(id = id, object_name = object_name)[cnt]
+
+                        param_dic[name] = self.children[1].do(id = id, object_name = object_name)[cnt]
                         cnt += 1
+
+                    for k,v in param_dic.iteritems():
+                        identifiers[k] = v
                 except:
                     print "Function parameter error!"
                     return None 
@@ -879,6 +1000,8 @@ def p_expression_unary(t):
                   | list_expr
                   | dictionary_expr
                   | parse_text_expr
+                  | url_expr
+                  | select_op_expr
                   | group_expr
                   | uplus_expr
                   | uminus_expr
@@ -997,7 +1120,14 @@ def p_expression_name(t):
                 if object_name is not None:
                     return identifiers[object_name][self.children]
                 else:
-                    return identifiers[self.children]
+                    result = identifiers[self.children]
+                    try:
+                        # String case
+                        if result['type'] == 0:
+                            result = result['val']
+                            return result
+                    except:
+                        return result                    
         except LookupError:
             print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
             raise NameException(t.lexer.lineno, str(self.children))
@@ -1013,7 +1143,6 @@ def p_expression_string(t):
                    | STRING2'''
 
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
-
     def do(self, id = None, object_name = None):
         try:
             return self.children
@@ -1311,6 +1440,56 @@ def p_expression_cond_op(t):
                 raise TypeException(t.lexer.lineno, str(self.children[0].do(id = id, object_name = object_name)) + " " + self.leaf + " " + str(self.children[1].do(id = id, object_name = object_name)))
 
     t[0].do = MethodType(do, t[0], Node)
+
+#----------------------------------------------------#
+#        5.3.2.2 Selector and URL stuff!             #
+#----------------------------------------------------#
+
+def p_url_expression(t):
+    '''url_expr : MULTIPLY string_expr MULTIPLY'''
+
+    t[0] = Node("url", t[2], 'get')
+
+    def do(self, id = None, object_name = None):
+        try:
+            raw_url = self.children.do(id = id, object_name = object_name)
+            url = stripe_quotation(raw_url)     
+            d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+            d.url = url
+            return d
+        except:
+            print("Error in url expression")
+            print traceback.format_exc()
+
+    t[0].do = MethodType(do, t[0], Node)
+
+def p_select_op_expression(t):
+    '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
+                      | id_expr LCBRACKET string_expr RCBRACKET'''
+
+    t[0] = Node('select_op', [t[1], t[3]], 'select')
+    def do(self, id = None, object_name = None):
+        try:
+            raw_selector = self.children[1].do(id = id, object_name = object_name)
+            selector = stripe_quotation(raw_selector)
+            raw_url = self.children[0].do(id = id, object_name = object_name)
+            if type(raw_url) == str:
+                url = stripe_quotation(raw_url)
+                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+
+                return d(selector)
+            else:
+                return raw_url(selector)
+        except Exception:
+            print("Mismatch grammar for parsing!")
+            print traceback.format_exc()
+    t[0].do = MethodType(do, t[0], Node)
+
+# def p_find_op(t):
+#     '''find_op : url LCBRACKET string_expr RCBRACKET
+#                | ID LSBRACKET string_expr RCBRACKET'''
+#     t[0] = Node('find_op', [t[1], t[3]], 'find')
+#     t[0].do = MethodType(do, t[0], Node)
  
 #----------------------------------------------------#
 #                     5.4 Error                      #

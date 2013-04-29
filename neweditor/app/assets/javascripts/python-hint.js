@@ -67,7 +67,7 @@
     ////////////////////////////////////////////////////////////////
     
     //basic for loop
-    pythonBuiltinsL.push("for element in list do\n" + 
+    pythonBuiltinsL.push("for each item in \/\* iterable here \*\/ do\n" + 
     "    statement;\n" +
     "end");
 
@@ -80,16 +80,18 @@
     pythonBuiltinsL.push("else\n" + 
     "    statements;\n");
 
-
-
     // Class definition
     pythonBuiltinsL.push("class classname do\n" + 
     "    #class body goes here\n" +
     "end");
 
+    // function definition
+    pythonBuiltinsL.push("function(param1, param2, ...) do\n" + 
+    "    #function body goes here\n" +
+    "end");
+
     // imports
     pythonBuiltinsL.push("include libname;");
-
 
     //assignments
     pythonBuiltinsL.push("var = [element1, element2, ..., elementn];");

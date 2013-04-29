@@ -65,6 +65,7 @@ def main(file=None, mode=2):
     else:
 
         if mode == 1:
+            yacc.parse("include std;")
             s = raw_input("SWIM REPL> ")   
             lex.input(s)
         if mode == 3:
@@ -79,6 +80,7 @@ def main(file=None, mode=2):
         else:
 
             if len(sys.argv) > 1:
+                yacc.parse("include std;")
                 fn = open(sys.argv[1])
                 s = fn.read()
                 yacc.parse(s)
@@ -91,6 +93,7 @@ def main(file=None, mode=2):
                         if not tok:
                             break
                     else:
+                        yacc.parse("include std;")
                         try:
                             s = raw_input('SWIM REPL> ')
                             

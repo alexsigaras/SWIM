@@ -6,9 +6,8 @@ class ApplicationController < ActionController::Base
 		@code = params[:token]
 		tmp_file = "#{Rails.root}/public/files/tmp.swim"
 		id = 0
-		while File.exists?(tmp_file) do
-			tmp_file = "#{Rails.root}/public/files/tmp-#{id}.swim"        
-			id += 1
+		if File.exists?(tmp_file)
+			File.delete(tmp_file)
 		end
 		File.open(tmp_file, 'wb') do |f|
 			f.write  @code
@@ -16,7 +15,6 @@ class ApplicationController < ActionController::Base
 		@retval = `#{Rails.root}/public/bin/swim_osx #{tmp_file}`
 		render :text =>  @retval
 		logger.info @retval.to_json
-		
 	end
 
 	
