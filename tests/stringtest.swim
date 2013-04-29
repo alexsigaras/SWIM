@@ -1,16 +1,22 @@
 include std;
 
-print("Testing Strings");
-a="FirstString";
-a="FirstStringa";
-a= a+"alex";
-b="SecondString";
-c="a,b,c,d,e";
+print("TESTING STRINGS");
 
-print(a+b);
+if 'a' + 'b' != 'ab' do print('###FAILED ON: concatenation "a" + "b"'); end
 
-print(a.startswith("F"));
-print(a.endswith("g"));
+a = "hello";
+
+if not a.startswith('h') do print('###FAILED ON: startswith()'); end
+if a.startswith('x') do print('###FAILED ON: startswith()'); end
+
+if not a.endswith('o') do print('###FAILED ON: endswith()'); end
+if a.endswith('x') do print('###FAILED ON: endswith()'); end
+
+if not a.contains('o') do print('###FAILED ON: contains()'); end
+if a.contains('x') do print('###FAILED ON: contains()'); end
+
+
+/*
 print(c.contains("c"));
 print(c.split(","));
 print(c);
@@ -20,4 +26,4 @@ print(a.matches("First"));
 print(a);
 print(a.uppercase());
 print(a.lowercase());
-
+*/
