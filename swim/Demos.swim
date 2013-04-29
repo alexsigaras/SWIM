@@ -79,7 +79,15 @@ end
 # end
 
 // Fibonacci using golden phi
-fun fib(n) do return round(phi() ^ n / sqrt(5)); end
+# fun fib(n) do return round(phi() ^ n / sqrt(5)); end
 
 # print("Fibonacci Lambda");
 # print(fibl(10));
+
+// lambda Fib using golden phi
+fun fiblphi(n) do
+	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
+end
+
+print("Fibonacci Lambda using phi");
+print(fiblphi(10));

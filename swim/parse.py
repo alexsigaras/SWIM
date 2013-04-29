@@ -1548,6 +1548,7 @@ def p_select_op_expression(t):
     t[0] = Node('select_op', [t[1], t[3]], 'select')
     def do(self, id = None, object_name = None):
         try:
+            
             raw_selector = self.children[1].do(id = id, object_name = object_name)
             selector = stripe_quotation(raw_selector)
             pyqueryObj = self.children[0].do(id = id, object_name = object_name)
