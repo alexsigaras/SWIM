@@ -519,7 +519,7 @@ def p_statement_elif_block(t):
     def do(self, id = None, object_name = None):
         if self.children[0].do(id = id, object_name = object_name):
             try:
-                return self.children[1].do
+                return self.children[1].do(id = id, object_name = object_name)
             except:
                 print("Error in elif block")
                 print traceback.format_exc()
@@ -700,7 +700,7 @@ def p_expression_function_call(t):
     if t[1] == "print":
         def do(self, id = None, object_name = None):
             try:
-                try:    
+                try:
                     if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'Dict':
                         val = self.children[1].do(id = id, object_name = object_name)[0]['val']
                 except:

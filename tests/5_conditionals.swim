@@ -1,3 +1,7 @@
 print('TESTING CONDITIONALS');
 
+if(true) do x=0;
 if(true) do x=0; else print('###FAILED ON : Simple If'); end
+if(false) do print("s"); elif(true) do print("no2") end
+if(false) do print("s"); elif(false) do print("no"); elif(true) do print("no2") end
+if(false) do print("s"); elif(false) do print("no"); elif(false) do print("no2"); else print("yes"); end
