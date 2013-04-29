@@ -909,10 +909,10 @@ def p_expression_function_call(t):
     elif t[1] == "str":
         def do(self, id = None, object_name = None):
             try: 
-                if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
+                # if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
                     return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
-                else:
-                    print ("Invalid type provided")
+                # else:
+                #     print ("Invalid type provided")
             except:
                 print("Error in builtin ToString")
                 print traceback.format_exc()

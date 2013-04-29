@@ -1,15 +1,82 @@
 // Demo 1
-ny = *"nytimes.com"*;
-print(ny<".story">);
+# ny = *"nytimes.com"*;
+# print(ny<".story">);
 
 
 // Demo 2
 //websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
 //for each website in websites do print(*website*<".post">); end
 
-# // Demo 3
+/*
+Swimco.de
+An example of getting specific tags from the NYTimes website
+and then looping over the results checking if the results
+match the provided regular expression.
+*/
 
-// Lambda Fibonacci
-fun fib(n) do
-(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+# ny = *"nytimes.com"*;
+# stories = ny<".story">;
+# for each story in stories do
+# 	if story<"title">.ToString().matches("Boston") do
+# 		print(story);
+# 	end
+# end
+
+# gz = *"gizmodo.com"*;
+# stories = gz<".post">;
+
+en = *"engadget.com"*;
+stories = en<".post">;
+i=1;
+for each story in stories do 
+	p = story<"p">;
+	ps = p.ToString();
+	if ps.contains("android") do
+		print("Post: ");
+		print(i); i++;
+		print(story);
+	end
 end
+
+# // Demo 3
+# // Power of our language
+
+# // Simple Fibonacci
+# fun fib(n) do
+#     if(n == 0) do
+#         return 0;
+#     end
+#     if(n == 1) do
+#         return 1;
+#     end
+#     return fib(n-1) + fib(n-2);
+# end
+
+# print("Simple Fibonacci");
+# print(fib(10));
+
+# // Fibonacci 2
+# fun fib1(num) do
+#     return fibHelper(num, 1, 0);
+# end
+
+# fun fibHelper(num, val, prev) do
+#     if(num == 0) do
+#         return prev;
+#     end
+#     if(num == 1) do
+#         return val;
+#     end
+#     return fibHelper((num - 1), (val+prev), val);
+# end
+
+# print("Simple Fibonacci2");
+# print(fib(10));
+
+# // Lambda Fibonacci
+# fun fibl(n) do
+# (lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+# end
+
+# print("Fibonacci Lambda");
+# print(fibl(10));
