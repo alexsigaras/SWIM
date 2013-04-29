@@ -751,12 +751,14 @@ def p_expression_function_call(t):
                     return builtin_print(val) 
                 except:
                     print("Error in builtin print")
+
     elif t[1] == "printErr":
         def do(self, id = None, object_name = None):            
             try:
                 return builtin_print(self.children[1].do(id = id, object_name = object_name)[0], colorCodes['red'])
             except:
                 print("Error in builtin printErr")
+                
     elif t[1] == "pdf":
         def do(self, id = None, object_name = None):
             try: 
@@ -764,6 +766,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()
+
     elif t[1] == "e":
         def do(self, id = None, object_name = None):
             try:                 
@@ -771,6 +774,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin e")
                 print traceback.format_exc()
+
     elif t[1] == "pi":
         def do(self, id = None, object_name = None):
             try:                 

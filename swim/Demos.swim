@@ -1,15 +1,15 @@
-// Demo 1
-print("Demo 1 - NY TIMES");
-/*
-	A simple demo on how to print all the stories from the new york times.
-*/
-ny = *"nytimes.com"*;
-print(ny<".story">);
+# // Demo 1
+# print("Demo 1 - NY TIMES");
+# /*
+# 	A simple demo on how to print all the stories from the new york times.
+# */
+# ny = *"nytimes.com"*;
+# print(ny<".story">);
 
 
 // Demo 2
-//websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
-//for each website in websites do print(*website*<".post">); end
+# websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
+# for each website in websites do print(*website*<".post">); end
 
 /*
 Swimco.de
@@ -34,12 +34,14 @@ stories = en<".post">;
 i=1;
 for each story in stories do 
 	p = story<"p">;
+	# print(p);
 	ps = p.ToString();
-	if ps.contains("android") do
-		print("Post: ");
-		print(i); i++;
-		print(story);
-	end
+	print(ps);
+	# if ps.contains("android") do
+	# 	print("Post: ");
+	# 	print(i); i++;
+	# 	print(story);
+	# end
 end
 
 # // Demo 3
