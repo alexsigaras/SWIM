@@ -241,4 +241,11 @@ def builtin_matches(string, string1):
         print ("Mismatch grammar for ends with")
         raise Exception
 
+def builtin_ToString(obj):
+    try:
+        return str(obj)
+    except Exception, e:
+        print ("Mismatch grammar for ToString")
+        raise Exception
+
 #-----------------------------------------------------------------------------#

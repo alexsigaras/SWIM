@@ -140,9 +140,9 @@ def p_start(t):
         else:
             try:
                 result = t[1].do()
-                if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
-                    pass
-                	#print(result)
+                if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace") and not result.__doc__.startswith("PyQuery Object"):
+                    #pass
+                	print(result)
             except Error as e:
                 printErr(t[1].traverse())
                 pass
@@ -593,22 +593,43 @@ def p_statement_for(t):
     def do(self, id = None, object_name = None):
         try:
             # val = self.children[1].do(id = id, object_name = object_name)[0].attr['val']
-            if object_name is not None:                
+            if object_name is not None: 
                 iterable = self.children[1].do(id = id, object_name = object_name)
             else:
-                iterable = self.children[1].do(id = id, object_name = object_name)['val']
-            for temp in iterable:
-                if object_name is not None:
-                    identifiers[object_name][self.children[0]] = temp
-                else:
-                    identifiers[self.children[0]] = temp
-                result  = self.children[2].do(id = id, object_name = object_name)
+                try:
+                    iterable = self.children[1].do(id = id, object_name = object_name)['val']
+                except:
+                    try:
+                        iterable = self.children[1].do(id = id, object_name = object_name)
+                    except:
+                        raise Exception
+            # Special case of pyquery
+            if iterable.__doc__.startswith("PyQuery Object"):
+                for temp in iterable:
+                    if object_name is not None:
+                        identifiers[object_name][self.children[0]] = iterable(temp)
+                    else:
+                        identifiers[self.children[0]] = iterable(temp)
+                    result  = self.children[2].do(id = id, object_name = object_name)
 
-                if isinstance(result, dict):
-                    if result.keys()[0] == "break":
-                        break
-                    elif result.keys()[0] == "return":
-                        return result
+                    if isinstance(result, dict):
+                        if result.keys()[0] == "break":
+                            break
+                        elif result.keys()[0] == "return":
+                            return result                
+            else:
+                for temp in iterable:
+                    if object_name is not None:
+                        identifiers[object_name][self.children[0]] = temp
+                    else:
+                        identifiers[self.children[0]] = temp
+                    result  = self.children[2].do(id = id, object_name = object_name)
+
+                    if isinstance(result, dict):
+                        if result.keys()[0] == "break":
+                            break
+                        elif result.keys()[0] == "return":
+                            return result
         except:
             print("Error in for statement")
             print traceback.format_exc()
@@ -712,7 +733,8 @@ def p_expression_function_call(t):
         def do(self, id = None, object_name = None):
             try:
                 try:
-                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'Dict':
+                    reserved = ('List', 'Dict', 'Url')
+                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] in reserved:
                         val = self.children[1].do(id = id, object_name = object_name)[0]['val']
                 except:
                     try:
@@ -884,6 +906,16 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin match")
                 print traceback.format_exc()
+    elif t[1] == "str":
+        def do(self, id = None, object_name = None):
+            try: 
+                if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
+                    return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin ToString")
+                print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
             #class method"
@@ -962,6 +994,7 @@ def p_expression_lambda_function(t):
             param = self.children[2].do(id = id, object_name = object_name)
             for e in self.children[0].do(id = True, object_name = object_name):
                 identifiers[e] = param[i]
+                i += 1
 
             result = self.children[1].do(id = id, object_name = object_name)
             identifiers.scope_out()
@@ -1125,6 +1158,8 @@ def p_expression_name(t):
                         # String case
                         if result['type'] == 0:
                             result = result['val']
+                            return result
+                        else:
                             return result
                     except:
                         return result                    
@@ -1446,14 +1481,16 @@ def p_expression_cond_op(t):
 #----------------------------------------------------#
 
 def p_url_expression(t):
-    '''url_expr : MULTIPLY string_expr MULTIPLY'''
+    '''url_expr : MULTIPLY expression MULTIPLY'''
 
     t[0] = Node("url", t[2], 'get')
 
     def do(self, id = None, object_name = None):
         try:
             raw_url = self.children.do(id = id, object_name = object_name)
-            url = stripe_quotation(raw_url)     
+            url = stripe_quotation(raw_url)  
+            if not url.startswith("http://") and not url.startswith("https://"):
+                url = "http://" + url
             d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
             d.url = url
             return d
@@ -1464,22 +1501,19 @@ def p_url_expression(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_select_op_expression(t):
-    '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
-                      | id_expr LCBRACKET string_expr RCBRACKET'''
+    # '''select_op_expr : id_expr LESS_THAN id_expr GREATER_THAN
+    #                   | id_expr LESS_THAN string_expr GREATER_THAN'''
+    '''select_op_expr : expression LESS_THAN expression GREATER_THAN'''
 
     t[0] = Node('select_op', [t[1], t[3]], 'select')
     def do(self, id = None, object_name = None):
         try:
             raw_selector = self.children[1].do(id = id, object_name = object_name)
             selector = stripe_quotation(raw_selector)
-            raw_url = self.children[0].do(id = id, object_name = object_name)
-            if type(raw_url) == str:
-                url = stripe_quotation(raw_url)
-                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-
-                return d(selector)
-            else:
-                return raw_url(selector)
+            pyqueryObj = self.children[0].do(id = id, object_name = object_name)
+            result = pyqueryObj['val'](selector)
+            result.url = pyqueryObj['url']
+            return result
         except Exception:
             print("Mismatch grammar for parsing!")
             print traceback.format_exc()

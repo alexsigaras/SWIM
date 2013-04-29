@@ -1,0 +1,15 @@
+// Demo 1
+ny = *"nytimes.com"*;
+print(ny<".story">);
+
+
+// Demo 2
+//websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
+//for each website in websites do print(*website*<".post">); end
+
+# // Demo 3
+
+// Lambda Fibonacci
+fun fib(n) do
+(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+end
