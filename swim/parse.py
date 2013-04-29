@@ -607,9 +607,21 @@ def p_statement_for(t):
             if iterable.__doc__.startswith("PyQuery Object"):
                 for temp in iterable:
                     if object_name is not None:
-                        identifiers[object_name][self.children[0]] = iterable(temp)
+                        identifiers.scope_in()
+                        identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                        class_attributes = identifiers.getAllItems()
+                        identifiers.scope_out()
+                        identifiers[object_name][self.children[0]]  = Namespace(class_attributes)                        
+                        identifiers[object_name][self.children[0]]['val'] = iterable(temp)
+                        identifiers[object_name][self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
                     else:
-                        identifiers[self.children[0]] = iterable(temp)
+                        identifiers.scope_in()
+                        identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                        class_attributes = identifiers.getAllItems()
+                        identifiers.scope_out()
+                        identifiers[self.children[0]]  = Namespace(class_attributes)                        
+                        identifiers[self.children[0]]['val'] = iterable(temp)
+                        identifiers[self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
                     result  = self.children[2].do(id = id, object_name = object_name)
 
                     if isinstance(result, dict):
