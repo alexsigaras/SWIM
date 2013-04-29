@@ -130,6 +130,7 @@ end
 class Url do
 
 	val = '';
+	url = '';
 
 	# fun letters() do
 	# 	print("still not implemented");

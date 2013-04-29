@@ -118,7 +118,7 @@ class FlexibleElement(object):
 
 
 class PyQuery(list):
-    """The main class
+    """PyQuery Object
     """
     def __init__(self, *args, **kwargs):
         html = None

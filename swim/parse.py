@@ -141,7 +141,8 @@ def p_start(t):
             try:
                 result = t[1].do()
                 if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
-                	print(result)
+                    pass
+                	#print(result)
             except Error as e:
                 printErr(t[1].traverse())
                 pass
@@ -281,7 +282,16 @@ def p_statement_assign(t):
         ''' Need to check ID !'''
         try:
             element = self.children[1].do(id = id, object_name = object_name)
-            if isinstance(element, list):
+            if element.__doc__.startswith("PyQuery Object"):
+                # If the expr is a pyquery
+                identifiers.scope_in()
+                identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                class_attributes = identifiers.getAllItems()
+                identifiers.scope_out()
+                identifiers[self.children[0]] = Namespace(class_attributes)
+                identifiers[self.children[0]]["val"] = element
+                identifiers[self.children[0]]["url"] = element.url
+            elif isinstance(element, list):
                 # If the expr is a list
                 identifiers.scope_in()
                 identifiers["List"].children[1].do(id = id, object_name = object_name)    
@@ -307,6 +317,7 @@ def p_statement_assign(t):
                 identifiers.scope_out()
                 identifiers[self.children[0]] = Namespace(class_attributes)
                 identifiers[self.children[0]]["val"] = element                     
+
             else:
                 if object_name is not None:
                     identifiers[object_name][self.children[0]] = element
@@ -1444,6 +1455,7 @@ def p_url_expression(t):
             raw_url = self.children.do(id = id, object_name = object_name)
             url = stripe_quotation(raw_url)     
             d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+            d.url = url
             return d
         except:
             print("Error in url expression")
@@ -1464,6 +1476,7 @@ def p_select_op_expression(t):
             if type(raw_url) == str:
                 url = stripe_quotation(raw_url)
                 d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+
                 return d(selector)
             else:
                 return raw_url(selector)
