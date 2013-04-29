@@ -127,31 +127,31 @@ class Str do
 	end
 end
 
-# class Url do
+class Url do
 
-# 	val = '';
+	val = '';
 
-# 	# fun letters() do
-# 	# 	print("still not implemented");
-# 	# end
+	# fun letters() do
+	# 	print("still not implemented");
+	# end
 
-# 	# fun lowercase() do
-# 	# 	return lower(val);
-# 	# end
+	# fun lowercase() do
+	# 	return lower(val);
+	# end
 
-# 	# fun uppercase() do
-# 	# 	print("still not implemented");
-# 	# end
+	# fun uppercase() do
+	# 	print("still not implemented");
+	# end
 
-# 	# fun digits() do
-# 	# 	print("still not implemented");
-# 	# end
+	# fun digits() do
+	# 	print("still not implemented");
+	# end
 
-# 	# fun whitespace() do
-# 	# 	print("still not implemented");
-# 	# end
+	# fun whitespace() do
+	# 	print("still not implemented");
+	# end
 
-# end
+end
 
 
 #-----------------------------------------------------------------------------#

@@ -1,0 +1,72 @@
+# #Recursive fibonacci
+# include std;
+# fun fib(n) do
+#     if(n == 0) do
+#         return 0;
+#     end
+#     if(n == 1) do
+#         return 1;
+#     end
+#     return fib(n-1) + fib(n-2);
+# end
+
+# print(fib(1));
+# // elif is broken!!! lists are broken
+
+
+
+
+# fun fib1(num) do
+#     return fibHelper(num, 1, 0);
+# end
+
+# fun fibHelper(num, val, prev) do
+#     if(num == 0) do
+#         # return 0;
+#         return prev;
+#     end
+#     if(num == 1) do
+#         # return 1;
+#         return val;
+#     end
+#     # print ("Next:");
+#     # print(num -1);
+#     # print(val+prev);
+#     # print(val);
+#     return fibHelper((num - 1), (val+prev), val);
+# end
+
+# print (fibHelper(4, 1, 0));
+
+# print(fib1(10));
+
+# 10,1,0
+# -> 9,1,1
+
+fun fib(number, fibpro, fibpropro) do
+	if(number == 0) do
+		return fibpropro;
+	end
+	if(number == 1) do
+		return fibpro;
+	end
+	return fib(number-1, fibpropro+fibpro, fibpro);
+end
+
+print(fib(0,1,0)); // 0
+print(fib(1,1,0)); // 1
+print(fib(2,1,0)); // 1
+print(fib(3,1,0)); // 1
+print(fib(4,1,0)); // 1
+print(fib(5,1,0)); // 1
+print(fib(6,1,0)); // 1
+print(fib(7,1,0)); // 1
+print(fib(8,1,0)); // 1
+print(fib(9,1,0)); // 1
+print(fib(10,1,0)); // 1
+
+# for each i in [1,2,3,4,5,6,7,8,9,10] do
+# 	print("Fibonaci of ");
+# 	print(i);
+# 	print(fib(i,1,0));
+# end

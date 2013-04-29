@@ -984,6 +984,8 @@ def p_expression_unary(t):
                   | list_expr
                   | dictionary_expr
                   | parse_text_expr
+                  | url_expr
+                  | select_op_expr
                   | group_expr
                   | uplus_expr
                   | uminus_expr
@@ -1308,11 +1310,11 @@ def p_expression_parse_text(t):
     def do(self, id = None, object_name = None):
         try:
             raw_selector = self.children.do(id = id, object_name = object_name)[0]
-            #selector = stripe_quotation(raw_selector)
+            selector = stripe_quotation(raw_selector)
             raw_url = self.children.do(id = id, object_name = object_name)[1]
 
             if type(raw_url) == str:
-                #url = stripe_quotation(raw_url)
+                url = stripe_quotation(raw_url)
                 d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
                 return d(selector)
             else:
@@ -1427,29 +1429,49 @@ def p_expression_cond_op(t):
 #        5.3.2.2 Selector and URL stuff!             #
 #----------------------------------------------------#
 
-def p_url(p):
-    '''url : MULTIPLY expression MULTIPLY'''
-    t[0] = Node("url", stripe_quotation(t[2]), 'get')
+def p_url_expression(t):
+    '''url_expr : MULTIPLY string_expr MULTIPLY'''
+
+    t[0] = Node("url", t[2], 'get')
+
     def do(self, id = None, object_name = None):
         try:
-            return self.children
+            raw_url = self.children.do(id = id, object_name = object_name)
+            url = stripe_quotation(raw_url)     
+            d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+            return d
         except:
             print("Error in url expression")
             print traceback.format_exc()
 
-    t[0].do = MethodType(do, t[1], Node)
+    t[0].do = MethodType(do, t[0], Node)
 
+def p_select_op_expression(t):
+    '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
+                      | id_expr LCBRACKET string_expr RCBRACKET'''
 
-
-def p_select_op(t):
-    '''select_op : url LESS_THAN expression GREATER_THAN
-                 | ID LESS_THAN expression GREATER_THAN'''
     t[0] = Node('select_op', [t[1], t[3]], 'select')
+    def do(self, id = None, object_name = None):
+        try:
+            raw_selector = self.children[1].do(id = id, object_name = object_name)
+            selector = stripe_quotation(raw_selector)
+            raw_url = self.children[0].do(id = id, object_name = object_name)
+            if type(raw_url) == str:
+                url = stripe_quotation(raw_url)
+                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+                return d(selector)
+            else:
+                return raw_url(selector)
+        except Exception:
+            print("Mismatch grammar for parsing!")
+            print traceback.format_exc()
+    t[0].do = MethodType(do, t[0], Node)
 
-def p_find_op(t):
-    '''find_op : url LCBRACKET expression RCBRACKET
-               | ID LSBRACKET expression RCBRACKET'''
-    t[0] = Node('find_op', [t[1], t[3]], 'find')
+# def p_find_op(t):
+#     '''find_op : url LCBRACKET string_expr RCBRACKET
+#                | ID LSBRACKET string_expr RCBRACKET'''
+#     t[0] = Node('find_op', [t[1], t[3]], 'find')
+#     t[0].do = MethodType(do, t[0], Node)
  
 #----------------------------------------------------#
 #                     5.4 Error                      #
