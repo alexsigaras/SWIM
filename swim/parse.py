@@ -916,11 +916,16 @@ def p_expression_function_call(t):
 
                 try:
                     cnt = 0
+                    param_dic = {}
                     for name in func.children[1].do(True):
                         # take the name and assign it into the new namespace
                         # pass by ref via python
-                        identifiers[name] = self.children[1].do(id = id, object_name = object_name)[cnt]
+
+                        param_dic[name] = self.children[1].do(id = id, object_name = object_name)[cnt]
                         cnt += 1
+
+                    for k,v in param_dic.iteritems():
+                        identifiers[k] = v
                 except:
                     print "Function parameter error!"
                     return None 
