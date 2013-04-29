@@ -41,6 +41,12 @@ end
 
 print(fibonacci(10));
 
+fun fib(n) do
+	(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+end
+
+
+
 
 
 
