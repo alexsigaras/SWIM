@@ -593,22 +593,43 @@ def p_statement_for(t):
     def do(self, id = None, object_name = None):
         try:
             # val = self.children[1].do(id = id, object_name = object_name)[0].attr['val']
-            if object_name is not None:                
+            if object_name is not None: 
                 iterable = self.children[1].do(id = id, object_name = object_name)
             else:
-                iterable = self.children[1].do(id = id, object_name = object_name)['val']
-            for temp in iterable:
-                if object_name is not None:
-                    identifiers[object_name][self.children[0]] = temp
-                else:
-                    identifiers[self.children[0]] = temp
-                result  = self.children[2].do(id = id, object_name = object_name)
+                try:
+                    iterable = self.children[1].do(id = id, object_name = object_name)['val']
+                except:
+                    try:
+                        iterable = self.children[1].do(id = id, object_name = object_name)
+                    except:
+                        raise Exception
+            # Special case of pyquery
+            if iterable.__doc__.startswith("PyQuery Object"):
+                for temp in iterable:
+                    if object_name is not None:
+                        identifiers[object_name][self.children[0]] = iterable(temp)
+                    else:
+                        identifiers[self.children[0]] = iterable(temp)
+                    result  = self.children[2].do(id = id, object_name = object_name)
 
-                if isinstance(result, dict):
-                    if result.keys()[0] == "break":
-                        break
-                    elif result.keys()[0] == "return":
-                        return result
+                    if isinstance(result, dict):
+                        if result.keys()[0] == "break":
+                            break
+                        elif result.keys()[0] == "return":
+                            return result                
+            else:
+                for temp in iterable:
+                    if object_name is not None:
+                        identifiers[object_name][self.children[0]] = temp
+                    else:
+                        identifiers[self.children[0]] = temp
+                    result  = self.children[2].do(id = id, object_name = object_name)
+
+                    if isinstance(result, dict):
+                        if result.keys()[0] == "break":
+                            break
+                        elif result.keys()[0] == "return":
+                            return result
         except:
             print("Error in for statement")
             print traceback.format_exc()
@@ -888,9 +909,7 @@ def p_expression_function_call(t):
     elif t[1] == "str":
         def do(self, id = None, object_name = None):
             try: 
-                print "here1"
                 if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
-                    print "here2"
                     return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
                 else:
                     print ("Invalid type provided")
@@ -1469,7 +1488,7 @@ def p_url_expression(t):
         try:
             raw_url = self.children.do(id = id, object_name = object_name)
             url = stripe_quotation(raw_url)  
-            if not url.startswith("http://")  or not url.startswith("https://"):
+            if not url.startswith("http://") and not url.startswith("https://"):
                 url = "http://" + url
             d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
             d.url = url
@@ -1481,9 +1500,9 @@ def p_url_expression(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_select_op_expression(t):
-    # '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
-    #                   | id_expr LCBRACKET string_expr RCBRACKET'''
-    '''select_op_expr : expression LCBRACKET expression RCBRACKET'''
+    # '''select_op_expr : id_expr LESS_THAN id_expr GREATER_THAN
+    #                   | id_expr LESS_THAN string_expr GREATER_THAN'''
+    '''select_op_expr : expression LESS_THAN expression GREATER_THAN'''
 
     t[0] = Node('select_op', [t[1], t[3]], 'select')
     def do(self, id = None, object_name = None):
@@ -1491,14 +1510,9 @@ def p_select_op_expression(t):
             raw_selector = self.children[1].do(id = id, object_name = object_name)
             selector = stripe_quotation(raw_selector)
             pyqueryObj = self.children[0].do(id = id, object_name = object_name)
-            # if type(raw_url) == str:
-            #     url = stripe_quotation(raw_url)
-            #     d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
             result = pyqueryObj['val'](selector)
             result.url = pyqueryObj['url']
             return result
-            # else:
-            #     return raw_url(selector)
         except Exception:
             print("Mismatch grammar for parsing!")
             print traceback.format_exc()
