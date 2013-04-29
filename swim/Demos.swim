@@ -1,6 +1,10 @@
 // Demo 1
-# ny = *"nytimes.com"*;
-# print(ny<".story">);
+print("Demo 1 - NY TIMES");
+/*
+	A simple demo on how to print all the stories from the new york times.
+*/
+ny = *"nytimes.com"*;
+print(ny<".story">);
 
 
 // Demo 2
@@ -78,16 +82,16 @@ end
 # (lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
 # end
 
-// Fibonacci using golden phi
+# // Fibonacci using golden phi
 # fun fib(n) do return round(phi() ^ n / sqrt(5)); end
 
 # print("Fibonacci Lambda");
 # print(fibl(10));
 
-// lambda Fib using golden phi
-fun fiblphi(n) do
-	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
-end
+# // lambda Fib using golden phi
+# fun fiblphi(n) do
+# 	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
+# end
 
-print("Fibonacci Lambda using phi");
-print(fiblphi(10));
+# print("Fibonacci Lambda using phi");
+# print(fiblphi(10));
