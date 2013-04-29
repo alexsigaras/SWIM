@@ -1,2 +1,0 @@
-a=@("html", "http://www.nytimes.com");
-print(a);
