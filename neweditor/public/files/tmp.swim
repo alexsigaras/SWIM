@@ -1,7 +1,99 @@
-ny = *"nytimes.com"*;
-stories = ny<".story">;
-for each story in stories do
-	if story<"title">.ToString().matches("Boston") do
-		print(story);
-	end
+####################################################
+# 
+#  Introduction to
+#  _____          _           
+# /  ___|        (_)          
+# \ `--.__      ___ _ __ ___  
+#  `--. \ \ /\ / / | '_ ` _ \ 
+# /\__/ /\ V  V /| | | | | | |
+# \____/  \_/\_/ |_|_| |_| |_|
+#
+#####################################################
+
+/*  Block
+	Comments
+	May 
+	Be
+	Formatted 
+	Like
+	This
+*/
+
+###
+# The functions below show how recursion works 
+# as well as conditional statments, namespace, 
+# function declaration/definition and more...
+##
+
+fun fibonacci(num) do
+	return fibHelper(num, 1, 0);
 end
+
+fun fibHelper(num, val, prev) do
+	if(num == 0) do
+		return prev;
+	end
+	if(num == 1) do
+		return val;
+	end
+	return fibHelper((num - 1), (val+prev), val);
+end
+
+print(fibonacci(10));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

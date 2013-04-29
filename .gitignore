@@ -7,3 +7,4 @@ lextab.py
 *.log
 *.out
 *.DS_Store
+neweditor/public/files/tmp*.swim
