@@ -131,10 +131,11 @@ class Url do
 
 	val = '';
 	url = '';
+	type = 'Url';
 
-	# fun letters() do
-	# 	print("still not implemented");
-	# end
+	fun ToString() do
+		return str(val);
+	end
 
 	# fun lowercase() do
 	# 	return lower(val);

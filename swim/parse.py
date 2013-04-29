@@ -140,9 +140,9 @@ def p_start(t):
         else:
             try:
                 result = t[1].do()
-                if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace"):
-                    pass
-                	#print(result)
+                if result is not None and result.__doc__ != "Simple Node" and not result.__doc__.startswith("Namespace") and not result.__doc__.startswith("PyQuery Object"):
+                    #pass
+                	print(result)
             except Error as e:
                 printErr(t[1].traverse())
                 pass
@@ -712,7 +712,8 @@ def p_expression_function_call(t):
         def do(self, id = None, object_name = None):
             try:
                 try:
-                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'List' or self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] == 'Dict':
+                    reserved = ('List', 'Dict', 'Url')
+                    if self.children[1].do(id = id, object_name = object_name)[0]["type"]['val'] in reserved:
                         val = self.children[1].do(id = id, object_name = object_name)[0]['val']
                 except:
                     try:
@@ -883,6 +884,18 @@ def p_expression_function_call(t):
                     print ("Invalid type provided")
             except:
                 print("Error in builtin match")
+                print traceback.format_exc()
+    elif t[1] == "str":
+        def do(self, id = None, object_name = None):
+            try: 
+                print "here1"
+                if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
+                    print "here2"
+                    return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin ToString")
                 print traceback.format_exc()
     else:      
         def do(self, id = None, object_name = None):
@@ -1125,6 +1138,8 @@ def p_expression_name(t):
                         # String case
                         if result['type'] == 0:
                             result = result['val']
+                            return result
+                        else:
                             return result
                     except:
                         return result                    
@@ -1453,7 +1468,9 @@ def p_url_expression(t):
     def do(self, id = None, object_name = None):
         try:
             raw_url = self.children.do(id = id, object_name = object_name)
-            url = stripe_quotation(raw_url)     
+            url = stripe_quotation(raw_url)  
+            if not url.startswith("http://")  or not url.startswith("https://"):
+                url = "http://" + url
             d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
             d.url = url
             return d
@@ -1464,22 +1481,24 @@ def p_url_expression(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_select_op_expression(t):
-    '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
-                      | id_expr LCBRACKET string_expr RCBRACKET'''
+    # '''select_op_expr : id_expr LCBRACKET id_expr RCBRACKET
+    #                   | id_expr LCBRACKET string_expr RCBRACKET'''
+    '''select_op_expr : expression LCBRACKET expression RCBRACKET'''
 
     t[0] = Node('select_op', [t[1], t[3]], 'select')
     def do(self, id = None, object_name = None):
         try:
             raw_selector = self.children[1].do(id = id, object_name = object_name)
             selector = stripe_quotation(raw_selector)
-            raw_url = self.children[0].do(id = id, object_name = object_name)
-            if type(raw_url) == str:
-                url = stripe_quotation(raw_url)
-                d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
-
-                return d(selector)
-            else:
-                return raw_url(selector)
+            pyqueryObj = self.children[0].do(id = id, object_name = object_name)
+            # if type(raw_url) == str:
+            #     url = stripe_quotation(raw_url)
+            #     d = pq(url=url, opener=lambda url: urllib.urlopen(url).read())
+            result = pyqueryObj['val'](selector)
+            result.url = pyqueryObj['url']
+            return result
+            # else:
+            #     return raw_url(selector)
         except Exception:
             print("Mismatch grammar for parsing!")
             print traceback.format_exc()
