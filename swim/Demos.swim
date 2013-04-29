@@ -36,12 +36,13 @@ for each story in stories do
 	p = story<"p">;
 	# print(p);
 	ps = p.ToString();
-	print(ps);
-	# if ps.contains("android") do
-	# 	print("Post: ");
-	# 	print(i); i++;
-	# 	print(story);
-	# end
+	# print(ps);
+	if ps.contains("android") do
+		print("Article: ");
+		print(i); i++;
+		print(story);
+		print("\n\n");
+	end
 end
 
 # // Demo 3
