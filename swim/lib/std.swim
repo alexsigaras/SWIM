@@ -26,7 +26,6 @@
 #-----------------------------------------------------------------------------#
 
 include datastructures; # Data Stuctures library
-include math;			# Math library
 include html;			# HTML library
 
 #-----------------------------------------------------------------------------#

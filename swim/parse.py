@@ -689,6 +689,7 @@ def p_statement_class_setAttribute(t):
 
 def p_expression_class_getAttribute(t):
     '''class_getAttribute_expr : ID DOT ID
+                               | string_expr DOT function_call_expr
                                | ID DOT function_call_expr'''
 
     t[0] = Node("classAttribute", [t[1],t[3]], "classAttribute")
@@ -697,6 +698,7 @@ def p_expression_class_getAttribute(t):
         try:
             return identifiers[self.children[0]][self.children[1]]
         except:
+
             try:       
                 return self.children[1].do(object_name = self.children[0])
             except:
@@ -762,6 +764,28 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()
+    elif t[1] == "e":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_e()
+            except:
+                print("Error in builtin e")
+                print traceback.format_exc()
+    elif t[1] == "pi":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_pi()
+            except:
+                print("Error in builtin pi")
+                print traceback.format_exc()
+
+    elif t[1] == "phi":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_phi()
+            except:
+                print("Error in builtin phi")
+                print traceback.format_exc()
     elif t[1] == "abs":
         def do(self, id = None, object_name = None):
             try:                 
@@ -800,6 +824,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin sqrt")
                 print traceback.format_exc()
+
     elif t[1] == "log":
         def do(self, id = None, object_name = None):
             try: 
@@ -807,6 +832,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin log")
                 print traceback.format_exc()
+
     elif t[1] == "factorial":
         def do(self, id = None, object_name = None):
             try: 
@@ -814,6 +840,15 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin factorial")
                 print traceback.format_exc()
+
+    elif t[1] == "round":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_round(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin round")
+                print traceback.format_exc()
+
     elif t[1] == "lower":
         def do(self, id = None, object_name = None):
             try: 
@@ -824,6 +859,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin lowercase")
                 print traceback.format_exc()
+
     elif t[1] == "upper":
         def do(self, id = None, object_name = None):
             try: 
@@ -834,6 +870,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin uppercase")
                 print traceback.format_exc()
+
     elif t[1] == "len":
         def do(self, id = None, object_name = None):
             try: 
@@ -844,6 +881,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin length")
                 print traceback.format_exc()
+
     elif t[1] == "repl":
         def do(self, id = None, object_name = None):
             try: 
@@ -854,6 +892,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin replace")
                 print traceback.format_exc()
+
     elif t[1] == "splt":
         def do(self, id = None, object_name = None):
             try: 
@@ -864,6 +903,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin split")
                 print traceback.format_exc()
+
     elif t[1] == "cnt":
         def do(self, id = None, object_name = None):
             try: 

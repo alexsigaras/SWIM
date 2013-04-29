@@ -78,5 +78,8 @@ end
 # (lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
 # end
 
+// Fibonacci using golden phi
+fun fib(n) do return round(phi() ^ n / sqrt(5)); end
+
 # print("Fibonacci Lambda");
 # print(fibl(10));

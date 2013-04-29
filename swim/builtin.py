@@ -113,6 +113,17 @@ def builtin_factorial(number):
     except:
         print("Mismatch grammar for factorial")
         raise Exception
+def builtin_pi():
+    return math.pi
+
+def builtin_phi():
+    return 2 * math.cos(math.pi/5)
+
+def builtin_e():
+    return math.e
+    
+def builtin_round(number):
+    return round(number)
 
 #----------------------------------------------------#
 #            4.2  Print Function                     #
