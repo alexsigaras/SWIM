@@ -1,0 +1,53 @@
+/*
+	Good luck for your final!
+*/
+
+url = *"http://www1.cs.columbia.edu/~aho/cs4115/"*;
+
+tables = url<"table">;
+
+lecture_urls = '';
+
+cnt = 1;
+
+for each i in tables do
+	if(cnt == 4) do
+		lecture_urls = i;
+	end
+	cnt++;
+end
+
+lectures = [];
+anchors = lecture_urls<"a">;
+for each anchor in anchors do
+	lectures.append(anchor.attr("href"));
+end
+#print(lectures);
+
+total = ' ';
+cnt = 1;
+for each i in lectures do
+	temp = i;
+
+	if(temp.contains(".htm")) do
+		
+		new_url = url.url + i;
+		#print(new_url);
+
+		obj = *new_url*;
+		temp2 = obj.ToString();
+		total = total + temp2;
+		
+		#pdf(obj, "final_" + str(cnt) + ".pdf");
+		
+		cnt++;
+	end
+	#print(total);
+	
+	#pdf(url + i, "final_" + cnt + ".pdf");
+	#print(i);
+end
+
+pdf(total, "final.pdf");
+print('<script>window.open("files/final.pdf");</script>');
+

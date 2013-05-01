@@ -1,48 +1,9 @@
-// Demo 3
-// Power of our language
-
-// Simple Fibonacci
-fun fib(n) do
-    if(n == 0) do
-        return 0;
-    end
-    if(n == 1) do
-        return 1;
-    end
-    return fib(n-1) + fib(n-2);
-end
-
-print("Simple Fibonacci");
-print(fib(10));
-
-// Fibonacci 2
-fun fib1(num) do
-    return fibHelper(num, 1, 0);
-end
-
-fun fibHelper(num, val, prev) do
-    if(num == 0) do
-        return prev;
-    end
-    if(num == 1) do
-        return val;
-    end
-    return fibHelper((num - 1), (val+prev), val);
-end
-
-print("Simple Fibonacci2");
-print(fib(10));
+// Demo 3 Power of our language
 
 // Lambda Fibonacci
 fun fibl(n) do
 (lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
 end
-
-// Fibonacci using golden phi
-fun fib(n) do return round(phi() ^ n / sqrt(5)); end
-
-print("Fibonacci Lambda");
-print(fibl(10));
 
 // lambda Fib using golden phi
 fun fiblphi(n) do
@@ -50,4 +11,4 @@ fun fiblphi(n) do
 end
 
 print("Fibonacci Lambda using phi");
-print(fiblphi(10));
+print(fiblphi(1000));

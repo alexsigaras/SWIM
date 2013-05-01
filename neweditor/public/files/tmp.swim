@@ -1,53 +1,52 @@
-// Demo 3
-// Power of our language
+/*
+	Good luck for your final!
+*/
 
-// Simple Fibonacci
-fun fib(n) do
-    if(n == 0) do
-        return 0;
-    end
-    if(n == 1) do
-        return 1;
-    end
-    return fib(n-1) + fib(n-2);
+url = *"http://www1.cs.columbia.edu/~aho/cs4115/"*;
+
+tables = url<"table">;
+
+lecture_urls = '';
+
+cnt = 1;
+
+for each i in tables do
+	if(cnt == 4) do
+		lecture_urls = i;
+	end
+	cnt++;
 end
 
-print("Simple Fibonacci");
-print(fib(10));
+lectures = [];
+anchors = lecture_urls<"a">;
+for each anchor in anchors do
+	lectures.append(anchor.attr("href"));
+end
+#print(lectures);
 
-// Fibonacci 2
-fun fib1(num) do
-    return fibHelper(num, 1, 0);
+total = ' ';
+cnt = 1;
+for each i in lectures do
+	temp = i;
+
+	if(temp.contains(".htm")) do
+		
+		new_url = url.url + i;
+		#print(new_url);
+
+		obj = *new_url*;
+		temp2 = obj.ToString();
+		total = total + temp2;
+		
+		#pdf(obj, "final_" + str(cnt) + ".pdf");
+		
+		cnt++;
+	end
+	#print(total);
+	
+	#pdf(url + i, "final_" + cnt + ".pdf");
+	#print(i);
 end
 
-fun fibHelper(num, val, prev) do
-    if(num == 0) do
-        return prev;
-    end
-    if(num == 1) do
-        return val;
-    end
-    return fibHelper((num - 1), (val+prev), val);
-end
-
-print("Simple Fibonacci2");
-print(fib(10));
-
-// Lambda Fibonacci
-fun fibl(n) do
-(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
-end
-
-// Fibonacci using golden phi
-fun fib(n) do return round(phi() ^ n / sqrt(5)); end
-
-print("Fibonacci Lambda");
-print(fibl(10));
-
-// lambda Fib using golden phi
-fun fiblphi(n) do
-	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
-end
-
-print("Fibonacci Lambda using phi");
-print(fiblphi(10));
+pdf(total, "final.pdf");
+print('<script>window.open("files/final.pdf");</script>');
