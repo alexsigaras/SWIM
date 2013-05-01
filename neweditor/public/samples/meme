@@ -1,0 +1,5 @@
+// Meme Demo
+
+page = *"http://youmightbeanengineeringstudentif.tumblr.com/post/37773591116/when-i-try-to-pump-myself-up-for-exam-studying"*;
+print(page<'article div h2'>);
+print(page<'article div p img'>);
