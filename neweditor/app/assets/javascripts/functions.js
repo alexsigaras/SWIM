@@ -1,4 +1,3 @@
-
 CodeMirror.commands.autocomplete = function(cm) {
 	CodeMirror.showHint(cm, CodeMirror.pythonHint);
 }
@@ -54,6 +53,63 @@ function sendCommand(){
 
 
 
+
+$('#goButton').click(function(e) {
+	e.preventDefault(); 
+	var href = $(this).attr("href");
+
+	// $.ajax({
+	// 	url : href,
+	// 	type : GET,
+	// 	success : function(data){
+	// 		wrapper.html(data);
+	// 	}
+	// });                
+
+
+var command = editor.getValue();
+$("#stuff").fadeOut('1000');
+$.ajax({
+	url: href,
+	type: "GET",
+	async : false,
+	data:{token: command},
+	dataType:"text",
+}).done(function(html) {
+	$('#stuff').empty();
+	$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\">"+html+"</div></div></div>")
+});
+$("#stuff").fadeIn();
+history.pushState('', 'New URL: '+href, href);
+
+});
+
+
+
+
+
+window.onpopstate = function(event) {
+	if(event.state === ''){
+		var href = location.pathname,
+		wrapper = $("#stuff");
+		$.ajax({
+			url : "index",
+           type : GET,
+           success : function(data){
+                wrapper.html(data);
+           }
+		});
+	}
+};
+
+
+
+
+
+
+
+
+
 window.addEventListener('load', initSlider, false);
 /**
 * Initializes sliders
@@ -95,3 +151,17 @@ function initSlider(){
 	$(document).ready(function() {
 		loadProgram('fibonacci');
 	});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
