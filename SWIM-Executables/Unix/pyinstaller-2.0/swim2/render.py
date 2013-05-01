@@ -13,10 +13,9 @@ HTML/CSS to PDF converter
 Test background image generation on the `portrait` and `landscape`
 page.
 """
-
-from cookbook import HTML2PDF
 import sys, os
-
+sys.path.append(os.path.join("..", "include"))
+from cookbook import HTML2PDF
 
 if __name__ == "__main__":    
     xhtml = open(sys.argv[1])

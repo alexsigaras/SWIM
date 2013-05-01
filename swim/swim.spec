@@ -1,6 +1,6 @@
 # -*- mode: python -*-
-a = Analysis(['../SWIM-Executables/Unix/pyinstaller-2.0/swim3/swim.py'],
-             pathex=['/Users/SeungWoo_0914/MyFuture/Columbia/PLT/PLT-SLAMM/PLT-SLAMM/swim'],
+a = Analysis(['../SWIM-Executables/Unix/pyinstaller-2.0/swim2/swim.py'],
+             pathex=['/Users/morrishopkins/Dropbox/Spring2013/PLT/PLT-SLAMM/swim'],
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)

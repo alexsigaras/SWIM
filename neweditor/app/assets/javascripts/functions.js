@@ -10,12 +10,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 	lineNumbers: true,
 	lineWrapping: true,
 	autoCloseBrackets: true,
-	enableSearchTools: true,
-	enableCodeFolding: true,
-	enableCodeFormatting: true,
-	autoFormatOnStart: true,
 	extraKeys: {"Ctrl-Space": "autocomplete"},
-	indentWithTabs: true
 });
 
 
@@ -46,7 +41,7 @@ function sendCommand(){
 		dataType:"text",
 	}).done(function(html) {
 		$('#stuff').empty();
-		$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\">"+html+"</div></div></div>")
+		$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\"><div id=\"results\">"+html+"</div></div></div>")
 	});
 	$("#stuff").fadeIn();
 }
@@ -77,14 +72,12 @@ $.ajax({
 	dataType:"text",
 }).done(function(html) {
 	$('#stuff').empty();
-	$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\">"+html+"</div></div></div>")
+	$('#stuff').html("<div class=\"container-fluid\"><div class=\"row-fluid\"><div class=\"span10 offset1\"><div id=\"results\">"+html+"</div></div></div></div>")
 });
 $("#stuff").fadeIn();
 history.pushState('', 'New URL: '+href, href);
 
 });
-
-
 
 
 

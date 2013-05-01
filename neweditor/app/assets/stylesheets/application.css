@@ -55,3 +55,12 @@
   font-weight: bold;
 }
 
+#results {
+	height: 700px;
+	overflow: scroll;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
