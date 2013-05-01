@@ -1,0 +1,1 @@
+../../../../share/pyshared/lxml/etreepublic.pxd

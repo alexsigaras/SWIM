@@ -18,7 +18,7 @@
 
 __version__ = "0.4"
 
-from PIL import Image, ImageFile, ImagePalette, _binary
+import Image, ImageFile, ImagePalette
 
 MODES = {
     # (photoshop mode, bits) -> (pil mode, required channels)
@@ -36,15 +36,17 @@ MODES = {
 #
 # helpers
 
-i8 = _binary.i8
-i16 = _binary.i16be
-i32 = _binary.i32be
+def i16(c):
+    return ord(c[1]) + (ord(c[0])<<8)
+
+def i32(c):
+    return ord(c[3]) + (ord(c[2])<<8) + (ord(c[1])<<16) + (ord(c[0])<<24)
 
 # --------------------------------------------------------------------.
 # read PSD images
 
 def _accept(prefix):
-    return prefix[:4] == b"8BPS"
+    return prefix[:4] == "8BPS"
 
 ##
 # Image plugin for Photoshop images.
@@ -55,15 +57,15 @@ class PsdImageFile(ImageFile.ImageFile):
     format_description = "Adobe Photoshop"
 
     def _open(self):
-        
+
         read = self.fp.read
 
         #
         # header
 
         s = read(26)
-        if s[:4] != b"8BPS" or i16(s[4:]) != 1:
-            raise SyntaxError("not a PSD file")
+        if s[:4] != "8BPS" or i16(s[4:]) != 1:
+            raise SyntaxError, "not a PSD file"
 
         psd_bits = i16(s[22:])
         psd_channels = i16(s[12:])
@@ -72,7 +74,7 @@ class PsdImageFile(ImageFile.ImageFile):
         mode, channels = MODES[(psd_mode, psd_bits)]
 
         if channels > psd_channels:
-            raise IOError("not enough channels")
+            raise IOError, "not enough channels"
 
         self.mode = mode
         self.size = i32(s[18:]), i32(s[14:])
@@ -98,7 +100,7 @@ class PsdImageFile(ImageFile.ImageFile):
             while self.fp.tell() < end:
                 signature = read(4)
                 id = i16(read(2))
-                name = read(i8(read(1)))
+                name = read(ord(read(1)))
                 if not (len(name) & 1):
                     read(1) # padding
                 data = read(i32(read(4)))
@@ -144,7 +146,7 @@ class PsdImageFile(ImageFile.ImageFile):
             self.fp = self._fp
             return name, bbox
         except IndexError:
-            raise EOFError("no such layer")
+            raise EOFError, "no such layer"
 
     def tell(self):
         # return layer number (0=image, 1..max=layers)
@@ -163,6 +165,7 @@ def _layerinfo(file):
     # read layerinfo block
     layers = []
     read = file.read
+
     for i in range(abs(i16(read(2)))):
 
         # bounding box
@@ -172,18 +175,12 @@ def _layerinfo(file):
         # image info
         info = []
         mode = []
-        types = list(range(i16(read(2))))
-        if len(types) > 4:
-            continue
-
-        for i in types:
+        for i in range(i16(read(2))):
             type = i16(read(2))
-
             if type == 65535:
                 m = "A"
             else:
-                m = "RGBA"[type]
-
+                m = "RGB"[type]
             mode.append(m)
             size = i32(read(4))
             info.append((m, size))
@@ -217,10 +214,9 @@ def _layerinfo(file):
                 file.seek(length, 1)
             combined += length + 4
 
-            length = i8(read(1))
+            length = ord(read(1))
             if length:
-                # Don't know the proper encoding, Latin-1 should be a good guess
-                name = read(length).decode('latin-1', 'replace')
+                name = read(length)
             combined += length + 1
 
         file.seek(size - combined, 1)

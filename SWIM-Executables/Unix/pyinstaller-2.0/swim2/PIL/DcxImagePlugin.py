@@ -23,13 +23,14 @@
 
 __version__ = "0.2"
 
-from PIL import Image, _binary
+import Image
 
-from PIL.PcxImagePlugin import PcxImageFile
+from PcxImagePlugin import PcxImageFile
 
 MAGIC = 0x3ADE68B1 # QUIZ: what's this value, then?
 
-i32 = _binary.i32le
+def i32(c):
+    return ord(c[0]) + (ord(c[1])<<8) + (ord(c[2])<<16) + (ord(c[3])<<24)
 
 def _accept(prefix):
     return i32(prefix) == MAGIC
@@ -47,7 +48,7 @@ class DcxImageFile(PcxImageFile):
         # Header
         s = self.fp.read(4)
         if i32(s) != MAGIC:
-            raise SyntaxError("not a DCX file")
+            raise SyntaxError, "not a DCX file"
 
         # Component directory
         self._offset = []

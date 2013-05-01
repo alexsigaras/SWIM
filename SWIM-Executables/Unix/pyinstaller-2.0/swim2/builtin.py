@@ -204,7 +204,7 @@ def builtin_pdf(expr):
             f.write(c)
             if not f.close():
         #render.render(c, expr[1])
-                os.system("python render.py " + random_name + " " + expr[1])
+                os.system("python ./render.py " + random_name + " " + expr[1])
 
     except:
         print("Mismatch grammar for pdf output!")

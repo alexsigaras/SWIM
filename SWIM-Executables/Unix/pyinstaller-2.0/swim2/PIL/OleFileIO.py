@@ -36,21 +36,17 @@
 # See the README file for information on usage and redistribution.
 #
 
-from __future__ import print_function
-
-import io
-import sys
-from PIL import _binary
-
-if str is not bytes:
-    long = int
-
-i8 = _binary.i8
-i16 = _binary.i16le
-i32 = _binary.i32le
+import string, StringIO
 
 
-MAGIC = b'\320\317\021\340\241\261\032\341'
+def i16(c, o = 0):
+    return ord(c[o])+(ord(c[o+1])<<8)
+
+def i32(c, o = 0):
+    return ord(c[o])+(ord(c[o+1])<<8)+(ord(c[o+2])<<16)+(ord(c[o+3])<<24)
+
+
+MAGIC = '\320\317\021\340\241\261\032\341'
 
 #
 # --------------------------------------------------------------------
@@ -69,7 +65,7 @@ VT_VECTOR=0x1000;
 # map property id to name (for debugging purposes)
 
 VT = {}
-for k, v in list(vars().items()):
+for k, v in vars().items():
     if k[:3] == "VT_":
         VT[v] = k
 
@@ -83,7 +79,7 @@ WORD_CLSID = "00020900-0000-0000-C000-000000000046"
 #
 # --------------------------------------------------------------------
 
-class _OleStream(io.BytesIO):
+class _OleStream(StringIO.StringIO):
 
     """OLE2 Stream
 
@@ -109,11 +105,11 @@ class _OleStream(io.BytesIO):
             data.append(fp.read(sectorsize))
             sect = fat[sect]
 
-        data = b"".join(data)
+        data = string.join(data, "")
 
         # print len(data), size
 
-        io.BytesIO.__init__(self, data[:size])
+        StringIO.StringIO.__init__(self, data[:size])
 
 #
 # --------------------------------------------------------------------
@@ -177,7 +173,7 @@ class _OleDirectoryEntry:
                 if right != -1: # 0xFFFFFFFFL:
                     # and then back to the left
                     sid = right
-                    while True:
+                    while 1:
                         left, right, child = sidlist[sid][4]
                         if left == -1: # 0xFFFFFFFFL:
                             break
@@ -185,7 +181,7 @@ class _OleDirectoryEntry:
                         sid = left
                 else:
                     # couldn't move right; move up instead
-                    while True:
+                    while 1:
                         ptr = stack[-1]
                         del stack[-1]
                         left, right, child = sidlist[ptr][4]
@@ -212,12 +208,12 @@ class _OleDirectoryEntry:
         TYPES = ["(invalid)", "(storage)", "(stream)", "(lockbytes)",
                  "(property)", "(root)"]
 
-        print(" "*tab + repr(self.name), TYPES[self.type], end=' ')
+        print " "*tab + repr(self.name), TYPES[self.type],
         if self.type in (2, 5):
-            print(self.size, "bytes", end=' ')
-        print()
+            print self.size, "bytes",
+        print
         if self.type in (1, 5) and self.clsid:
-            print(" "*tab + "{%s}" % self.clsid)
+            print " "*tab + "{%s}" % self.clsid
 
         for kid in self.kids:
             kid.dump(tab + 2)
@@ -269,7 +265,7 @@ class OleFileIO:
     def open(self, filename):
         """Open an OLE2 file"""
 
-        if isinstance(filename, str):
+        if type(filename) == type(""):
             self.fp = open(filename, "rb")
         else:
             self.fp = filename
@@ -277,7 +273,7 @@ class OleFileIO:
         header = self.fp.read(512)
 
         if len(header) != 512 or header[:8] != MAGIC:
-            raise IOError("not an OLE2 structured storage file")
+            raise IOError, "not an OLE2 structured storage file"
 
         # file clsid (probably never used, so we don't store it)
         clsid = self._clsid(header[8:24])
@@ -311,7 +307,7 @@ class OleFileIO:
             if ix == -2 or ix == -1: # ix == 0xFFFFFFFEL or ix == 0xFFFFFFFFL:
                 break
             s = self.getsect(ix)
-            fat = fat + [i32(s, i) for i in range(0, len(s), 4)]
+            fat = fat + map(lambda i, s=s: i32(s, i), range(0, len(s), 4))
         self.fat = fat
 
     def loadminifat(self):
@@ -320,7 +316,7 @@ class OleFileIO:
 
         s = self._open(self.minifatsect).read()
 
-        self.minifat = [i32(s, i) for i in range(0, len(s), 4)]
+        self.minifat = map(lambda i, s=s: i32(s, i), range(0, len(s), 4))
 
     def getsect(self, sect):
         # Read given sector
@@ -331,12 +327,9 @@ class OleFileIO:
     def _unicode(self, s):
         # Map unicode string to Latin 1
 
-        if bytes is str:
-            # Old version tried to produce a Latin-1 str
-            return s.decode('utf-16').encode('latin-1', 'replace')
-        else:
-            # Provide actual Unicode string
-            return s.decode('utf-16')
+        # FIXME: some day, Python will provide an official way to handle
+        # Unicode strings, but until then, this will have to do...
+        return filter(ord, s)
 
     def loaddirectory(self, sect):
         # Load the directory.  The directory is stored in a standard
@@ -347,11 +340,11 @@ class OleFileIO:
 
         # create list of sid entries
         self.sidlist = []
-        while True:
+        while 1:
             entry = fp.read(128)
             if not entry:
                 break
-            type = i8(entry[66])
+            type = ord(entry[66])
             name = self._unicode(entry[0:0+i16(entry, 64)])
             ptrs = i32(entry, 68), i32(entry, 72), i32(entry, 76)
             sect, size = i32(entry, 116), i32(entry, 120)
@@ -371,7 +364,7 @@ class OleFileIO:
             return ""
         return (("%08X-%04X-%04X-%02X%02X-" + "%02X" * 6) %
                 ((i32(clsid, 0), i16(clsid, 4), i16(clsid, 6)) +
-                tuple(map(i8, clsid[8:16]))))
+                tuple(map(ord, clsid[8:16]))))
 
     def _list(self, files, prefix, node):
         # listdir helper
@@ -392,7 +385,7 @@ class OleFileIO:
                 if kid.name == name:
                     break
             else:
-                raise IOError("file not found")
+                raise IOError, "file not found"
             node = kid
         return node.sid
 
@@ -430,7 +423,7 @@ class OleFileIO:
         slot = self._find(filename)
         name, type, sect, size, sids, clsid = self.sidlist[slot]
         if type != 2:
-            raise IOError("this file is not a stream")
+            raise IOError, "this file is not a stream"
         return self._open(sect, size)
 
     ##
@@ -487,9 +480,9 @@ class OleFileIO:
                 value = long(i32(s, offset+4)) + (long(i32(s, offset+8))<<32)
                 # FIXME: this is a 64-bit int: "number of 100ns periods
                 # since Jan 1,1601".  Should map this to Python time
-                value = value // 10000000 # seconds
+                value = value / 10000000L # seconds
             elif type == VT_UI1:
-                value = i8(s[offset+4])
+                value = ord(s[offset+4])
             elif type == VT_CLSID:
                 value = self._clsid(s[offset+4:offset+20])
             elif type == VT_CF:
@@ -519,16 +512,17 @@ if __name__ == "__main__":
     for file in sys.argv[1:]:
         try:
             ole = OleFileIO(file)
-            print("-" * 68)
-            print(file)
-            print("-" * 68)
+            print "-" * 68
+            print file
+            print "-" * 68
             ole.dumpdirectory()
             for file in ole.listdir():
                 if file[-1][0] == "\005":
-                    print(file)
+                    print file
                     props = ole.getproperties(file)
-                    props = sorted(props.items())
+                    props = props.items()
+                    props.sort()
                     for k, v in props:
-                        print("   ", k, v)
-        except IOError as v:
-            print("***", "cannot read", file, "-", v)
+                        print "   ", k, v
+        except IOError, v:
+            print "***", "cannot read", file, "-", v

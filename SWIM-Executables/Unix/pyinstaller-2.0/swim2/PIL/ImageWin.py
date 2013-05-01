@@ -17,8 +17,7 @@
 # See the README file for information on usage and redistribution.
 #
 
-import warnings
-from PIL import Image
+import Image
 
 ##
 # The <b>ImageWin</b> module contains support to create and display
@@ -152,40 +151,22 @@ class Dib:
             self.image.paste(im.im)
 
     ##
-    # Load display memory contents from byte data.
+    # Load display memory contents from string buffer.
     #
-    # @param buffer A buffer containing display data (usually
-    #     data returned from <b>tobytes</b>)
+    # @param buffer A string buffer containing display data (usually
+    #     data returned from <b>tostring</b>)
 
-    def frombytes(self, buffer):
-        return self.image.frombytes(buffer)
+    def fromstring(self, buffer):
+        return self.image.fromstring(buffer)
 
     ##
-    # Copy display memory contents to bytes object.
+    # Copy display memory contents to string buffer.
     #
-    # @return A bytes object containing display data.
-
-    def tobytes(self):
-        return self.image.tobytes()
-
-    ##
-    # Deprecated aliases to frombytes & tobytes.
-
-    def fromstring(self, *args, **kw):
-        warnings.warn(
-            'fromstring() is deprecated. Please call frombytes() instead.',
-            DeprecationWarning,
-            stacklevel=2
-        )
-        return self.frombytes(*args, **kw)
+    # @return A string buffer containing display data.
 
     def tostring(self):
-        warnings.warn(
-            'tostring() is deprecated. Please call tobytes() instead.',
-            DeprecationWarning,
-            stacklevel=2
-        )
-        return self.tobytes()
+        return self.image.tostring()
+
 
 ##
 # Create a Window with the given title size.
@@ -198,7 +179,7 @@ class Window:
             )
 
     def __dispatcher(self, action, *args):
-        return getattr(self, "ui_handle_" + action)(*args)
+        return apply(getattr(self, "ui_handle_" + action), args)
 
     def ui_handle_clear(self, dc, x0, y0, x1, y1):
         pass

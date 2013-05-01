@@ -21,22 +21,22 @@
 
 __version__ = "0.6"
 
-import re
-from PIL import Image, ImageFile
+import re, string
+import Image, ImageFile
 
 # XBM header
 xbm_head = re.compile(
-    b"\s*#define[ \t]+[^_]*_width[ \t]+(?P<width>[0-9]+)[\r\n]+"
-    b"#define[ \t]+[^_]*_height[ \t]+(?P<height>[0-9]+)[\r\n]+"
-    b"(?P<hotspot>"
-    b"#define[ \t]+[^_]*_x_hot[ \t]+(?P<xhot>[0-9]+)[\r\n]+"
-    b"#define[ \t]+[^_]*_y_hot[ \t]+(?P<yhot>[0-9]+)[\r\n]+"
-    b")?"
-    b"[\\000-\\377]*_bits\\[\\]"
+    "\s*#define[ \t]+[^_]*_width[ \t]+(?P<width>[0-9]+)[\r\n]+"
+    "#define[ \t]+[^_]*_height[ \t]+(?P<height>[0-9]+)[\r\n]+"
+    "(?P<hotspot>"
+    "#define[ \t]+[^_]*_x_hot[ \t]+(?P<xhot>[0-9]+)[\r\n]+"
+    "#define[ \t]+[^_]*_y_hot[ \t]+(?P<yhot>[0-9]+)[\r\n]+"
+    ")?"
+    "[\\000-\\377]*_bits\\[\\]"
 )
 
 def _accept(prefix):
-    return prefix.lstrip()[:7] == b"#define"
+    return string.lstrip(prefix)[:7] == "#define"
 
 ##
 # Image plugin for X11 bitmaps.
@@ -69,21 +69,21 @@ class XbmImageFile(ImageFile.ImageFile):
 def _save(im, fp, filename):
 
     if im.mode != "1":
-        raise IOError("cannot write mode %s as XBM" % im.mode)
+        raise IOError, "cannot write mode %s as XBM" % im.mode
 
-    fp.write(("#define im_width %d\n" % im.size[0]).encode('ascii'))
-    fp.write(("#define im_height %d\n" % im.size[1]).encode('ascii'))
+    fp.write("#define im_width %d\n" % im.size[0])
+    fp.write("#define im_height %d\n" % im.size[1])
 
     hotspot = im.encoderinfo.get("hotspot")
     if hotspot:
-        fp.write(("#define im_x_hot %d\n" % hotspot[0]).encode('ascii'))
-        fp.write(("#define im_y_hot %d\n" % hotspot[1]).encode('ascii'))
+        fp.write("#define im_x_hot %d\n" % hotspot[0])
+        fp.write("#define im_y_hot %d\n" % hotspot[1])
 
-    fp.write(b"static char im_bits[] = {\n")
+    fp.write("static char im_bits[] = {\n")
 
     ImageFile._save(im, fp, [("xbm", (0,0)+im.size, 0, None)])
 
-    fp.write(b"};\n")
+    fp.write("};\n")
 
 
 Image.register_open("XBM", XbmImageFile, _accept)

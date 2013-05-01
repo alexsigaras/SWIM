@@ -14,7 +14,7 @@
 # See the README file for information on usage and redistribution.
 #
 
-from PIL import Image
+import Image
 
 ##
 # Path wrapper.

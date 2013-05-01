@@ -15,20 +15,13 @@
 # See the README file for information on usage and redistribution.
 #
 
-from PIL import Image
+import Image
 import _imagingmath
-import sys
-
-try:
-    import builtins
-except ImportError:
-    import __builtin__
-    builtins = __builtin__
 
 VERBOSE = 0
 
 def _isconstant(v):
-    return isinstance(v, int) or isinstance(v, float)
+    return isinstance(v, type(0)) or isinstance(v, type(0.0))
 
 class _Operand:
     # wraps an image operand, providing standard operators
@@ -45,7 +38,7 @@ class _Operand:
             elif im1.im.mode in ("I", "F"):
                 return im1.im
             else:
-                raise ValueError("unsupported mode: %s" % im1.im.mode)
+                raise ValueError, "unsupported mode: %s" % im1.im.mode
         else:
             # argument was a constant
             if _isconstant(im1) and self.im.mode in ("1", "L", "I"):
@@ -62,7 +55,7 @@ class _Operand:
             try:
                 op = getattr(_imagingmath, op+"_"+im1.mode)
             except AttributeError:
-                raise TypeError("bad operand type for '%s'" % op)
+                raise TypeError, "bad operand type for '%s'" % op
             _imagingmath.unop(op, out.im.id, im1.im.id)
         else:
             # binary operation
@@ -72,7 +65,7 @@ class _Operand:
                 if im1.mode != "F": im1 = im1.convert("F")
                 if im2.mode != "F": im2 = im2.convert("F")
                 if im1.mode != im2.mode:
-                    raise ValueError("mode mismatch")
+                    raise ValueError, "mode mismatch"
             if im1.size != im2.size:
                 # crop both arguments to a common size
                 size = (min(im1.size[0], im2.size[0]),
@@ -86,20 +79,14 @@ class _Operand:
             try:
                 op = getattr(_imagingmath, op+"_"+im1.mode)
             except AttributeError:
-                raise TypeError("bad operand type for '%s'" % op)
+                raise TypeError, "bad operand type for '%s'" % op
             _imagingmath.binop(op, out.im.id, im1.im.id, im2.im.id)
         return _Operand(out)
 
     # unary operators
-    def __bool__(self):
+    def __nonzero__(self):
         # an image is "true" if it contains at least one non-zero pixel
         return self.im.getbbox() is not None
-
-    if bytes is str:
-        # Provide __nonzero__ for pre-Py3k
-        __nonzero__ = __bool__
-        del __bool__
-
     def __abs__(self):
         return self.apply("abs", self)
     def __pos__(self):
@@ -120,9 +107,9 @@ class _Operand:
         return self.apply("mul", self, other)
     def __rmul__(self, other):
         return self.apply("mul", other, self)
-    def __truediv__(self, other):
+    def __div__(self, other):
         return self.apply("div", self, other)
-    def __rtruediv__(self, other):
+    def __rdiv__(self, other):
         return self.apply("div", other, self)
     def __mod__(self, other):
         return self.apply("mod", self, other)
@@ -132,13 +119,6 @@ class _Operand:
         return self.apply("pow", self, other)
     def __rpow__(self, other):
         return self.apply("pow", other, self)
-
-    if bytes is str:
-        # Provide __div__ and __rdiv__ for pre-Py3k
-        __div__ = __truediv__
-        __rdiv__ = __rtruediv__
-        del __truediv__
-        del __rtruediv__
 
     # bitwise
     def __invert__(self):
@@ -195,7 +175,7 @@ def imagemath_convert(self, mode):
     return _Operand(self.im.convert(mode))
 
 ops = {}
-for k, v in list(globals().items()):
+for k, v in globals().items():
     if k[:10] == "imagemath_":
         ops[k[10:]] = v
 
@@ -215,11 +195,12 @@ def eval(expression, _dict={}, **kw):
     args = ops.copy()
     args.update(_dict)
     args.update(kw)
-    for k, v in list(args.items()):
+    for k, v in args.items():
         if hasattr(v, "im"):
             args[k] = _Operand(v)
 
-    out = builtins.eval(expression, args)
+    import __builtin__
+    out =__builtin__.eval(expression, args)
     try:
         return out.im
     except AttributeError:

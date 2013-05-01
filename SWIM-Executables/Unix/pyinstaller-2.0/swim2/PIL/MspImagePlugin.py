@@ -19,16 +19,17 @@
 
 __version__ = "0.1"
 
-from PIL import Image, ImageFile, _binary
+import Image, ImageFile
 
 
 #
 # read MSP files
 
-i16 = _binary.i16le
+def i16(c):
+    return ord(c[0]) + (ord(c[1])<<8)
 
 def _accept(prefix):
-    return prefix[:4] in [b"DanM", b"LinS"]
+    return prefix[:4] in ["DanM", "LinS"]
 
 ##
 # Image plugin for Windows MSP images.  This plugin supports both
@@ -43,20 +44,20 @@ class MspImageFile(ImageFile.ImageFile):
 
         # Header
         s = self.fp.read(32)
-        if s[:4] not in [b"DanM", b"LinS"]:
-            raise SyntaxError("not an MSP file")
+        if s[:4] not in ["DanM", "LinS"]:
+            raise SyntaxError, "not an MSP file"
 
         # Header checksum
         sum = 0
         for i in range(0, 32, 2):
             sum = sum ^ i16(s[i:i+2])
         if sum != 0:
-            raise SyntaxError("bad MSP checksum")
+            raise SyntaxError, "bad MSP checksum"
 
         self.mode = "1"
         self.size = i16(s[4:]), i16(s[6:])
 
-        if s[:4] == b"DanM":
+        if s[:4] == "DanM":
             self.tile = [("raw", (0,0)+self.size, 32, ("1", 0, 1))]
         else:
             self.tile = [("msp", (0,0)+self.size, 32+2*self.size[1], None)]
@@ -64,17 +65,18 @@ class MspImageFile(ImageFile.ImageFile):
 #
 # write MSP files (uncompressed only)
 
-o16 = _binary.o16le
+def o16(i):
+    return chr(i&255) + chr(i>>8&255)
 
 def _save(im, fp, filename):
 
     if im.mode != "1":
-        raise IOError("cannot write mode %s as MSP" % im.mode)
+        raise IOError, "cannot write mode %s as MSP" % im.mode
 
     # create MSP header
     header = [0] * 16
 
-    header[0], header[1] = i16(b"Da"), i16(b"nM") # version 1
+    header[0], header[1] = i16("Da"), i16("nM") # version 1
     header[2], header[3] = im.size
     header[4], header[5] = 1, 1
     header[6], header[7] = 1, 1

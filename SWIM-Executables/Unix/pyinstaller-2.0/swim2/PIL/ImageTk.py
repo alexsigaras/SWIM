@@ -25,12 +25,7 @@
 # See the README file for information on usage and redistribution.
 #
 
-try:
-    import tkinter
-except ImportError:
-    import Tkinter as tkinter
-
-from PIL import Image
+import Tkinter, Image
 
 ##
 # The <b>ImageTk</b> module contains support to create and modify
@@ -50,9 +45,9 @@ def _pilbitmap_check():
     if _pilbitmap_ok is None:
         try:
             im = Image.new("1", (1,1))
-            tkinter.BitmapImage(data="PIL:%d" % im.im.id)
+            Tkinter.BitmapImage(data="PIL:%d" % im.im.id)
             _pilbitmap_ok = 1
-        except tkinter.TclError:
+        except Tkinter.TclError:
             _pilbitmap_ok = 0
     return _pilbitmap_ok
 
@@ -86,12 +81,12 @@ class PhotoImage:
 
         # Tk compatibility: file or data
         if image is None:
-            if "file" in kw:
+            if kw.has_key("file"):
                 image = Image.open(kw["file"])
                 del kw["file"]
-            elif "data" in kw:
-                from io import BytesIO
-                image = Image.open(BytesIO(kw["data"]))
+            elif kw.has_key("data"):
+                from StringIO import StringIO
+                image = Image.open(StringIO(kw["data"]))
                 del kw["data"]
 
         if hasattr(image, "mode") and hasattr(image, "size"):
@@ -115,7 +110,7 @@ class PhotoImage:
 
         self.__mode = mode
         self.__size = size
-        self.__photo = tkinter.PhotoImage(**kw)
+        self.__photo = apply(Tkinter.PhotoImage, (), kw)
         self.tk = self.__photo.tk
         if image:
             self.paste(image)
@@ -180,7 +175,7 @@ class PhotoImage:
 
         try:
             tk.call("PyImagingPhoto", self.__photo, block.id)
-        except tkinter.TclError as v:
+        except Tkinter.TclError, v:
             # activate Tkinter hook
             try:
                 import _imagingtk
@@ -189,7 +184,7 @@ class PhotoImage:
                 except AttributeError:
                     _imagingtk.tkinit(id(tk), 0)
                 tk.call("PyImagingPhoto", self.__photo, block.id)
-            except (ImportError, AttributeError, tkinter.TclError):
+            except (ImportError, AttributeError, Tkinter.TclError):
                 raise # configuration problem; cannot attach to Tkinter
 
 # --------------------------------------------------------------------
@@ -218,12 +213,12 @@ class BitmapImage:
 
         # Tk compatibility: file or data
         if image is None:
-            if "file" in kw:
+            if kw.has_key("file"):
                 image = Image.open(kw["file"])
                 del kw["file"]
-            elif "data" in kw:
-                from io import BytesIO
-                image = Image.open(BytesIO(kw["data"]))
+            elif kw.has_key("data"):
+                from StringIO import StringIO
+                image = Image.open(StringIO(kw["data"]))
                 del kw["data"]
 
         self.__mode = image.mode
@@ -237,7 +232,7 @@ class BitmapImage:
         else:
             # slow but safe way
             kw["data"] = image.tobitmap()
-        self.__photo = tkinter.BitmapImage(**kw)
+        self.__photo = apply(Tkinter.BitmapImage, (), kw)
 
     def __del__(self):
         name = self.__photo.name
@@ -284,18 +279,18 @@ def getimage(photo):
 
 def _show(image, title):
 
-    class UI(tkinter.Label):
+    class UI(Tkinter.Label):
         def __init__(self, master, im):
             if im.mode == "1":
                 self.image = BitmapImage(im, foreground="white", master=master)
             else:
                 self.image = PhotoImage(im, master=master)
-            tkinter.Label.__init__(self, master, image=self.image,
+            Tkinter.Label.__init__(self, master, image=self.image,
                 bg="black", bd=0)
 
-    if not tkinter._default_root:
-        raise IOError("tkinter not initialized")
-    top = tkinter.Toplevel()
+    if not Tkinter._default_root:
+        raise IOError, "tkinter not initialized"
+    top = Tkinter.Toplevel()
     if title:
         top.title(title)
     UI(top, image).pack()

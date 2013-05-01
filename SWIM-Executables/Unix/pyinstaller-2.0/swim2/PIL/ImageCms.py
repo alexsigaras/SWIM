@@ -15,8 +15,6 @@
 # below for the original description.
 #
 
-from __future__ import print_function
-
 DESCRIPTION = """
 pyCMS
 
@@ -81,7 +79,7 @@ VERSION = "0.1.0 pil"
 
 # --------------------------------------------------------------------.
 
-from PIL import Image
+import Image
 import _imagingcms
 
 core = _imagingcms
@@ -124,7 +122,7 @@ FLAGS = {
 
 _MAX_FLAG = 0
 for flag in FLAGS.values():
-    if isinstance(flag, int):
+    if isinstance(flag, type(0)):
         _MAX_FLAG = _MAX_FLAG | flag
 
 # --------------------------------------------------------------------.
@@ -142,7 +140,7 @@ class ImageCmsProfile:
         if Image.isStringType(profile):
             self._set(core.profile_open(profile), profile)
         elif hasattr(profile, "read"):
-            self._set(core.profile_frombytes(profile.read()))
+            self._set(core.profile_fromstring(profile.read()))
         else:
             self._set(profile) # assume it's already a profile
 
@@ -207,7 +205,7 @@ class ImageCmsTransform(Image.ImagePointHandler):
 def get_display_profile(handle=None):
     import sys
     if sys.platform == "win32":
-        from PIL import ImageWin
+        import ImageWin
         if isinstance(handle, ImageWin.HDC):
             profile = core.get_display_profile_win32(handle, 1)
         else:
@@ -290,10 +288,10 @@ def profileToProfile(im, inputProfile, outputProfile, renderingIntent=INTENT_PER
     if outputMode is None:
         outputMode = im.mode
 
-    if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <=3):
+    if type(renderingIntent) != type(1) or not (0 <= renderingIntent <=3):
         raise PyCMSError("renderingIntent must be an integer between 0 and 3")
 
-    if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
+    if type(flags) != type(1) or not (0 <= flags <= _MAX_FLAG):
         raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
 
     try:
@@ -309,7 +307,7 @@ def profileToProfile(im, inputProfile, outputProfile, renderingIntent=INTENT_PER
             imOut = None
         else:
             imOut = transform.apply(im)
-    except (IOError, TypeError, ValueError) as v:
+    except (IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
     return imOut
@@ -336,7 +334,7 @@ def getOpenProfile(profileFilename):
 
     try:
         return ImageCmsProfile(profileFilename)
-    except (IOError, TypeError, ValueError) as v:
+    except (IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -398,10 +396,10 @@ def buildTransform(inputProfile, outputProfile, inMode, outMode, renderingIntent
 
     """
 
-    if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <=3):
+    if type(renderingIntent) != type(1) or not (0 <= renderingIntent <=3):
         raise PyCMSError("renderingIntent must be an integer between 0 and 3")
 
-    if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
+    if type(flags) != type(1) or not (0 <= flags <= _MAX_FLAG):
         raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
 
     try:
@@ -410,7 +408,7 @@ def buildTransform(inputProfile, outputProfile, inMode, outMode, renderingIntent
         if not isinstance(outputProfile, ImageCmsProfile):
             outputProfile = ImageCmsProfile(outputProfile)
         return ImageCmsTransform(inputProfile, outputProfile, inMode, outMode, renderingIntent, flags=flags)
-    except (IOError, TypeError, ValueError) as v:
+    except (IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -489,10 +487,10 @@ def buildProofTransform(inputProfile, outputProfile, proofProfile, inMode, outMo
 
     """
 
-    if not isinstance(renderingIntent, int) or not (0 <= renderingIntent <=3):
+    if type(renderingIntent) != type(1) or not (0 <= renderingIntent <=3):
         raise PyCMSError("renderingIntent must be an integer between 0 and 3")
 
-    if not isinstance(flags, int) or not (0 <= flags <= _MAX_FLAG):
+    if type(flags) != type(1) or not (0 <= flags <= _MAX_FLAG):
         raise PyCMSError("flags must be an integer between 0 and %s" + _MAX_FLAG)
 
     try:
@@ -503,7 +501,7 @@ def buildProofTransform(inputProfile, outputProfile, proofProfile, inMode, outMo
         if not isinstance(proofProfile, ImageCmsProfile):
             proofProfile = ImageCmsProfile(proofProfile)
         return ImageCmsTransform(inputProfile, outputProfile, inMode, outMode, renderingIntent, proofProfile, proofRenderingIntent, flags)
-    except (IOError, TypeError, ValueError) as v:
+    except (IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 buildTransformFromOpenProfiles = buildTransform
@@ -559,7 +557,7 @@ def applyTransform(im, transform, inPlace=0):
             imOut = None
         else:
             imOut = transform.apply(im)
-    except (TypeError, ValueError) as v:
+    except (TypeError, ValueError), v:
         raise PyCMSError(v)
 
     return imOut
@@ -597,14 +595,14 @@ def createProfile(colorSpace, colorTemp=-1):
         raise PyCMSError("Color space not supported for on-the-fly profile creation (%s)" % colorSpace)
 
     if colorSpace == "LAB":
-        if isinstance(colorTemp, float):
+        if type(colorTemp) == type(5000.0):
             colorTemp = int(colorTemp + 0.5)
-        if not isinstance(colorTemp, int):
+        if type (colorTemp) != type (5000):
             raise PyCMSError("Color temperature must be a positive integer, \"%s\" not valid" % colorTemp)
 
     try:
         return core.createProfile(colorSpace, colorTemp)
-    except (TypeError, ValueError) as v:
+    except (TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -635,7 +633,7 @@ def getProfileName(profile):
         if not isinstance(profile, ImageCmsProfile):
             profile = ImageCmsProfile(profile)
         return profile.profile.product_name + "\n"
-    except (AttributeError, IOError, TypeError, ValueError) as v:
+    except (AttributeError, IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -667,7 +665,7 @@ def getProfileInfo(profile):
             profile = ImageCmsProfile(profile)
         # add an extra newline to preserve pyCMS compatibility
         return profile.product_info + "\n"
-    except (AttributeError, IOError, TypeError, ValueError) as v:
+    except (AttributeError, IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -705,7 +703,7 @@ def getDefaultIntent(profile):
         if not isinstance(profile, ImageCmsProfile):
             profile = ImageCmsProfile(profile)
         return profile.profile.rendering_intent
-    except (AttributeError, IOError, TypeError, ValueError) as v:
+    except (AttributeError, IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -754,7 +752,7 @@ def isIntentSupported(profile, intent, direction):
             return 1
         else:
             return -1
-    except (AttributeError, IOError, TypeError, ValueError) as v:
+    except (AttributeError, IOError, TypeError, ValueError), v:
         raise PyCMSError(v)
 
 ##
@@ -771,17 +769,18 @@ def versions():
 if __name__ == "__main__":
     # create a cheap manual from the __doc__ strings for the functions above
 
-    from PIL import ImageCms
-    print(__doc__)
+    import ImageCms
+    import string
+    print __doc__
 
     for f in dir(pyCMS):
-        print("="*80)
-        print("%s" %f)
+        print "="*80
+        print "%s" %f
 
         try:
             exec ("doc = ImageCms.%s.__doc__" %(f))
-            if "pyCMS" in doc:
+            if string.find(doc, "pyCMS") >= 0:
                 # so we don't get the __doc__ string for imported modules
-                print(doc)
+                print doc
         except AttributeError:
             pass

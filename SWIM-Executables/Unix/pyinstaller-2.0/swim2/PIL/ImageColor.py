@@ -17,9 +17,16 @@
 # See the README file for information on usage and redistribution.
 #
 
-from PIL import Image
-import re
+import Image
+import re, string
 
+try:
+    x = int("a", 16)
+except TypeError:
+    # python 1.5.2 doesn't support int(x,b)
+    str2int = string.atoi
+else:
+    str2int = int
 
 ##
 # Convert color string to RGB tuple.
@@ -36,12 +43,12 @@ def getrgb(color):
     except KeyError:
         try:
             # fall back on case-insensitive lookup
-            rgb = colormap[color.lower()]
+            rgb = colormap[string.lower(color)]
         except KeyError:
             rgb = None
     # found color in cache
     if rgb:
-        if isinstance(rgb, tuple):
+        if isinstance(rgb, type(())):
             return rgb
         colormap[color] = rgb = getrgb(rgb)
         return rgb
@@ -49,30 +56,30 @@ def getrgb(color):
     m = re.match("#\w\w\w$", color)
     if m:
         return (
-            int(color[1]*2, 16),
-            int(color[2]*2, 16),
-            int(color[3]*2, 16)
+            str2int(color[1]*2, 16),
+            str2int(color[2]*2, 16),
+            str2int(color[3]*2, 16)
             )
     m = re.match("#\w\w\w\w\w\w$", color)
     if m:
         return (
-            int(color[1:3], 16),
-            int(color[3:5], 16),
-            int(color[5:7], 16)
+            str2int(color[1:3], 16),
+            str2int(color[3:5], 16),
+            str2int(color[5:7], 16)
             )
     m = re.match("rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$", color)
     if m:
         return (
-            int(m.group(1)),
-            int(m.group(2)),
-            int(m.group(3))
+            str2int(m.group(1)),
+            str2int(m.group(2)),
+            str2int(m.group(3))
             )
     m = re.match("rgb\(\s*(\d+)%\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)$", color)
     if m:
         return (
-            int((int(m.group(1)) * 255) / 100.0 + 0.5),
-            int((int(m.group(2)) * 255) / 100.0 + 0.5),
-            int((int(m.group(3)) * 255) / 100.0 + 0.5)
+            int((str2int(m.group(1)) * 255) / 100.0 + 0.5),
+            int((str2int(m.group(2)) * 255) / 100.0 + 0.5),
+            int((str2int(m.group(3)) * 255) / 100.0 + 0.5)
             )
     m = re.match("hsl\(\s*(\d+)\s*,\s*(\d+)%\s*,\s*(\d+)%\s*\)$", color)
     if m:
@@ -99,7 +106,7 @@ def getcolor(color, mode):
         return r, g, b, 255
     if Image.getmodebase(mode) == "L":
         r, g, b = color
-        return (r*299 + g*587 + b*114)//1000
+        return (r*299 + g*587 + b*114)/1000
     return color
 
 colormap = {
