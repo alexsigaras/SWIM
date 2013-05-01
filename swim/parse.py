@@ -1237,7 +1237,16 @@ def p_expression_string(t):
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self, id = None, object_name = None):
         try:
+            # identifiers.scope_in()
+            # identifiers["Str"].children[0].do(id = id, object_name = object_name)    
+            # class_attributes = identifiers.getAllItems()
+            # identifiers.scope_out()
+            # identifiers[self.children[0]] = Namespace(class_attributes)
+            # identifiers[self.children[0]]["val"] = element                     
+            # # element = self.children.do(id = id, object_name = object_name)
+            # # return element
             return self.children
+            
         except:
             print("Error in string expressions")
             print traceback.format_exc()

@@ -1,0 +1,14 @@
+aho = *"http://www.cs.columbia.edu/~aho/cs4115"*;
+a = aho<"a">;
+for each item in a do
+	itemtostring = item.ToString();
+	if (itemtostring.contains("Sample Final")) do
+	list = itemtostring.split("=");
+		for each j in list do
+			if (j.contains("lectures")) do
+				print(j);
+			end
+		end
+	#print(itemtostring);
+	end
+end
