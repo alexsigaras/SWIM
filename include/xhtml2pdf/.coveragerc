@@ -1,9 +1,0 @@
-[run]
-branch = True
-source =
-    xhtml2pdf
-omit =
-    /usr/share/*
-
-[report]
-precision = 2

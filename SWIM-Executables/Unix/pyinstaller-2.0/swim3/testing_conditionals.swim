@@ -1,0 +1,5 @@
+print('TESTING CONDITIONALS');
+
+if(true) do x=0; else print('###FAILED ON : Simple If'); end
+if(false) do x=0; elif(true) do x=1; else print('###FAILED ON : Simple If'); end
+if(False) do print("False"); elif(True) do print("true"); end

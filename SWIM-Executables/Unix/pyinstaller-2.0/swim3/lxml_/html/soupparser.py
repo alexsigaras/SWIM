@@ -1,0 +1,1 @@
+../../../../../share/pyshared/lxml/html/soupparser.py
