@@ -774,7 +774,7 @@ def p_expression_function_call(t):
     elif t[1] == "pdf":
         def do(self, id = None, object_name = None):
             try: 
-                return buildtin_pdf(self.children[1].do(id = id, object_name = object_name))
+                return builtin_pdf(self.children[1].do(id = id, object_name = object_name))
             except:
                 print("Error in builtin pdf")
                 print traceback.format_exc()

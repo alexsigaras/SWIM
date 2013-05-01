@@ -607,9 +607,21 @@ def p_statement_for(t):
             if iterable.__doc__.startswith("PyQuery Object"):
                 for temp in iterable:
                     if object_name is not None:
-                        identifiers[object_name][self.children[0]] = iterable(temp)
+                        identifiers.scope_in()
+                        identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                        class_attributes = identifiers.getAllItems()
+                        identifiers.scope_out()
+                        identifiers[object_name][self.children[0]]  = Namespace(class_attributes)                        
+                        identifiers[object_name][self.children[0]]['val'] = iterable(temp)
+                        identifiers[object_name][self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
                     else:
-                        identifiers[self.children[0]] = iterable(temp)
+                        identifiers.scope_in()
+                        identifiers["Url"].children[1].do(id = id, object_name = object_name)    
+                        class_attributes = identifiers.getAllItems()
+                        identifiers.scope_out()
+                        identifiers[self.children[0]]  = Namespace(class_attributes)                        
+                        identifiers[self.children[0]]['val'] = iterable(temp)
+                        identifiers[self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
                     result  = self.children[2].do(id = id, object_name = object_name)
 
                     if isinstance(result, dict):
@@ -689,6 +701,7 @@ def p_statement_class_setAttribute(t):
 
 def p_expression_class_getAttribute(t):
     '''class_getAttribute_expr : ID DOT ID
+                               | string_expr DOT function_call_expr
                                | ID DOT function_call_expr'''
 
     t[0] = Node("classAttribute", [t[1],t[3]], "classAttribute")
@@ -697,6 +710,7 @@ def p_expression_class_getAttribute(t):
         try:
             return identifiers[self.children[0]][self.children[1]]
         except:
+
             try:       
                 return self.children[1].do(object_name = self.children[0])
             except:
@@ -749,18 +763,44 @@ def p_expression_function_call(t):
                     return builtin_print(val) 
                 except:
                     print("Error in builtin print")
+
     elif t[1] == "printErr":
         def do(self, id = None, object_name = None):            
             try:
                 return builtin_print(self.children[1].do(id = id, object_name = object_name)[0], colorCodes['red'])
             except:
                 print("Error in builtin printErr")
+                
     elif t[1] == "pdf":
         def do(self, id = None, object_name = None):
             try: 
-                return buildtin_pdf(self.children[1].do(id = id, object_name = object_name))
+                return builtin_pdf(self.children[1].do(id = id, object_name = object_name))
             except:
                 print("Error in builtin pdf")
+                print traceback.format_exc()
+
+    elif t[1] == "e":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_e()
+            except:
+                print("Error in builtin e")
+                print traceback.format_exc()
+
+    elif t[1] == "pi":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_pi()
+            except:
+                print("Error in builtin pi")
+                print traceback.format_exc()
+
+    elif t[1] == "phi":
+        def do(self, id = None, object_name = None):
+            try:                 
+                return builtin_phi()
+            except:
+                print("Error in builtin phi")
                 print traceback.format_exc()
     elif t[1] == "abs":
         def do(self, id = None, object_name = None):
@@ -800,6 +840,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin sqrt")
                 print traceback.format_exc()
+
     elif t[1] == "log":
         def do(self, id = None, object_name = None):
             try: 
@@ -807,6 +848,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin log")
                 print traceback.format_exc()
+
     elif t[1] == "factorial":
         def do(self, id = None, object_name = None):
             try: 
@@ -814,6 +856,15 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin factorial")
                 print traceback.format_exc()
+
+    elif t[1] == "round":
+        def do(self, id = None, object_name = None):
+            try: 
+                return builtin_round(self.children[1].do(id = id, object_name = object_name)[0])
+            except:
+                print("Error in builtin round")
+                print traceback.format_exc()
+
     elif t[1] == "lower":
         def do(self, id = None, object_name = None):
             try: 
@@ -824,6 +875,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin lowercase")
                 print traceback.format_exc()
+
     elif t[1] == "upper":
         def do(self, id = None, object_name = None):
             try: 
@@ -834,6 +886,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin uppercase")
                 print traceback.format_exc()
+
     elif t[1] == "len":
         def do(self, id = None, object_name = None):
             try: 
@@ -844,6 +897,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin length")
                 print traceback.format_exc()
+
     elif t[1] == "repl":
         def do(self, id = None, object_name = None):
             try: 
@@ -854,6 +908,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin replace")
                 print traceback.format_exc()
+
     elif t[1] == "splt":
         def do(self, id = None, object_name = None):
             try: 
@@ -864,6 +919,7 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin split")
                 print traceback.format_exc()
+
     elif t[1] == "cnt":
         def do(self, id = None, object_name = None):
             try: 
@@ -906,13 +962,35 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin match")
                 print traceback.format_exc()
+    elif t[1] == "match":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_matchall(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin match")
+                print traceback.format_exc()
+    elif t[1] == "attribute":
+        def do(self, id = None, object_name = None):
+            try: 
+                # if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    # print "yes"
+                    return builtin_attrVal(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                # else:
+                #     print ("Invalid type provided")
+            except:
+                print("Error in builtin attribute")
+                print traceback.format_exc()
     elif t[1] == "str":
         def do(self, id = None, object_name = None):
             try: 
-                if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
-                    return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
-                else:
-                    print ("Invalid type provided")
+                # if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
+                #     print("pyquery")
+                # else:
+                return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
+                #     print ("Invalid type provided")
             except:
                 print("Error in builtin ToString")
                 print traceback.format_exc()
@@ -1180,7 +1258,16 @@ def p_expression_string(t):
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self, id = None, object_name = None):
         try:
+            # identifiers.scope_in()
+            # identifiers["Str"].children[0].do(id = id, object_name = object_name)    
+            # class_attributes = identifiers.getAllItems()
+            # identifiers.scope_out()
+            # identifiers[self.children[0]] = Namespace(class_attributes)
+            # identifiers[self.children[0]]["val"] = element                     
+            # # element = self.children.do(id = id, object_name = object_name)
+            # # return element
             return self.children
+            
         except:
             print("Error in string expressions")
             print traceback.format_exc()
@@ -1511,8 +1598,12 @@ def p_select_op_expression(t):
             raw_selector = self.children[1].do(id = id, object_name = object_name)
             selector = stripe_quotation(raw_selector)
             pyqueryObj = self.children[0].do(id = id, object_name = object_name)
-            result = pyqueryObj['val'](selector)
-            result.url = pyqueryObj['url']
+            try:
+                result = pyqueryObj['val'](selector)
+                result.url = pyqueryObj['url']
+            except:
+                result = pyqueryObj(selector)
+                #result.url = pyqueryObj['url']                    
             return result
         except Exception:
             print("Mismatch grammar for parsing!")

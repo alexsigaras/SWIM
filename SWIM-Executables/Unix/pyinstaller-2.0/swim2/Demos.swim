@@ -1,15 +1,100 @@
-// Demo 1
-ny = *"nytimes.com"*;
-print(ny<".story">);
+# // Demo 1
+# print("Demo 1 - NY TIMES");
+# /*
+# 	A simple demo on how to print all the stories from the new york times.
+# */
+# ny = *"nytimes.com"*;
+# print(ny<".story">);
 
 
 // Demo 2
-//websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
-//for each website in websites do print(*website*<".post">); end
+# websites = ["gizmodo.com", "engadget.com", "artechnica.com"];
+# for each website in websites do print(*website*<".post">); end
+
+/*
+Swimco.de
+An example of getting specific tags from the NYTimes website
+and then looping over the results checking if the results
+match the provided regular expression.
+*/
+
+# ny = *"nytimes.com"*;
+# stories = ny<".story">;
+# for each story in stories do
+# 	if story<"title">.ToString().matches("Boston") do
+# 		print(story);
+# 	end
+# end
+
+# gz = *"gizmodo.com"*;
+# stories = gz<".post">;
+
+en = *"engadget.com"*;
+stories = en<".post">;
+i=1;
+for each story in stories do 
+	p = story<"p">;
+	# print(p);
+	ps = p.ToString();
+	# print(ps);
+	if ps.contains("android") do
+		print("Article: ");
+		print(i); i++;
+		print(story);
+		print("\n\n");
+	end
+end
 
 # // Demo 3
+# // Power of our language
 
-// Lambda Fibonacci
-fun fib(n) do
-(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
-end
+# // Simple Fibonacci
+# fun fib(n) do
+#     if(n == 0) do
+#         return 0;
+#     end
+#     if(n == 1) do
+#         return 1;
+#     end
+#     return fib(n-1) + fib(n-2);
+# end
+
+# print("Simple Fibonacci");
+# print(fib(10));
+
+# // Fibonacci 2
+# fun fib1(num) do
+#     return fibHelper(num, 1, 0);
+# end
+
+# fun fibHelper(num, val, prev) do
+#     if(num == 0) do
+#         return prev;
+#     end
+#     if(num == 1) do
+#         return val;
+#     end
+#     return fibHelper((num - 1), (val+prev), val);
+# end
+
+# print("Simple Fibonacci2");
+# print(fib(10));
+
+# // Lambda Fibonacci
+# fun fibl(n) do
+# (lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+# end
+
+# // Fibonacci using golden phi
+# fun fib(n) do return round(phi() ^ n / sqrt(5)); end
+
+# print("Fibonacci Lambda");
+# print(fibl(10));
+
+# // lambda Fib using golden phi
+# fun fiblphi(n) do
+# 	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
+# end
+
+# print("Fibonacci Lambda using phi");
+# print(fiblphi(10));

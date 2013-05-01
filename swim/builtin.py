@@ -28,7 +28,7 @@
 #-----------------------------------------------------------------------------#
 #                     1. Common Library Import                                #
 #-----------------------------------------------------------------------------#
-
+import os, sys, random, string
 # Abstract Syntax Tree
 from AST import Node
 
@@ -47,6 +47,8 @@ import math
 
 # PDF
 from fpdf import fpdf as pdf
+from cookbook import *
+import render
 
 # Error handling
 from exception import *
@@ -168,20 +170,42 @@ def builtin_print(result, color=None):
 #----------------------------------------------------#
 #             4.2  PDF Function                      #
 #----------------------------------------------------#
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for x in range(size))
 
 def builtin_pdf(expr):
     try:
         #print stripe_quotation(t[3][0])
-        f = pdf.FPDF()
-        f.add_page()
-        f.set_font('Arial','B',16)          
-        f.multi_cell(w=200,h=5,txt = stripe_quotation(expr[0])) 
+
+        # f = pdf.FPDF()
+        # f.add_page()
+        # f.set_font('Arial','B',16)          
+        # f.multi_cell(w=200,h=5,txt = stripe_quotation(expr[0])) 
         
-        # for our user test
-        filename = stripe_quotation(self.children.do()[1])
-        filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
-        
-        f.output(os.path.join("..","doc",filename),'F')
+        # # for our user test
+        # filename = stripe_quotation(expr[1]) + '.pdf'
+        # #filename.__doc__
+        # #filename = filename.split('.')[0] + '_' + getpass.getuser() + '.' + filename.split('.')[1]
+        # #f.output(os.path.join("..","pdf",filename),'F')
+        # #print filename
+        # f.output(filename,'F')
+        text = expr[0]
+        try:
+            text = text['val'].html()
+            c = text.encode('utf-8')            
+        except:
+            text = expr[0]
+            c = text
+
+        random_name = id_generator() + ".html"
+
+        with open(random_name, 'w+') as f:
+
+            f.write(c)
+            if not f.close():
+        #render.render(c, expr[1])
+                os.system("python render.py " + random_name + " " + expr[1])
+
     except:
         print("Mismatch grammar for pdf output!")
         raise Exception

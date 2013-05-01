@@ -1,6 +1,6 @@
 # lextab.py. This file automatically created by PLY (version 3.4). Don't edit!
 _tabversion   = '3.4'
-_lextokens    = {'DO': 1, 'ELIF': 1, 'RETURN': 1, 'LSBRACKET': 1, 'LESS_THAN_OR_EQUAL': 1, 'NUMBER': 1, 'SELECTOR': 1, 'LCBRACKET': 1, 'WHILE': 1, 'COLON': 1, 'MULTIPLY': 1, 'END': 1, 'LESS_THAN': 1, 'TRUE': 1, 'MINUS': 1, 'RCBRACKET': 1, 'RPAREN': 1, 'SEMICOLON': 1, 'NOT_EQUALS': 1, 'POW': 1, 'FUN': 1, 'PLUS': 1, 'COMMA': 1, 'STRING2': 1, 'ASSIGN': 1, 'STRING1': 1, 'XOR': 1, 'DIVIDE': 1, 'FOR': 1, 'EQUALS': 1, 'ELSE': 1, 'LPAREN': 1, 'IN': 1, 'GREATER_THAN': 1, 'ID': 1, 'IF': 1, 'AND': 1, 'FALSE': 1, 'GREATER_THAN_OR_EQUAL': 1, 'CLASS': 1, 'BREAK': 1, 'RSBRACKET': 1, 'EACH': 1, 'NOT': 1, 'OR': 1, 'MOD': 1}
+_lextokens    = {'DO': 1, 'ELIF': 1, 'RETURN': 1, 'LSBRACKET': 1, 'LESS_THAN_OR_EQUAL': 1, 'NUMBER': 1, 'SELECTOR': 1, 'LCBRACKET': 1, 'WHILE': 1, 'COLON': 1, 'MULTIPLY': 1, 'END': 1, 'LESS_THAN': 1, 'TRUE': 1, 'MINUS': 1, 'RCBRACKET': 1, 'RPAREN': 1, 'SEMICOLON': 1, 'NOT_EQUALS': 1, 'POW': 1, 'FUN': 1, 'PLUS': 1, 'COMMA': 1, 'STRING2': 1, 'ASSIGN': 1, 'STRING1': 1, 'XOR': 1, 'DIVIDE': 1, 'FOR': 1, 'EQUALS': 1, 'ELSE': 1, 'LPAREN': 1, 'IN': 1, 'GREATER_THAN': 1, 'ID': 1, 'IF': 1, 'AND': 1, 'FALSE': 1, 'GREATER_THAN_OR_EQUAL': 1, 'CLASS': 1, 'RSBRACKET': 1, 'EACH': 1, 'NOT': 1, 'OR': 1, 'MOD': 1}
 _lexreflags   = 0
 _lexliterals  = ''
 _lexstateinfo = {'INITIAL': 'inclusive'}

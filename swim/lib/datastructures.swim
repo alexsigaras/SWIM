@@ -141,8 +141,8 @@ class Url do
 		return str(val);
 	end
 
-	fun attr() do
-		return attribute(val);
+	fun attr(key) do
+		return attribute(val, key);
 	end
 
 	# fun lowercase() do
