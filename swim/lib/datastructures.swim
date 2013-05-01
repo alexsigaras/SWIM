@@ -125,6 +125,10 @@ class Str do
 	fun matches(regex) do
 		return match(val, regex);
 	end
+
+	fun matchall(regex) do
+		return matchall(val, regex);
+	end
 end
 
 class Url do
@@ -135,6 +139,10 @@ class Url do
 
 	fun ToString() do
 		return str(val);
+	end
+
+	fun attr() do
+		return attribute(val);
 	end
 
 	# fun lowercase() do

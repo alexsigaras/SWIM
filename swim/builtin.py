@@ -245,9 +245,20 @@ def builtin_endswith(string, string1):
     except Exception, e:
         print ("Mismatch grammar for ends with")
         raise Exception
-def builtin_matches(string, string1):
+def builtin_matches(string, pattern):
     try:
-        return bool(re.match(string1, string))
+        # return bool(re.match(string1, string))
+
+        # match = re.match(pattern, strin3g)
+        # print match.group()
+        return re.match(pattern, string).group()
+    except Exception, e:
+        print ("Mismatch grammar for ends with")
+        raise Exception
+
+def builtin_matchall(string, pattern):
+    try:
+        return re.findall(pattern, string).group()
     except Exception, e:
         print ("Mismatch grammar for ends with")
         raise Exception
@@ -259,4 +270,12 @@ def builtin_ToString(obj):
         print ("Mismatch grammar for ToString")
         raise Exception
 
+def builtin_attrVal(object, attribute):
+    try:
+        print attribute
+        return object.attr(attribute)
+    except Exception, e:
+        print ("Mismatch grammar for attrVal")
+        raise Exception
+    
 #-----------------------------------------------------------------------------#

@@ -962,6 +962,27 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin match")
                 print traceback.format_exc()
+    elif t[1] == "match":
+        def do(self, id = None, object_name = None):
+            try: 
+                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    return builtin_matchall(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                else:
+                    print ("Invalid type provided")
+            except:
+                print("Error in builtin match")
+                print traceback.format_exc()
+    elif t[1] == "attribute":
+        def do(self, id = None, object_name = None):
+            try: 
+                # if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
+                    # print "yes"
+                    return builtin_attrVal(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
+                # else:
+                #     print ("Invalid type provided")
+            except:
+                print("Error in builtin attribute")
+                print traceback.format_exc()
     elif t[1] == "str":
         def do(self, id = None, object_name = None):
             try: 
