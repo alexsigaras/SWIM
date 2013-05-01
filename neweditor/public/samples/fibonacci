@@ -10,5 +10,12 @@ fun fiblphi(n) do
 	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
 end
 
-print("Fibonacci Lambda using phi");
+print("Fibonacci Recursive Lambda for 10");
+print("<h1>");
+print(fiblphi(10));
+print("</h1>");
+
+print("Fibonacci Lambda using phi for 1000");
+print("<h1>");
 print(fiblphi(1000));
+print("</h1>");
