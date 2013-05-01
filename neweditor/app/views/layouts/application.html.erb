@@ -16,5 +16,8 @@
 	<%= render 'layouts/header' %>
 	<%= yield %>
 	<%= javascript_include_tag "functions" %>
+	<script>
+		$('$stuff').ajaxify(options);
+	</script>
 </body>
 </html>

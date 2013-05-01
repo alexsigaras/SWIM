@@ -1,21 +1,10 @@
+// Demo 1
+print("Demo 1 - NY TIMES");
 /*
-Swimco.de
-An example of getting specific tags from the NYTimes website
-and then looping over the results checking if the results
-match the provided regular expression.
+	A simple demo on how to print all the stories from the new york times.
 */
-ny = *"nytimes.com"*;
-stories = ny<".story">;
-for each story in stories do
-	if story<"title">.ToString().matches("Boston") do
-		print(story);
-	end
-end
-
-
-
-
-
+ny = *"arstechnica.com"*;
+print(ny<".post">);
 
 
 

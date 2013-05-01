@@ -1,0 +1,15 @@
+en = *"engadget.com"*;
+stories = en<".post">;
+i=1;
+for each story in stories do 
+	p = story<"p">;
+	# print(p);
+	ps = p.ToString();
+	# print(ps);
+	if ps.contains("android") do
+		print("Article: ");
+		print(i); i++;
+		print(story);
+		print("\n\n");
+	end
+end

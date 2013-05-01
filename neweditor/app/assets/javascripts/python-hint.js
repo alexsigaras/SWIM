@@ -86,7 +86,7 @@
     "end");
 
     // function definition
-    pythonBuiltinsL.push("function(param1, param2, ...) do\n" + 
+    pythonBuiltinsL.push("fun id(param1, param2, ...) do\n" + 
     "    #function body goes here\n" +
     "end");
 

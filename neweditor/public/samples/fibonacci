@@ -1,105 +1,53 @@
-####################################################
-# 
-#  Introduction to
-#  _____          _           
-# /  ___|        (_)          
-# \ `--.__      ___ _ __ ___  
-#  `--. \ \ /\ / / | '_ ` _ \ 
-# /\__/ /\ V  V /| | | | | | |
-# \____/  \_/\_/ |_|_| |_| |_|
-#
-#####################################################
+// Demo 3
+// Power of our language
 
-/*  Block
-	Comments
-	May 
-	Be
-	Formatted 
-	Like
-	This
-*/
+// Simple Fibonacci
+fun fib(n) do
+    if(n == 0) do
+        return 0;
+    end
+    if(n == 1) do
+        return 1;
+    end
+    return fib(n-1) + fib(n-2);
+end
 
-###
-# The functions below show how recursion works 
-# as well as conditional statments, namespace, 
-# function declaration/definition and more...
-##
+print("Simple Fibonacci");
+print(fib(10));
 
-fun fibonacci(num) do
-	return fibHelper(num, 1, 0);
+// Fibonacci 2
+fun fib1(num) do
+    return fibHelper(num, 1, 0);
 end
 
 fun fibHelper(num, val, prev) do
-	if(num == 0) do
-		return prev;
-	end
-	if(num == 1) do
-		return val;
-	end
-	return fibHelper((num - 1), (val+prev), val);
+    if(num == 0) do
+        return prev;
+    end
+    if(num == 1) do
+        return val;
+    end
+    return fibHelper((num - 1), (val+prev), val);
 end
 
-print(fibonacci(10));
+print("Simple Fibonacci2");
+print(fib(10));
 
-fun fib(n) do
-	(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
+// Lambda Fibonacci
+fun fibl(n) do
+(lambda n do if(n==0) do return 0; elif(n==1) do return 1; else return fib(n-2) + fib(n-1); end)(n);
 end
 
+// Fibonacci using golden phi
+fun fib(n) do return round(phi() ^ n / sqrt(5)); end
 
+print("Fibonacci Lambda");
+print(fibl(10));
 
+// lambda Fib using golden phi
+fun fiblphi(n) do
+	(lambda n do return round(phi() ^ n / sqrt(5));)(n);
+end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print("Fibonacci Lambda using phi");
+print(fiblphi(10));

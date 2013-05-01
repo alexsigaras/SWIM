@@ -1,3 +1,30 @@
+#-----------------------------------------------------------------------------#
+#                                                                             #
+#           COLUMBIA UNIVERSITY - FU FOUNDATION SCHOOL OF ENGINEERING         #
+#                             COMPUTER SCIENCE DEPARTMENT                     #
+#                                                                             #
+# COMS W4115 - PROGRAMMING LANGUAGES AND TRANSLATORS                          #
+# Professor A. Aho                                                            #
+#                                                                             #
+# Team 3 Final Project: "SWIM"                                                #
+# Team Mentor: A. Aho                                                         #
+#                                                                             #
+# Team members:                                                               #
+#                                                                             #
+#    Name                    Role                         UNI                 #
+# Morris Hopkins        Project Manager                 mah2250               #
+# Seungwoo Lee          Language Guru                   sl3492                #
+# Lev Brie              System Architect                ldb2001               #
+# Alexandros Sigaras    System Integrator               as4161                #
+# Michal Wolski         Verification and Validation     mtw2135               #
+#                                                                             #
+#-----------------------------------------------------------------------------#
+
+#-----------------------------------------------------------------------------#
+# File: datastructures.swim                                                   #
+# Description: Swim Datastructures Library                                    #
+#-----------------------------------------------------------------------------#
+
 class List do
 	val = 0;
 	type="List";
@@ -28,6 +55,8 @@ end
 
 class Dict do
 	val= 0;
+	keys = 0;
+	vals = 0;
 	type="Dict";
 	
 	fun length() do 
@@ -35,54 +64,96 @@ class Dict do
 		for each element in val do
 			i++; 
 		end 
-		# print(i);
 		return i;
 	end
-	fun getKey(x) do
-		
-		i=0; 
-
+	fun getValue(key) do
+		i = 0;
 		for each element in val do
-			i++; 
-		end 
-
-		size = i;
-		i=0;
-
-		print("size:");
-		print(size);
-		for each element in val do
-			if(x == size-i) do
-				return element;
+			if(key == element) do
+				j = 0;
+				for each value in vals do
+					if(j==i) do
+						return value;
+					end
+					j++;
+				end
 			end
-			i++; 
-		end 
+			i++;			
+		end
 	end
 end
 
-/* To be implemented
+/* To be implemented*/
 
-class String do
+class Str do
 
-	fun letters()
-		print("still not implemented");
+	val = "";
+	type = 0;
+	
+	fun lowercase() do
+		return lower(val);
 	end
 
-	fun lowercase()
-		print("still not implemented");
+	fun uppercase() do
+		return upper(val);
 	end
 
-	fun uppercase()
-		print("still not implemented");
+	fun length() do
+		return len(val);
 	end
 
-	fun digits()
-		print("still not implemented");
+	fun split(x) do
+		return splt(val, x);
 	end
 
-	fun whitespace()
-		print("still not implemented");
+	fun replace(x,y) do
+		return repl(val, x, y);
 	end
+
+	fun contains(x) do
+		return cnt(val, x);
+	end
+
+	fun startswith(x) do
+		return strtwith(val, x);
+	end
+
+	fun endswith(x) do
+		return endwith(val, x);
+	end
+
+	fun matches(regex) do
+		return match(val, regex);
+	end
+end
+
+class Url do
+
+	val = '';
+	url = '';
+	type = 'Url';
+
+	fun ToString() do
+		return str(val);
+	end
+
+	# fun lowercase() do
+	# 	return lower(val);
+	# end
+
+	# fun uppercase() do
+	# 	print("still not implemented");
+	# end
+
+	# fun digits() do
+	# 	print("still not implemented");
+	# end
+
+	# fun whitespace() do
+	# 	print("still not implemented");
+	# end
 
 end
-*/
+
+
+#-----------------------------------------------------------------------------#
