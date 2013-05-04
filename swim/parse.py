@@ -280,51 +280,55 @@ def p_statement_assign(t):
 
     def do(self, id = None, object_name = None):
         ''' Need to check ID !'''
+
+        name = self.children[0]
+        expression = self.children[1]
         try:
-            element = self.children[1].do(id = id, object_name = object_name)
+            element = expression.do(id = id, object_name = object_name)
             if element.__doc__.startswith("PyQuery Object"):
                 # If the expr is a pyquery
                 identifiers.scope_in()
                 identifiers["Url"].children[1].do(id = id, object_name = object_name)    
                 class_attributes = identifiers.getAllItems()
                 identifiers.scope_out()
-                identifiers[self.children[0]] = Namespace(class_attributes)
-                identifiers[self.children[0]]["val"] = element
-                identifiers[self.children[0]]["url"] = element.url
+                identifiers[name] = Namespace(class_attributes)
+                identifiers[name]["val"] = element
+                identifiers[name]["url"] = element.url
             elif isinstance(element, list):
                 # If the expr is a list
                 identifiers.scope_in()
                 identifiers["List"].children[1].do(id = id, object_name = object_name)    
                 class_attributes = identifiers.getAllItems()
                 identifiers.scope_out()
-                identifiers[self.children[0]] = Namespace(class_attributes)
-                identifiers[self.children[0]]["val"] = element                
+                identifiers[name] = Namespace(class_attributes)
+                identifiers[name]["val"] = element                
             elif isinstance(element, dict):
                 #If the expr is a dictionary
                 identifiers.scope_in()
                 identifiers["Dict"].children[1].do(id = id, object_name = object_name)   
                 class_attributes = identifiers.getAllItems()
                 identifiers.scope_out()
-                identifiers[self.children[0]] = Namespace(class_attributes)
-                identifiers[self.children[0]]["val"] = element                   
-                identifiers[self.children[0]]["keys"] = element.keys()
-                identifiers[self.children[0]]["vals"] = element.values()
+                identifiers[name] = Namespace(class_attributes)
+                identifiers[name]["val"] = element                   
+                identifiers[name]["keys"] = element.keys()
+                identifiers[name]["vals"] = element.values()
             elif isinstance(element, StringType):
                 # If the expr is a string
                 identifiers.scope_in()
                 identifiers["Str"].children[1].do(id = id, object_name = object_name)    
                 class_attributes = identifiers.getAllItems()
                 identifiers.scope_out()
-                identifiers[self.children[0]] = Namespace(class_attributes)
-                identifiers[self.children[0]]["val"] = element                     
+                identifiers[name] = Namespace(class_attributes)
+                identifiers[name]["val"] = element                     
 
             else:
+                #object attribute assignment
                 if object_name is not None:
-                    identifiers[object_name][self.children[0]] = element
-                    return identifiers[object_name][self.children[0]]
+                    identifiers[object_name][name] = element
+                    return identifiers[object_name][name]
                 else:
-                    identifiers[self.children[0]] = element
-                    return identifiers[self.children[0]]      
+                    identifiers[name] = element
+                    return identifiers[name]      
         except:
             print("Error in assignment statement")
             print traceback.format_exc()
@@ -342,10 +346,14 @@ def p_statement_global_assign(t):
 
     def do(self, id = None, object_name = None):
         ''' Need to check ID !'''
+
+        name = self.children[0]
+        expression = self.children[1]
+
         try:
-            element = self.children[1].do(id = id, object_name = object_name)
-            identifiers.assign_global(self.children[0], element)
-            return identifiers.access_global(self.children[0])
+            element = expression.do(id = id, object_name = object_name)
+            identifiers.assign_global(name, element)
+            return identifiers.access_global(name)
         except:
             print("Error in global assignment statement")
             print traceback.format_exc()
@@ -464,7 +472,7 @@ def p_statement_break(t):
 def p_statement_if(t):
     'if_stmt : IF expression DO statements elif_blocks'
 
-    t[0] = Node ("if", [t[2],t[4],t[5]])
+    t[0] = Node("if", [t[2],t[4],t[5]])
 
     def do(self, id = None, object_name = None):
         if self.children[0].do(id = id, object_name = object_name):
@@ -487,7 +495,7 @@ def p_statement_elif_blocks(t):
                    | else_block 
                    | '''
     try:     
-        t[0] = Node ("elifs", [t[1], t[2]], "elifs")
+        t[0] = Node("elifs", [t[1], t[2]], "elifs")
 
         def do(self, id = None, object_name = None):
             if self.children[0].do(id = id, object_name = object_name):
@@ -586,21 +594,25 @@ def p_statement_while(t):
 #----------------------------------------------------#
 
 def p_statement_for(t):
-    'for_stmt : FOR EACH ID IN element DO statements'
+    'for_stmt : FOR EACH ID IN elements DO statements'
 
     t[0] = Node("for", [t[3], t[5], t[7]] , "for")
 
     def do(self, id = None, object_name = None):
+
+        name = self.children[0]
+        elements = self.children[1]
+        statements = self.children[2]
+
         try:
-            # val = self.children[1].do(id = id, object_name = object_name)[0].attr['val']
             if object_name is not None: 
-                iterable = self.children[1].do(id = id, object_name = object_name)
+                iterable = elements.do(id = id, object_name = object_name)
             else:
                 try:
-                    iterable = self.children[1].do(id = id, object_name = object_name)['val']
+                    iterable = elements.do(id = id, object_name = object_name)['val']
                 except:
                     try:
-                        iterable = self.children[1].do(id = id, object_name = object_name)
+                        iterable = elements.do(id = id, object_name = object_name)
                     except:
                         raise Exception
             # Special case of pyquery
@@ -611,17 +623,17 @@ def p_statement_for(t):
                         identifiers["Url"].children[1].do(id = id, object_name = object_name)    
                         class_attributes = identifiers.getAllItems()
                         identifiers.scope_out()
-                        identifiers[object_name][self.children[0]]  = Namespace(class_attributes)                        
-                        identifiers[object_name][self.children[0]]['val'] = iterable(temp)
-                        identifiers[object_name][self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
+                        identifiers[object_name][name]  = Namespace(class_attributes)                        
+                        identifiers[object_name][name]['val'] = iterable(temp)
+                        identifiers[object_name][name]['url'] = elements.do(id = id, object_name = object_name)['url']
                     else:
                         identifiers.scope_in()
                         identifiers["Url"].children[1].do(id = id, object_name = object_name)    
                         class_attributes = identifiers.getAllItems()
                         identifiers.scope_out()
-                        identifiers[self.children[0]]  = Namespace(class_attributes)                        
-                        identifiers[self.children[0]]['val'] = iterable(temp)
-                        identifiers[self.children[0]]['url'] = self.children[1].do(id = id, object_name = object_name)['url']
+                        identifiers[name]  = Namespace(class_attributes)                        
+                        identifiers[name]['val'] = iterable(temp)
+                        identifiers[name]['url'] = elements.do(id = id, object_name = object_name)['url']
                     result  = self.children[2].do(id = id, object_name = object_name)
 
                     if isinstance(result, dict):
@@ -632,10 +644,10 @@ def p_statement_for(t):
             else:
                 for temp in iterable:
                     if object_name is not None:
-                        identifiers[object_name][self.children[0]] = temp
+                        identifiers[object_name][name] = temp
                     else:
-                        identifiers[self.children[0]] = temp
-                    result  = self.children[2].do(id = id, object_name = object_name)
+                        identifiers[name] = temp
+                    result  = statements.do(id = id, object_name = object_name)
 
                     if isinstance(result, dict):
                         if result.keys()[0] == "break":
@@ -658,8 +670,9 @@ def p_statement_class_decl(t):
     t[0] = Node("class", [t[2], t[4]], t[2])
 
     def do(self, id=None, object_name = None):
+        name = self.children[0]
         try:
-            identifiers[self.children[0]] = self # child 0 is id, adds tree to id ref in symbol table
+            identifiers[name] = self # child 0 is id, adds tree to id ref in symbol table
             return self
         except:
             print("Error in Class declaration")
@@ -962,35 +975,17 @@ def p_expression_function_call(t):
             except:
                 print("Error in builtin match")
                 print traceback.format_exc()
-    elif t[1] == "match":
-        def do(self, id = None, object_name = None):
-            try: 
-                if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
-                    return builtin_matchall(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
-                else:
-                    print ("Invalid type provided")
-            except:
-                print("Error in builtin match")
-                print traceback.format_exc()
     elif t[1] == "attribute":
         def do(self, id = None, object_name = None):
             try: 
-                # if(isinstance(self.children[1].do(id = id, object_name = object_name)[0], StringType)):
-                    # print "yes"
                     return builtin_attrVal(self.children[1].do(id = id, object_name = object_name)[0], self.children[1].do(id = id, object_name = object_name)[1])
-                # else:
-                #     print ("Invalid type provided")
             except:
                 print("Error in builtin attribute")
                 print traceback.format_exc()
     elif t[1] == "str":
         def do(self, id = None, object_name = None):
             try: 
-                # if self.children[1].do(id = id, object_name = object_name)[0].__doc__.startswith("PyQuery Object"):
-                #     print("pyquery")
-                # else:
                 return builtin_ToString(self.children[1].do(id = id, object_name = object_name)[0])
-                #     print ("Invalid type provided")
             except:
                 print("Error in builtin ToString")
                 print traceback.format_exc()
@@ -1258,16 +1253,7 @@ def p_expression_string(t):
     t[0] = Node("string", stripe_quotation(t[1]), 'string')
     def do(self, id = None, object_name = None):
         try:
-            # identifiers.scope_in()
-            # identifiers["Str"].children[0].do(id = id, object_name = object_name)    
-            # class_attributes = identifiers.getAllItems()
-            # identifiers.scope_out()
-            # identifiers[self.children[0]] = Namespace(class_attributes)
-            # identifiers[self.children[0]]["val"] = element                     
-            # # element = self.children.do(id = id, object_name = object_name)
-            # # return element
-            return self.children
-            
+            return self.children       
         except:
             print("Error in string expressions")
             print traceback.format_exc()
@@ -1588,8 +1574,6 @@ def p_url_expression(t):
     t[0].do = MethodType(do, t[0], Node)
 
 def p_select_op_expression(t):
-    # '''select_op_expr : id_expr LESS_THAN id_expr GREATER_THAN
-    #                   | id_expr LESS_THAN string_expr GREATER_THAN'''
     '''select_op_expr : expression LESS_THAN expression GREATER_THAN'''
 
     t[0] = Node('select_op', [t[1], t[3]], 'select')
@@ -1609,12 +1593,6 @@ def p_select_op_expression(t):
             print("Mismatch grammar for parsing!")
             print traceback.format_exc()
     t[0].do = MethodType(do, t[0], Node)
-
-# def p_find_op(t):
-#     '''find_op : url LCBRACKET string_expr RCBRACKET
-#                | ID LSBRACKET string_expr RCBRACKET'''
-#     t[0] = Node('find_op', [t[1], t[3]], 'find')
-#     t[0].do = MethodType(do, t[0], Node)
  
 #----------------------------------------------------#
 #                     5.4 Error                      #

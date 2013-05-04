@@ -46,7 +46,7 @@ import re
 import math
 
 # PDF
-from fpdf import fpdf as pdf
+#from fpdf import fpdf as pdf
 from cookbook import *
 import render
 
