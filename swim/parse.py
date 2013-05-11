@@ -1107,6 +1107,8 @@ def p_expression_unary(t):
                   | not_expr
                   | number_expr
                   | id_expr
+                  | list_index_expr
+                  | dict_index_expr
                   | string_expr
                   | list_expr
                   | dictionary_expr
@@ -1217,7 +1219,6 @@ def p_expression_number(t):
 #----------------------------------------------------#
 #              5.3.1.4 ID                            #
 #----------------------------------------------------#
-
 def p_expression_name(t):
     'id_expr : ID'
     
@@ -1245,7 +1246,47 @@ def p_expression_name(t):
             print(str(t.lexer.lineno) + ":\nexpression could not be recognized as stored value.\n")
             raise NameException(t.lexer.lineno, str(self.children))
 
-    t[0].do = MethodType(do, t[0], Node)     
+    t[0].do = MethodType(do, t[0], Node) 
+
+def p_expression__listname_index(t):
+    'list_index_expr : ID LSBRACKET number_expr RSBRACKET'    
+    t[0] = Node("nameIndex", [str(t[1]), t[3]], 'nameIndex')
+
+    def do(self, id = None, object_name = None):
+        try:
+            if id is not None:            
+                return self.children[0][self.children[1].do()]['val']
+            else:
+                if object_name is not None:
+                    return identifiers[object_name][self.children[0]]['val'][int(self.children[1].do())]
+                else:
+                    result = identifiers[self.children[0]]['val'][int(self.children[1].do())]
+                    return result
+        except LookupError:
+            print(str(t.lexer.lineno) + ":\nError in getting value list index\n")
+            raise NameException(t.lexer.lineno, str(self.children))
+
+    t[0].do = MethodType(do, t[0], Node) 
+
+def p_expression__dictname_index(t):
+    'dict_index_expr : ID LSBRACKET string_expr RSBRACKET'    
+    t[0] = Node("nameIndex", [str(t[1]), t[3]], 'nameIndex')
+
+    def do(self, id = None, object_name = None):
+        try:
+            if id is not None:            
+                return self.children[0][self.children[1].do()]
+            else:
+                if object_name is not None:
+                    return identifiers[object_name][self.children[0]]['val'][self.children[1].do()]
+                else:
+                    result = identifiers[self.children[0]]['val'][self.children[1].do()]
+                    return result
+        except LookupError:
+            print(str(t.lexer.lineno) + ":\nError in getting value dict index\n")
+            raise NameException(t.lexer.lineno, str(self.children))
+
+    t[0].do = MethodType(do, t[0], Node) 
 
 #----------------------------------------------------#
 #              5.3.1.5 String                        #
