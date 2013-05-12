@@ -1,0 +1,187 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>
+  Lecture 3: January 30, 2013
+ </title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 3: January 30, 2013<br/>
+  Structure of a Compiler
+ </h1>
+
+ <h2>Overview</h2>
+ <ol><li>Language processing tools</li>
+  <li>Structure of a compiler</li>
+  <li>The lexical analyzer</li>
+  <li>Language theory background</li>
+  <li>Regular expressions</li>
+  <li>Tokens/patterns/lexemes/attributes</li>
+ </ol><h2>1. Language Processing Tools</h2>
+ <ul><li>Compiler</li>
+  <li>Interpreter</li>
+  <li>C compiler</li>
+  <li>Java compiler</li>
+  <li>Just-in-time compiler</li>
+ </ul><h2>2. Structure of a Compiler</h2>
+ <ul><li>Front end: analysis</li>
+  <li>Back end: synthesis</li>
+  <li>IR: Intermediate representation(s)</li>
+  <li>Phases</li>
+  <ul><li>lexical analyzer (scanner)</li>
+    <li>syntax analyzer (parser)</li>
+    <li>semantic analyzer</li>
+    <li>intermediate code generator</li>
+    <li>code optimizer</li>
+    <li>code generator</li>
+    <li>machine-specific code optimizer</li>
+  </ul><li>Symbol table</li>
+  <li>Error handler</li>
+  <li>Compiler component generators</li>
+   <ul><li><a href="http://dinosaur.compilertools.net/">
+        lexical analyzer generators: lex, flex</a></li>
+    <li><a href="http://dinosaur.compilertools.net/">
+        syntax analyzer generator: yacc, bison</a></li>
+    <li><a href="http://www.antlr.org/wiki/display/ANTLR3/Five+minute+introduction+to+ANTLR+3/">
+        front-end generator: antlr</a></li>
+   </ul></ul><h2>3. The Lexical Analyzer</h2>
+ <ul><li>The first phase of the compiler is the lexical analyzer,
+      often called a lexer or scanner.</li>
+  <li>The lexer reads the stream of characters making up the source
+      program and groups the characters into logically meaningful sequences
+      called lexemes.</li>
+  <li>Many lexers use a leftmost-longest rule. For example,
+      <code>a+++++b</code> would be partitioned into the lexemes
+      <code>a ++ ++ + b</code>, not <code>a ++ + ++ b.</code></li>
+  <li>For each lexeme the lexer sends to the parser a token of the
+      form &lt;token-name, attribute-value&gt;.</li>
+  <li>For a token such as an identifier, the lexer will make an entry into
+      the symbol table in which it stores attributes such as
+      the lexeme and type associated with the token.</li>
+  <li>The lexer will also strip out whitespace
+      (blanks, horizontal and vertical tabs, newlines, formfeeds, comments).</li>
+  <li>Tokens in C</li>
+  <ul><li>identifiers</li>
+   <li>keywords</li>
+   <li>constants</li>
+   <li>string literals</li>
+   <li>operators</li>
+   <li>separators</li>
+  </ul><li>Issues in the design of a lexical analyzer</li>
+  <ul><li>efficiency: buffered reads</li>
+   <li>portability and character sets</li>
+   <li>need for lookahead</li>
+  </ul><li>Coping with lexical errors</li>
+  <ul><li>types of lexical errors</li>
+   <ul><li>insertion/deletion/replacement/transposition errors</li>
+   </ul><li>edit distance</li>
+   <li>panic mode of error recovery</li>
+  </ul></ul><h2>4. Language Theory Background</h2>
+ <ul><li>Symbol (character, letter)</li>
+  <li>Alphabet: a finite nonempty set of characters</li>
+  <ul><li>Examples: {0, 1}, ASCII, Unicode</li>
+  </ul><li>String (sentence, word): a finite sequence of characters, possibly empty.</li>
+  <li>Language: a (countable) set of strings, possibly empty.</li>
+  <li>Operations on strings</li>
+  <ul><li>concatenation</li>
+   <li>exponentiation</li>
+   <ul><li><i>x</i><sup>0</sup> is the empty string ε.</li>
+    <li><i>x<sup>i</sup></i> = <i>x<sup>i</sup></i><sup>-1</sup><i>x</i>, for <i>i</i> &gt; 0</li>
+   </ul><li>prefix, suffix, substring, subsequence</li>
+  </ul><li>Operations on languages</li>
+  <ul><li>union</li>
+   <li>concatenation</li>
+   <li>exponentiation</li>
+   <ul><li><i>L</i><sup>0</sup> is { ε }, even when <i>L</i>
+        is the empty set.</li>
+    <li><i>L<sup>i</sup></i> = <i>L<sup>i</sup></i><sup>-1</sup><i>L</i>, for <i>i</i> &gt; 0</li>
+   </ul><li>Kleene closure</li>
+   <ul><li><i>L*</i> = <i>L</i><sup>0</sup> ∪ <i>L</i><sup>1</sup>
+                    ∪ …</li>
+    <li>Note that <i>L*</i> always contains the empty string.</li>
+   </ul></ul></ul><h2>5. Regular Expressions</h2>
+ <ul><li>A regular expression is a notation for specifying a set of strings.</li>
+  <li>Many of today's programming languages use regular expressions to match
+      patterns in strings.</li>
+  <ul><li>E.g., awk, flex, lex, java, javascript, perl, python</li>
+  </ul><li>Definition of a regular expression and the language it denotes</li>
+  <ul><li>Basis</li>
+   <ul><li>ε is a regular expression that denotes { ε }.</li>
+    <li>A single character <i>a</i> is a regular expression that denotes { <i>a</i> }.</li>
+   </ul><li>Induction: suppose <i>r</i> and <i>s</i> are regular expressions that
+       denote the languages L(<i>r</i>) and L(<i>s</i>).</li>
+   <ul><li>(<i>r</i>)|(<i>s</i>) is a regular expression that denotes
+        L(<i>r</i>) ∪ L(<i>s</i>).</li>
+
+    <li>(<i>r</i>)(<i>s</i>) is a regular expression that denotes
+        L(<i>r</i>)L(<i>s</i>).</li>
+    <li>(<i>r</i>)* is a regular expression that denotes
+        L(<i>r</i>)*.</li>
+
+    <li>(<i>r</i>) is a regular expression that denotes
+        L(<i>r</i>).</li>
+   </ul><li>We can drop redundant parenthesis by assuming</li>
+   <ul><li>the Kleene star operator
+        * has the highest precedence and is left associative</li>
+
+    <li>concatenation
+        has the next highest precedence and is left associative</li>
+    <li>the union operator
+        | has the lowest precedence and is left associative</li>
+   </ul><li>E.g., under these rules r|s*t is interpreted as (r)|((s)*(t)).</li>
+   <li>Extensions of regular expressions</li>
+   <ul><li>Positive closure: <i>r</i>+ = <i>r</i><i>r</i>*</li>
+
+    <li>Zero or one instance: <i>r</i>? = ε | <i>r</i>
+    </li><li>Character classes:
+    <ul><li>[abc] = a | b | c</li>
+     <li>[0-9] = 0 | 1 | 2 | … | 9</li>
+
+    </ul></li></ul></ul><li>Today regular expressions come many different forms.</li>
+  <ul><li>The earliest and simplest are the Kleene regular expressions: See ALSU, Sect. 3.3.3.</li>
+   <li>Awk and egrep extended grep's regular expressions with union and parentheses.</li>
+   <li>POSIX has a standard for Unix regular expressions.</li>
+   <li>Perl has an amazingly rich set of regular expression operators.</li>
+   <li>Python uses pcre regular expressions.</li>
+  </ul><li>Lex regular expressions</li>
+  <ul><li>The lexical analyzer generators flex and lex use extended regular expressions
+       to specify lexeme patterns making up tokens: See ALSU, Fig. 3.8, p. 127.</li>
+  </ul></ul><h2>6. Tokens/Patterns/Lexemes/Attributes</h2>
+ <ul><li>a <i>token</i> is a pair consisting of a token name and
+      an optional attribute value.</li>
+  <ul><li>e.g., &lt;id, ptr to symbol table&gt;, &lt;=&gt;</li>
+  </ul><li>a <i>pattern</i> is a description of the form that the
+      lexemes making up a token in a source program may have.</li>
+  <ul><li>We will use regular expressions to denote patterns.</li>
+   <li>e.g., identifiers in C: <code>[_A-Za-z][_A-Za-z0-9]*</code></li>
+  </ul><li>a lexeme is a sequence of characters that matches the pattern for a
+      token, e.g.,</li>
+  <ul><li>identifiers: <code>count, x1, i, position</code></li>
+   <li>keywords: <code>if</code></li>
+   <li>operators: <code>=, ==, !=, +=</code></li>
+  </ul><li>an <i>attribute</i> of a token is usually a pointer to the symbol
+      table entry that gives additional information about the token,
+      such as its type, value, line number, etc.</li>
+ </ul><h2>7. Practice Problems</h2>
+ <ol><li>What language is denoted by the following regular expressions?</li>
+  <ol style="list-style-type: lower-alpha;"><li><code>(a*b*)*</code></li>
+   <li><code>a(a|b)*a</code></li>
+   <li><code>(aa|bb)*((ab|ba)(aa|bb)*(ab|ba)(aa|bb)*)*</code></li>
+   <li><code>a(ba|a)*</code></li>
+   <li><code>ab(a|b*c)*bb*a</code></li>
+  </ol><li>Construct Lex-style regular expressions for the following patterns.</li>
+  <ol style="list-style-type: lower-alpha;"><li>All lowercase English words with the five vowels in order.</li>
+   <li>All lowercase English words with exactly one vowel.</li>
+   <li>All lowercase English words beginning and ending with the substring "ad".</li>
+   <li>All lowercase English words in which the letters are in strictly increasing
+       alphabetic order.</li>
+   <li>Strings of the form <code>abxba</code> where <code>x</code>
+       is a string of <code>a</code>’s, <code>b</code>’s, and
+       <code>c</code>’s that does not contain <code>ba</code> as a substring.</li>
+  </ol></ol><h2>8. Reading Assignment</h2>
+ <ul><li>ALSU: Ch. 1, Sects. 3.1-3.3</li>
+  <li>See <a href="http://dinosaur.compilertools.net/">
+      The Lex &amp; Yacc Page</a>
+      for lex, flex, yacc and bison tutorials and manuals.</li>
+  <li>See <a href="http://javadude.com/articles/antlr3xtut/">
+      ANTLR 3.x</a>
+      for an antlr video tutorial.</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+</body>

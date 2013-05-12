@@ -1,0 +1,66 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><!-- Homework Assignment #4                         --><!-- Created by Al Aho on 4/15/2013                 --><!-- Last modified on 4/15/2013                     --><!-- -------------------------------------------------><title>Homework #4</title></head><body>
+ <h1 style="text-align: left;"> COMS W4115
+  <br/>Programming Languages and Translators
+  <br/>Homework Assignment #4
+  <br/>Submit solutions electronically on
+  <br/>    Courseworks/COMSW4115/Assignments
+  <br/>    by 2:40pm, April 24, 2013
+ </h1>
+ <hr/><h2>Instructions</h2>
+ <ul><li>Problems 1-4 are each worth 25 points.</li>
+  <li>You may discuss the questions with the TAs and others in the class but your answers
+      must be in your own words. You must not copy someone
+      else's solutions.
+      If you consult others or use external sources, please cite the
+      people or sources used in your answers.</li>
+  <li>Solutions to these problems will be posted
+      on Courseworks on May 1, 2013.</li>
+  <li>This assignment may submitted electronically on Courseworks by 2:40pm,
+      May 1, 2013 for 50% credit.</li>
+  <li>Pdf files are preferred.</li>
+ </ul><h2>Problems</h2>
+ <ol><li>Consider the arithmetic expression  <code>u * (v - w) + x / y</code>
+      and a register machine with instructions of the form</li>
+
+<pre><code>
+     LD reg, src
+     ST dst, reg
+     OP reg1, reg2, reg3      // the registers need not be distinct
+</code></pre>
+
+   <ol style="list-style-type: lower-alpha;"><li>Draw an abstract syntax tree for the expression and label the nodes with Ershov numbers.</li>
+    <li>Generate machine code for the expression on a two-register machine
+        minimizing the number of spills.</li>
+   </ol><br/><li>Consider the following sequence of three-address code:</li>
+
+<pre><code>
+   x = 0
+   i = 0
+L: t1 = i * 4
+   t2 = a[t1]
+   t3 = i * 4
+   t4 = b[t3]
+   t5 = t2 * t4
+   x = x + t5
+   i = i + 1
+   if i &lt; n goto L
+</code></pre>
+
+   <ol style="list-style-type: lower-alpha;"><li>Draw a flow graph for this three-address code.</li>
+    <li>Optimize this code by eliminating common subexpressions,
+        performing reduction in strength on induction variables,
+        and eliminating all the induction variables that you can.
+        State what transformations you are using at each optimization step.</li>
+   </ol><br/><li>Consider the lambda-calculus expression
+      (λu. (λx. u) u) ((λy. y) (λw. (λv.v) w) ).</li>
+  <ol style="list-style-type: lower-alpha;"><li>Draw a parse tree for this expression.</li>
+   <li>Identify all redexes in this expression.</li>
+   <li>Evaluate this expression using normal order evaluation.</li>
+   <li>Evaluate this expression using applicative order evaluation.</li>
+  </ol><br/><li>Evaluate the lambda-calculus expression
+      <code>(λx.(λy.(x(λx.xy))))y</code>. What order of
+      evaluation did you use? Explain all the steps you               used in the evaluation.</li>
+
+ </ol><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address> 
+
+</body>

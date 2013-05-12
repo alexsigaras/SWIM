@@ -1,0 +1,208 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 9: February 20, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 9: Predictive Top-Down Parsers<br/>
+  February 20, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Review</li>
+  <li>FIRST</li>
+  <li>FOLLOW</li>
+  <li>How to construct a predictive parsing table</li>
+  <li>LL(1) grammars</li>
+  <li>Transformations on grammars</li>
+ </ol><h2>1. Review</h2>
+ <ul><li>Top-down parsing consists of constructing or tracing a parse tree
+      for an input string starting from the root and creating
+      the nodes of the parse tree in preorder.</li>
+  <li>Recursive-descent parsing is a top-down method of syntax
+      analysis in which a set of recursive procedures is used
+      to process the input string with a
+      procedure associated with each nonterminal of
+      the grammar. See Fig. 4.13, p. 219.</li>
+  <li>A nonrecursive predictive parser uses an explicit stack and
+      a parsing table to do deterministic top-down parsing.</li>
+  <li>In this class we will develop an algorithm to construct
+      a predictive parsing table for a large class of useful
+      grammars called LL(1) grammars.</li>
+  <li>For this algorithm we need two functions on grammars,
+      FIRST and FOLLOW.</li>
+ </ul><h2>2. FIRST</h2>
+ <ul><li>FIRST(α) is the set of terminal symbols that begin the strings
+      derivable from a string of terminal and nonterminal symbols α in a grammar.<br/>
+      If α can derive ε, then ε is also in FIRST(α).</li>
+
+  <li>Algorithm to compute FIRST(<i>X</i>):</li>
+  </ul><ol><li>If <i>X</i> is a terminal, then FIRST(<i>X</i>) = { <i>X</i> }.</li>
+   <li>If <i>X</i> → ε is a production, then add ε to FIRST(<i>X</i>).</li>
+   <li>If <i>X</i>
+       → <i>Y</i><sub>1</sub><i>Y</i><sub>2</sub> ... <i>Y<sub>k</sub></i>
+       is a production for <i>k</i> ≥ 1, and<br/>
+          for some <i>i</i> ≤ <i>k</i>,
+       <i>Y</i><sub>1</sub><i>Y</i><sub>2</sub> ... <i>Y<sub>i</sub></i><sub>-1</sub> derives the empty string,
+       and <code>a</code> is in FIRST(<i>Y<sub>i</sub></i>),
+       then add <code>a</code> to FIRST(<i>X</i>).<br/>
+       If <i>Y</i><sub>1</sub><i>Y</i><sub>2</sub> ... <i>Y<sub>k</sub></i>
+       derives the empty string,
+       then add ε to FIRST(<i>X</i>).</li>
+  </ol><li><b>Example.</b> Consider the grammar <i>G</i>:</li>
+  <ul><dt><pre><code>S → ( S ) S | ε</code></pre></dt><dt>
+  </dt></ul><dt>For <i>G</i>, FIRST(<code>S</code>) = {<code>(, ε</code>}.</dt>
+
+ 
+
+ <h2>3. FOLLOW</h2>
+ <ul><li>FOLLOW(<i>A</i>) is the set of terminals that can appear immediately
+      to the right of <i>A</i> in some sentential form in a grammar.<br/>
+      Let us assume the string to be parsed is terminated by an end-of-string
+      endmarker $.
+      Then if <i>A</i> can be the rightmost symbol in some sentential form,
+      the right endmarker $ is also in FOLLOW(<i>A</i>).</li>
+  <li>Algorithm to compute FOLLOW(<i>A</i>) for all nonterminals <i>A</i> of a grammar:</li>
+  </ul><ol><li>Place $ in FOLLOW(<i>S</i>) where <i>S</i> is the start symbol of the grammar.</li>
+   <li>If <i>A</i> → α<i>B</i>β is a production,
+       then add every terminal symbol <code>a</code> in FIRST(β)
+       to FOLLOW(<i>B</i>).</li>
+   <li>If there is a production <i>A</i> → α<i>B</i>, 
+       or a production <i>A</i> → α<i>B</i>β,
+       where FIRST(β) contains ε,<br/>
+       then add every symbol in FOLLOW(<i>A</i>) to FOLLOW(<i>B</i>).</li>
+  </ol><li><b>Example.</b> For <i>G</i> above, FOLLOW(<code>S</code>) = {<code>)</code>, $}.</li>
+  
+ 
+
+ <h2>4. How to Construct a Predictive Parsing Table</h2>
+ <ul><li>Input: Grammar <i>G</i>.</li>
+  <li>Output: Predictive parsing table <i>M</i>.</li>
+
+  <li>Method:</li>
+  </ul><pre><code>
+  for (each production <i>A</i> → α in <i>G</i>) {
+     for (each terminal <i>a</i> in FIRST(α))
+        add <i>A</i> → α to <i>M</i>[<i>A, a</i>];
+     if (ε is in FIRST(α))
+        for (each symbol <i>b</i> in FOLLOW(<i>A</i>))
+           add <i>A</i> → α to <i>M</i>[<i>A, b</i>];
+  }
+  make each undefined entry of <i>M</i> be <b>error</b>;
+  </code></pre>
+
+  <li><b>Example 1.</b> Predictive parsing table for the grammar:</li>
+  <ul><dt><pre><code>S → +SS | *SS | a;</code></pre></dt>
+  </ul><dt>FIRST(<code>S</code>) = {<code>+, *, a</code>}</dt>
+   <dt>FOLLOW(<code>S</code>) = {<code>+, *, a, $</code>}</dt>
+
+    <pre><code>
+                        Input Symbol
+   Nonterminal      a        +          *        $
+
+       S          S → a    S → +SS    S → *SS  <b>error</b>
+   </code></pre>
+
+  <li><b>Example 2.</b> Predictive parsing table for the grammar:</li>
+  <ul><dt><pre><code>S → ( S ) S | ε</code></pre></dt>
+  </ul><dt>FIRST(<code>S</code>) = {<code>(, ε</code>}</dt>
+   <dt>FOLLOW(<code>S</code>) = {<code>), $</code>}</dt>
+
+    <pre><code>
+                        Input Symbol
+   Nonterminal      (         )        $
+
+       S        S → (S)S    S → ε    S → ε
+   </code></pre>
+
+  <li><b>Example 3.</b> Predictive parsing table for the grammar:</li>
+  <ul><dt><pre><code>S → S ( S ) | ε</code></pre></dt>
+  </ul><dt>FIRST(<code>S</code>) = {<code>(, ε</code>}</dt>
+   <dt>FOLLOW(<code>S</code>) = {<code>(, ), $</code>}</dt>
+
+    <pre><code>
+                        Input Symbol
+   Nonterminal      (         )        $
+
+       S        S → S(S)    S → ε    S → ε
+                S → ε
+   </code></pre>
+
+
+ 
+
+ <h2>5. LL(1) Grammars</h2>
+ <ul><li>A grammar is LL(1) iff whenever <code>A → α | β</code>
+      are two distinct productions, the following three conditions hold:</li>
+  </ul><ol><li>For no terminal <code>a</code> do both α and β derive
+       strings beginning with <code>a</code>.</li>
+   <li>At most one of α and β can derive the empty string.</li>
+   <li>If β derives the empty string, then α does not derive any string
+       beginning with a terminal in FOLLOW(<code>A</code>).<br/>
+       Likewise, if α derives the empty string, then β does not derive
+       any string beginning with a terminal in FOLLOW(<code>A</code>).</li>
+  </ol><li>We can use the algorithm above to construct a predictive parsing
+      table with uniquely defined entries for any LL(1) grammar.</li>
+  <li>The first "L" in LL(1) means scanning the input from left to right,
+      the second "L" for producing a leftmost derivation, and the "1" for
+      using one symbol of lookahead to make each parsing action decision.</li> 
+ 
+
+
+ <h2>6. Transformations on Grammars</h2>
+ <ul><li>Two common language-preserving transformations are often applied to
+      grammars to try to make them parsable by top-down methods.
+      These are eliminating left recursion and left factoring.</li>
+  <li>Eliminating left recursion:</li>
+  <ul><li>Replace</li>
+   </ul></ul><pre><code>
+      expr →  expr + term
+           |  term
+   </code></pre> by
+
+    <pre><code>
+      expr  →  term expr'
+
+      expr' →  + term expr'
+            |  ε
+   </code></pre>
+  
+
+  <li>Left factoring:</li>
+  <ul><li>Replace</li>
+   </ul><pre><code>
+      stmt → if ( expr ) stmt else stmt
+           | if (expr) stmt
+           | other
+   </code></pre> by
+   <pre><code>
+      stmt  → if ( expr ) stmt stmt'
+            | other
+
+      stmt' → else stmt
+            | ε
+   </code></pre>
+  
+ 
+
+ <h2>7. Practice Problems</h2>
+ <ol><dt>Consider the following grammar G for Boolean expressions:</dt>
+  </ol><ul/><pre><code>
+     B → B or T | T
+     T → T and F | F
+     F → not B | ( B ) | true | false
+   </code></pre>
+  
+  <li>What precedence and associativity does this grammar give to the operators
+      <code>and, or, not</code>?</li>
+  <li>Compute FIRST and FOLLOW for each nonterminal in G.</li>
+  <li>Transform G into an equivalent LL(1) grammar G'.</li>
+  <li>Construct a predictive parsing table for G'.</li>
+  <li>Show how your predictive parser processes the input string</li>
+  <ul><code>true and not false or true</code>
+  </ul><dt>Draw the parse tree traced out by your parser.</dt>
+ 
+
+
+ <h2>8. Reading</h2>
+ <ul><li>ALSU, Section 4.4.</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

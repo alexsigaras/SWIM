@@ -1,0 +1,58 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><!-- Homework Assignment #1                         --><!-- Created by Al Aho on 2/1/2013                  --><!-- Last modified on 2/1/2013                      --><!-- -------------------------------------------------><title>Homework #1</title></head><body>
+ <h1 style="text-align: left;"> COMS W4115
+  <br/>Programming Languages and Translators
+  <br/>Homework Assignment #1
+  <br/>Submit solutions electronically on
+  <br/>     Courseworks/COMSW4115/Assignments
+  <br/>     by 2:40pm, February 13, 2013
+ </h1>
+ <hr/><h2>Instructions</h2>
+ <ul><li>You may discuss the questions with others but your answers
+      must be your own words and your own code.</li>
+  <li>Problems 1-4 are each worth 25 points.</li>
+  <li>Solutions to these problems will be posted
+      on Courseworks on February 20, 2013.</li>
+  <li>This assignment may submitted electronically on Courseworks by 2:40pm,
+      February 20, 2013 for 50% credit.</li>
+ </ul><h2>Problems</h2>
+ <ol><li>Construct Lex-style regular expressions for the following patterns.
+      For each pattern, create a Lex program to find the first longest lowercase word
+      in the dictionary satisfying that pattern. As part of your
+      answer list your program and the longest word found.  State what dictionary
+      you used (e.g., on Linux systems <code>/usr/dict/words</code>).
+      You can use any variant of Lex such as Flex, JLex, Ocamllex, PLY, etc.</li>
+  <ol style="list-style-type: lower-alpha;"><li>All lowercase English words that can be made up using only the letters
+       in your first name. Each letter in your name can be used zero or more times
+       and in any order in a word.</li>
+   <li>All lowercase English words that can be made up using exactly the letters
+       in your first name. Each letter in your name must be used exactly the
+       number of times it appears in your name but the letters can appear
+       in any order in a word. If your name
+       has more than five letters, use the prefix of length five.</li>
+  </ol><br/><li>Let <i>L</i> be the language consisting of all
+      strings of <i>a</i>'s, <i>b</i>'s, and
+      <i>c</i>'s such that each string is of the form
+      <i>abxba</i> where <i>x</i> does not contain <i>ba</i> as a substring.
+      These strings model comments in the programming language C.
+  </li>
+
+  <ol style="list-style-type: lower-alpha;"><li>Write down a deterministic finite automaton
+       (DFA) for <i>L</i>.</li>
+   <li>Minimize the number states in your DFA. Briefly explain how you did the minimization.</li>
+   <li>Explain what property of the scanned input each state of your minimized DFA recognizes.</li>
+   <li>Write down a regular expression for <i>L</i>.
+  </li></ol><br/><li>Let <i>L</i> be the language consisting of just balanced parentheses,
+      i.e., {<code>ε, ( ), ( ( ) ), ( ) ( ), ( ( ( ) ) ), ( ( ) ( ) ), ...</code> }
+  </li>
+
+  <ol style="list-style-type: lower-alpha;"><li>Write down a recursive definition for <i>L</i>.</li>
+   <li>Use the pumping lemma for regular languages to show that <i>L</i>
+       cannot be specified by a regular expression.</li>
+  </ol><br/><li>Let <i>R</i> be a regular expression of length <i>m</i> and let <i>w</i> be an input string
+      of length <i>n</i>. Briefly discuss in terms
+      of <i>m</i> and <i>n</i> the time-space complexity of the McNaughton-Yamada-Thompson
+      algorithm  to
+      determine whether <i>w</i> is in <i>L</i>(<i>R</i>).</li> 
+
+ </ol><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address> 
+</body>

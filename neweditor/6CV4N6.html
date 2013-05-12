@@ -1,0 +1,71 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><!-- Homework Assignment #3                         --><!-- Created by Al Aho on 4/1/2013                  --><!-- Last modified on 4/1/2013                      --><!-- -------------------------------------------------><title>Homework #3</title></head><body>
+ <h1 style="text-align: left;"> COMS W4115
+  <br/>Programming Languages and Translators
+  <br/>Homework Assignment #3
+  <br/>Submit solutions electronically on
+  <br/>     Courseworks/COMSW4115/Assignments
+  <br/>     by 2:40pm, April 10, 2013
+ </h1>
+ <hr/><h2>Instructions</h2>
+ <ul><li>Problems 1-4 are each worth 25 points.</li>
+  <li>You may discuss the questions with the TAs and others in the class but your answers
+      must be in your own words. You must not copy someone
+      else's solutions.
+      If you consult others or use external sources, please cite the
+      people or sources used in your answers.</li>
+  <li>Solutions to these problems will be posted
+      on Courseworks on April 17, 2013.</li>
+  <li>This assignment may submitted electronically on Courseworks by 2:40pm,
+      April 17, 2013 for 50% credit.</li>
+  <li>Pdf files are preferred.</li>
+ </ul><h2>Problems</h2>
+ <ol><li>Consider the syntax-directed definitions in Figs. 6.19, 6.36 and 6.37 in ALSU
+      for expressions, if-statements and booleans. Assume the boolean operators <code>&amp;&amp;</code>,
+      <code>||</code>, and <code>!=</code> have the customary associativities and precedences.</li>
+
+  <ol style="list-style-type: lower-alpha;"><li>Construct a parse tree for the C-like if-statement</li>
+       <dt><code>if( x &lt; 10 &amp;&amp; x &gt; 20 || x != y ) x = 30;</code></dt>
+
+   <li>Show the values of all the attributes computed at each node in the parse tree by these SDDs.</li>
+
+   <li>Show the three-address code produced for this if-statement.</li>
+
+   <li>Can you see any ways in which the three-address code can be optimized?</li>
+  </ol><br/><li>Write pseudcode for a function <code>sequiv(exp1, exp2)</code> that will test the
+      structural equivalence of two type expressions <code>exp1</code> and <code>exp2</code>.
+      Show how your function computes
+      <code>sequiv(array(2, array(2, int)), array(2, array(3, int))).</code></li>
+  <br/><li>Let <code>fib(n)</code> be the function</li>
+
+<pre><code>
+     int fib(n) {
+       if (n == 0)
+         return 0;
+       else if (n == 1)
+         return 1;
+       else
+         return fib(n-1) + fib(n-2);
+     }
+</code></pre>
+
+   <ol style="list-style-type: lower-alpha;"><li>Show the activation tree for <code>fib(3)</code>.</li>
+    <li>Show the activation records that are on the run-time stack
+        when <code>fib(1)</code> is invoked for the first time. Just show the return value,
+        actual parameters, and the caller’s frame pointer in each activation record.</li>
+   </ol><br/><li>Give an example from some common programming languages to illustrate the difference between</li>
+
+  <ol style="list-style-type: lower-alpha;"><li>Normal-order evaluation and applicative-order evaluation.</li>
+
+   <li>Call by reference and call by value.</li>
+
+   <li>Lexical scope and dynamic scope.</li>
+
+   <li>Stack allocation and heap allocation.</li>
+
+   <li>A static type and a dynamic type.</li>
+  </ol><dt>You can use different programming languages for each part.</dt>
+
+
+ </ol><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address> 
+
+</body>

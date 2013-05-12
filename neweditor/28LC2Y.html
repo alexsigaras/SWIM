@@ -1,0 +1,358 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 22: April 17, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 22: April 17, 2013<br/>
+  Introduction to Lambda Calculus
+ </h1>
+
+<h2>Outline</h2>
+ <ul><li>The evolution of programming languages</li>
+  <li>Programming paradigms</li>
+  <li>History of lambda calculus and functional programming languages</li>
+  <li>CFG for lambda calculus</li>
+  <li>Function abstraction</li>
+  <li>Function application</li>
+  <li>Free and bound variables</li>
+  <li>Beta reductions</li>
+  <li>Evaluating a lambda expression</li>
+  <li>Currying</li>
+  <li>Renaming bound variables by alpha reduction</li>
+  <li>Eta conversion</li>
+  <li>Substitutions</li>
+  <li>Disambiguating lambda expressions</li>
+  <li>Normal form</li>
+  <li>Evaluation strategies</li>
+ </ul><h2>1. The Evolution of Programming Languages</h2>
+ <ul><li>There are thousands of programming languages in the world today.
+      Why so many?</li>
+  <ul><li>Software is used in virtually every domain of human endeavor.
+       Each application domain has its distinct and often conflicting programming needs.
+       No one language is ideal for all application domains.</li>
+   <ul><li>Scientific programming demands support for matrices and efficient floating point computations.
+        Fortran, first developed in the 1950s, is still widely used for scientific computation.</li>
+    <li>Systems programming demands low-level control of machine resources, often
+        with real-time constraints. C and C++ are the dominant systems programming languages.</li>
+    <li>Business applications are characterized by data persistence and report generation.
+        SQL is the dominant query language in business data processing.</li>
+   </ul></ul><li>Why are there so many new programming languages?</li>
+   <ul><li>Software reliability and programmer productivity are critical concerns.</li>
+    <li>Programmer training is a significant cost, so old languages tend to persist.</li>
+    <li>But new languages can arise to meet the demands of new application domains.
+        For example, Java was designed in the 1990s to meet the demands of Internet programming.
+        But to gain acceptance, Java was designed to look a lot like C++.</li>
+   </ul><li>What makes a good programming language?</li>
+   <ul><li>This is a hotly debated question.  There is no universally accepted metric for
+        the goodness of a programming language. Technical excellence is rarely a criterion
+        for adoption.</li>
+    <li>Functional programming languages have many ardent advocates and many features of
+        functional languages have been incorporated into modern languages.
+        The next sequence of lectures will discuss the theoretical underpinnings
+        of functional languages and highlight a few important functional languages.</li>
+   </ul></ul><h2>2. Programming Paradigms</h2>
+ <ul><li>A programming paradigm is a style of computer programming.</li>
+  <li>There are many paradigms, each with its distinctive characteristics and
+      prototypical programming languages. The four most common are:</li>
+  <ul><li>imperative also known as procedural programming</li>
+   <ul><li>imperative programming tends to be the most popular paradigm</li>
+    <li>an imperative program tells the computer <i>how</i> to do a computation</li>
+    <li>the typical imperative languages are C and Fortran</li>
+   </ul><li>object-oriented programming</li>
+   <ul><li>an object-oriented program consists of a collection of interacting objects</li>
+    <li>C++, Java, and Smalltalk are prototypical object-oriented languages</li>
+   </ul><li>functional programming</li>
+   <ul><li>a functional program is typified by the recursive definition of functions</li>
+    <li>Haskell, Lisp, Scheme, ML, and OCaml are popular functional languages</li>
+   </ul><li>declarative programming</li>
+   <ul><li>a declarative program specifies <i>what</i> should be computed</li>
+    <li>SQL and Prolog are declarative languages</li>
+   </ul></ul><li>Some programming languages are multi-paradigm languages in the sense that they can
+      support more than one programming paradigm. For example, C#, OCaml, Ruby, and Scala
+      support both imperative, object-oriented, and functional programming.</li> 
+ </ul><h2>3. History of Lambda Calculus and Functional Programming Languages</h2>
+ <ul><li>Lambda calculus was introduced in the 1930s by Alonzo Church at Princeton University
+      as a mathematical system for defining computable functions.</li>
+  <li>Lambda calculus is equivalent in definitional power to that of Turing machines.</li>
+  <li>Lambda calculus serves as the theoretical model for functional programming languages
+      and has applications to artificial intelligence, proof systems, and logic.</li>
+  <li>Lisp was developed by John McCarthy at MIT in 1958 around lambda calculus.</li>
+  <li>ML, a general-purpose functional language, was developed
+      by Robin Milner at the University of Edinburgh in the early 1970s. Caml and OCaml are dialects of ML
+      developed at INRIA in 1985 and 1996, respectively.</li>
+  <li>Haskell, considered by many as one of the purest functional
+      programming languages, was developed by Simon Peyton Jones,
+      Paul Houdak, Phil Wadler and others in the late 1980s
+      and early 90s.</li>
+  <li>Because of its simplicity, lambda calculus is a very useful tool
+      for the study and analysis of programming languages.</li>
+ </ul><h2>4. CFG for The Lambda Calculus</h2>
+ <ul><li>The central concept in lambda calculus is an expression which
+      we can think of as a program that when
+      evaluated returns a result consisting of another lambda calculus expression.</li>
+  <li>Here is the grammar for lambda expressions:</li>
+  <ul/></ul><pre><code>
+expr → λ variable . expr | expr expr | variable | ( expr ) | built_in
+</code></pre>
+  
+  <li>A <code>variable</code> is an identifier.</li>
+  <li>A <code>built_in</code> is a built-in function such as addition or
+      multiplication, or a constant such as an integer
+      or boolean. However, as we shall see,
+      all programming language construct
+      can be implemented as functions with the pure lambda calculus so these       built-ins are unnecessary.
+      However, we will use built-ins for notational simplicity.</li>
+ 
+
+ <h2>5. Function Abstraction</h2>
+ <ul><li>A function abstraction, often called a lambda abstraction, is a lambda expression
+      that defines a function.</li>
+  <li>A function abstraction consists of four parts: a lambda followed by a variable, a          period, and then an expression as in
+      <code>λx.expr</code>.</li>
+
+  <li>In the function abstraction <code>λx.expr</code> the variable <code>x</code>
+      is the formal parameter of the function and <code>expr</code> is the body of the           function.</li>
+  <li>For example, the function abstraction λ<i>x</i>. + <i>x</i> 1 is a function of
+       <i>x</i> that adds <i>x</i> to 1. Parentheses can be added to lambda expressions        for clarity.
+       Thus, we could have
+       written this function abstraction as λ<i>x</i>.(+ <i>x</i> 1) or even as
+       (λ<i>x</i>. (+ <i>x</i> 1)).</li> 
+  <li>In C this function definition might be written as</li>
+</ul><pre><code>
+int addOne (int x)
+{
+  return (x + 1);
+}
+</code></pre>
+  <li>Note that unlike C the lambda abstraction does not give a name to the function.
+      The lambda expression itself is the function.</li>
+  <li>We say that <code>λx.expr</code> <i>binds</i> the variable
+      <code>x</code> in <code>expr</code> and that <code>expr</code> is the            <i>scope</i> of the variable.</li>
+ 
+
+ <h2>6. Function Application</h2>
+ <ul><li>A function application, often called a lambda application, consists of
+      an expression followed by an expression: <code>expr expr</code>.
+      The first expression is a function abstraction and the second expression
+      is an argument to which the function is applied.</li>
+  <li>For example, the lambda expression λ<i>x</i>. (+ <i>x</i> 1) 2 is an
+      application of the function λ<i>x</i>. (+ <i>x</i> 1) to the argument 2.</li>
+  <li>This function application λ<i>x</i>. (+ <i>x</i> 1) 2 can be evaluated
+      by substituting the argument 2 for the formal parameter <i>x</i> in the body
+      (+ <i>x</i> 1). Doing this we get (+ 2 1). This substitution is called a
+      beta reduction.</li>
+  <li>Beta reductions are like macro substitutions in C. To do beta reductions correctly
+      we may need to rename bound variables in lambda expressions to avoid name       clashes.</li>
+  <li>Functions can be used as arguments to functions and functions can return functions
+      as results.
+ </li></ul><h2>7. Free and Bound Variables</h2>
+ <ul><li>In the function definition λ<i>x</i>.<i>x</i> the variable <i>x</i>
+      in the body of the           definition
+      (the second <i>x</i>) is <i>bound</i> because its first occurrence in the
+      definition is λ<i>x</i>.</li>
+  <li>A variable that is not bound in <code>expr</code> is said to be <i>free</i> in             <code>expr</code>.
+      In the function (λ<i>x</i>.<i>xy</i>), the variable <i>x</i> in the
+      body of the function is bound and the variable <i>y</i> is free.</li>
+  <li>Every variable in a lambda expression is either bound or free.
+      Bound and free variables have quite a different status in functions.</li>
+
+  <li>In the expression (λ<i>x</i>.<i>x</i>)(λ<i>y</i>.<i>yx</i>):</li>
+
+  <ul><li>The variable <i>x</i> in the body of the leftmost
+        expression is bound to the first lambda.</li>
+    <li>The variable <i>y</i> in the body of the second expression is bound to the second lambda.</li>
+    <li>The variable <i>x</i> in the body of the second expression is free.</li>
+    <li>Note that <i>x</i> in second expression is independent of the <i>x</i> in the first expression.</li>
+  </ul><li>In the expression (λ<i>x</i>.<i>xy</i>)(λ<i>y</i>.<i>y</i>):</li>
+  <ul><li>The variable <i>y</i> in the body of the leftmost
+        expression is free.</li>
+    <li>The variable <i>y</i> in the body of the second expression is bound to the second lambda.</li>
+  </ul><li>Given an expression <i>e</i>, the following rules define FV(<i>e</i>),
+      the set of free variables in <i>e</i>:</li>
+
+  <ul><li>If <i>e</i> is a variable <i>x</i>, then FV(<i>e</i>) = {<i>x</i>}.</li>
+   <li>If <i>e</i> is of the form λ<i>x</i>.<i>y</i>, then FV(<i>e</i>) = FV(<i>y</i>) - {<i>x</i>}.</li>
+   <li>If <i>e</i> is of the form xy, then FV(<i>e</i>) = FV(<i>x</i>) ∪ FV(<i>y</i>).</li>
+  </ul><li>An expression with no free variables is said to be <i>closed</i>.</li>
+
+ </ul><h2>8. Beta Reductions</h2>
+ <ul><li>A function application <code>λx.e f</code> is evaluated by substituting the argument <code>f</code> for the
+      formal parameter <code>x</code> in the body <code>e</code>
+      of the function definition.</li>
+  <li>We will use the notation [<code>f/x]e</code> to indicate that <code>f</code> is
+      to be substituted
+      for all free occurrences
+      of <code>x</code> in the expression <code>e</code>.</li>
+  <li>Examples:</li>
+  </ul><ol><li>(λ<i>x</i>.<i>x</i>)<i>y</i> → [<i>y</i>/<i>x</i>]<i>x</i> =        <i>y</i>.</li>
+   <li>(λ<i>x</i>.<i>xzx</i>)<i>y</i> → [<i>y</i>/<i>x</i>]<i>xzx</i> =        <i>yzy</i>.</li>
+   <li>(λ<i>x</i>.<i>z</i>)<i>y</i> → [<i>y</i>/<i>x</i>]<i>z</i> =        <i>z</i>.</li>
+  </ol><li>This substitution in a function application is called a <i>beta reduction</i>
+      and we use a right arrow
+      to indicate it.</li>
+
+  <li>If expr1 → expr2, we say expr1 <i>reduces</i> to expr2 in one step.</li>
+  <li>In general, <code>(λx.e)f → [f/x]e</code>
+      means that applying the function
+      <code>(λx.e)</code> to the argument expression <code>f</code> reduces to the 
+      expression <code>[f/x]e</code>
+      where the argument expression <code>f</code> is substituted for the function's             formal parameter <code>x</code>
+      in the function body <code>e</code>.</li>
+  <li>A lambda calculus expression (aka a "program") is "run" by computing a final result       by repeatly applying beta reductions.
+      We use →* to denote the reflexive and transitive closure of →;
+      that is, zero or more applications of beta reductions.</li>
+
+  <li>Examples:</li>
+  <ul><li>(λ<i>x</i>.<i>x</i>)<i>y</i> → <i>y</i>
+       (illustrating that λ<i>x</i>.<i>x</i> is the identity function).</li>
+   <li>(λ<i>x</i>.<i>xx</i>)(λ<i>y</i>.<i>y</i>) →
+       (λ<i>y</i>.<i>y</i>)(λ<i>y</i>.<i>y</i>) → (λ<i>y</i>.<i>y</i>);
+       thus, we can write (λ<i>x</i>.<i>xx</i>)(λ<i>y</i>.<i>y</i>)
+       →* (λ<i>y</i>.<i>y</i>).
+       Note that here we have applied a function to a function as an argument
+       and the result is a function.</li>
+  </ul><h2>9. Evaluating a Lambda Expression</h2>
+ <ul><li>A lambda calculus expression can be thought of as a program which can be
+      executed by evaluating it. Evaluation is done by repeatedly finding a
+      reducible expression (called a redex) and reducing it by a function evaluation
+      until there are no more redexes.</li>
+  <li>Example 1: The lambda expression (λ<i>x</i>.<i>x</i>)<i>y</i> in its entirety
+      is a redex that reduces to <i>y</i>.</li>
+  <li>Example 2: The lambda expression (+ (* 1 2) (- 4 3)) has two redexes:
+      (* 1 2) and (- 4 3).
+      If we choose to reduce the first redex,
+      we get (+ 2 (- 4 3)).
+      We can then reduce (+ 2 (- 4 3)) to get (+ 2 1).
+      Finally we can reduce (+ 2 1) to get 3.</li>
+  <li>Note that if we had chosen the second redex to revaluate first, we would
+      have ended up with the same result:</li>
+      <ul><di>(+ (* 1 2) (- 4 3)) → (+ (* 1 2) 1) → (+ 2 1) → 3.</di></ul></ul><h2>10. Currying</h2>
+ <ul><li>All functions in lambda calculus are prefix and take exactly one argument.</li>
+  <li>If we want to apply a function to more than one argument, we can use a technique
+      called <i>currying</i> that treats a function applied to more than
+      one argument to a sequence of applications of one-argument functions.
+      For example, to express the sum of 1 and 2 we can write (+ 1 2) as ((+ 1) 2)
+      where the expression (+ 1) denotes the function that adds 1 to its argument.
+      Thus ((+ 1) 2) means the function + is applied to the argument 1 and the result is
+      a function (+ 1) that adds 1 to its argument:
+      (+ 1 2) = ((+ 1) 2) → 3</li>
+  <li>Note that function application associates to the left.</li>
+ </ul><h2>11. Renaming Bound Variables by Alpha Reduction</h2>
+ <ul><li>The name of a formal parameter in a function definition is arbitrary.
+      We can use any variable to name a parameter, so that the function
+      λ<i>x</i>.<i>x</i> is equivalent to λ<i>y</i>.<i>y</i> and       λ<i>z</i>.<i>z</i>.
+      This kind of renaming is called <i>alpha reduction</i>.</li>
+  <li>Note that we cannot rename free variables in expressions.</li>
+  <li>Also note that we cannot change the name of a bound variable in an
+      expression to conflict
+      with the name of a free variable in that expression.</li>
+ </ul><h2>12. Eta Conversion</h2>
+ <ul><li>The two lambda expressions (λ<i>x</i>.+ 1 <i>x</i>) and (+ 1) are equivalent in the
+      sense that these expressions behave in exactly the same way when they are applied to
+      an argument -- they add 1 to it. η-conversion is a rule that expresses this
+      equivalence.</li>
+  <li>In general, if <i>x</i> does not occur free in the function <i>F</i>, then (λ<i>x</i>.<i>F</i> <i>x</i>)
+      is η-convertible to <i>F</i>.</li>
+ </ul><h2>13. Substitutions</h2>
+ <ul><li>For a beta reduction, we introduced the notation <code>[f/x]e</code>
+      to indicate that the expression <code>f</code> is to be substituted
+      for all free occurrences
+      of the formal parameter <code>x</code> in the expression <code>e</code>:</li>
+  <ul><dt><code>(λx.e) f → [f/x]e</code></dt>
+  </ul><li>To avoid name clashes in a substitution <code>[f/x]e</code>,
+      first rename the bound variables in <code>e</code> and <code>f</code>
+      so they become distinct. Then perform the textual substituion of <code>f</code>
+      for <code>x</code> in <code>e</code>.</li>
+  <ul><li>For example,
+       consider the substitution <code>[y(λx.x)/x] λy.(λx.x)yx</code>.</li>
+   <li>After renaming all the bound variables
+       to make them all distinct we get <code>[y(λu.u)/x]        λv.(λw.w)vx</code>.</li>
+   <li>Then doing the substitution we get <code>λv.(λw.w)v(y(λu.u))</code>.</li>
+  </ul><li>The rules for substitution are as follows. We assume <code>x</code> and <code>y</code>
+      are distinct variables, and <code>e</code>, <code>f</code>
+      and <code>g</code> are expressions.</li>
+  <ul><li>For variables</li>
+    <code>
+    <dt>   [e/x]x = e</dt>
+    <dt>   [e/x]y = y</dt>
+    </code>
+   <li>For function applications</li>
+    <code><dt>   [e/x](f g) = ([e/x]f) ([e/x]g)</dt></code>
+   <li>For function abstractions</li>
+    <dt><code>   [e/x](λx.f) = λx.f</code></dt>
+
+    <dt><code>   [e/x](λy.f) = λy.[e/x]f</code>,
+        provided <code>y</code> is not free in <code>e</code>
+        (the "freshness" condition).</dt>
+  </ul><li>Examples:</li>
+  </ul><ol><li><code>[y/y](λx.x) = λx.x</code></li>
+   <li><code>[y/x]((λx.y) x) = ([y/x](λx.y)) ([y/x]x) = (λx.y)y</code></li>
+   <li>Note that the freshness condition does not allow us to make the
+       substitution <code>[y/x](λy.x) = λy.([y/x]x) = λy.y</code>
+       because <code>y</code> is free in the expression <code>y</code>.</li>
+  </ol><h2>14. Disambiguating Lambda Expressions</h2>
+ <ul><li>The grammar we gave in section 4 for lambda expressions is ambgious.
+      A few simple rules will remove the ambiguities.</li>
+  <li>Function application is left associative:
+      <i>f g h</i> = ((<i>f g</i>) <i>h</i>)</li>
+  <li>Function application binds more tightly than lambda:
+      λ<i>x</i>.<i>f g x </i> = (λ<i>x</i>.(<i>f g</i>) <i>x</i>) </li>
+  <li>The body in a function abstraction extends as far to the right as possible:
+      λ<i>x</i>. + <i>x</i> 1 =
+      λ<i>x</i>. (+ <i>x</i> 1).</li>
+ </ul><h2>15. Normal Form</h2>
+ <ul><li>An expression containing no possible beta reductions is said to be in normal form.
+      A normal form expression is one containing no redexes.</li>  
+  <li>Examples of normal form expressions:</li>
+  <ul><li><code>x</code> where <code>x</code> is a variable.</li>
+   <li><code>x e</code> where <code>x</code> is a variable and <code>e</code>
+       is a normal form expression.</li>
+   <li><code>λx.e</code> where <code>x</code> is a variable and
+       <code>e</code> is a normal form expression.</li>
+  </ul><li>The expression <code>(λx.x x)(λx.x x)</code> does not have a normal form
+      because it always evaluates to itself. We can think of this expression as
+      a representation for an infinite loop.</li>
+ </ul><h2>16. Evaluation Strategies</h2>
+ <ul><li>An expression may contain more than one redex so there can be
+      several reduction sequences. For example, the expression
+      <code>(+ (* 1 2) (- 4 3))</code> can be reduced to normal
+      form with two reduction sequences:</li>
+   <ul><code>
+     <dt>(+ (* 1 2) (- 4 3))</dt>
+     <dt>→ (+ 2 (- 4 3))</dt>
+     <dt>→ (+ 2 1)</dt>
+     <dt>→ 3</dt></code>
+   </ul><dt>or the sequence</dt>
+   <ul><code>
+     <dt>(+ (* 1 2) (- 4 3))</dt>
+     <dt>→ (+ (* 1 2) 1)</dt>
+     <dt>→ (+ 2 1)</dt>
+     <dt>→ 3</dt></code>
+   </ul><li>As we pointed out in (15), the expression <code>(λx.x x)(λx.x x)</code>
+      does not have a terminating sequence of reductions.</li>
+  <li>Some reduction sequences for a given expression may reach a normal form while
+      others may not. For example, consider the expression
+      <code>(λx.1)((λx.x x)(λx.x x))</code>.
+      If we reduce the application of <code>(λx.1)</code> to
+      <code>(λx.x x)(λx.x x)</code>, we get the result 1,
+      but if we keep reducing the application of <code>(λx.x x)</code>
+      to <code>(λx.x x)</code>, the evaluation will not terminate.</li>
+  <li>We shall see that repeatedly reducing the leftmost outermost redex will always             yield a normal form, if a normal form exists.</li>
+ </ul><h2>17. Practice Problems</h2>
+ <ol><li>Evaluate <code>(λx. λy. + x y)1 2</code>.</li>
+  <li>Evaluate <code>(λf. f 2)(λx. + x 1)</code>.</li>
+  <li>Evaluate <code>(λx. (λx. + (* 1)) x 2) 3</code>.</li>
+  <li>Evaluate <code>(λx. λy. + x((λx. * x 1) y))2 3</code>.</li>
+  <li>Is <code>(λx. + x x)</code> η-convertible to
+      <code>(+ x)</code>?</li>
+  <li>Show how all bound variables in a lambda expression
+      can be given distinct names.</li>
+  <li>Construct an unambiguous grammar for lambda calculus.</li>
+ </ol><h2>18. References</h2>
+ <ul><li>Simon Peyton Jones, <i>The Implementation of Functional Programming Languages</i>,
+      Prentice-Hall, 1987.</li>
+  <li><a href="13-04-22_Edwards-LC.pdf">
+      Stephen A. Edwards: The Lambda Calculus</a>  </li>
+  <li>http://www.inf.fu-berlin.de/lehre/WS01/ALPI/lambda.pdf</li>
+  <li>http://www.soe.ucsc.edu/classes/cmps112/Spring03/readings/lambdacalculus/project3.html</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

@@ -1,0 +1,396 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 11: February 27, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 11: Parsing Action Conflicts<br/>
+  February 27, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Parsing action conflicts</li>
+  <li>Resolving shift/reduce conflicts</li>
+  <li>Using Yacc to generate LALR(1) parsers</li>
+  <li>Using Yacc with ambiguous grammars</li>
+  <li>Error recovery in Yacc</li>
+ </ol><h2>1. Parsing Action Conflicts</h2>
+ <ul><li>If a grammar is not SLR(1), the SLR parsing table construction produces one or more
+      multiply defined entries in the parsing table action function.</li>
+  <li>These entries are either <i>shift/reduce conflicts</i> or
+      <i>reduce/reduce conflicts.</i>
+ </li></ul><h2>2. Resolving Shift/Reduce Conflicts</h2>
+ <ul><li><b>Example.</b> Given the augmented grammar <i>G'</i></li>
+  </ul><pre><code>
+  (0) E' → E
+  (1) E  → E+E
+  (2) E  → E*E
+  (3) E  → id
+  </code></pre>
+  <dt>FOLLOW(<code>E</code>) = { <code>+, *, $</code>}</dt><br/><li>Note that this grammar does not specify the relative precedence
+      of the <code>+</code> and <code>*</code> operators
+      nor their associativities.</li>
+  <li><i>C</i>, the canonical collection of sets of LR(0) items for <i>G'</i>, is</li>
+
+  <pre><code>
+  I<sub>0</sub>: E' → ·E
+      E → ·E+E
+      E → ·E*E
+      E → ·id
+
+  I<sub>1</sub>: E' → E·
+      E → E·+E
+      E → E·*E
+
+  I<sub>2</sub>: E → id·
+
+  I<sub>3</sub>: E → E+·E
+      E → ·E+E
+      E → ·E*E
+      E → ·id
+
+  I<sub>4</sub>: E → E*·E
+      E → ·E+E
+      E → ·E*E
+      E → ·id
+
+  I<sub>5</sub>: E → E+E·
+      E → E·+E
+      E → E·*E
+
+  I<sub>6</sub>: E → E*E·
+      E → E·+E
+      E → E·*E
+
+  </code></pre>
+
+
+  <li>SLR(1) parsing table for <i>G'</i>:</li><br/><code>
+   </code><table border="4"><tbody><tr><th rowspan="2"><code> State </code></th>
+     <th colspan="4"><code>Action</code></th>
+     <th><code>Goto</code></th>
+    </tr><tr><td style="text-align: center;"><code> id </code></td>
+     <td style="text-align: center;"><code> + </code></td>
+     <td style="text-align: center;"><code> * </code></td>
+     <td style="text-align: center;"><code> $ </code></td>
+     <td style="text-align: center;"><code> E </code></td>
+    </tr><tr><td style="text-align: center;"><code>0</code></td>
+     <td style="text-align: center;"><code>s2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>1</code></td>
+    </tr><tr><td style="text-align: center;"><code>1</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>s3</code></td>
+     <td style="text-align: center;"><code>s4</code></td>
+     <td style="text-align: center;"><code>acc</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr><tr><td style="text-align: center;"><code>2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>r3</code></td>
+     <td style="text-align: center;"><code>r3</code></td>
+     <td style="text-align: center;"><code>r3</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr><tr><td style="text-align: center;"><code>3</code></td>
+     <td style="text-align: center;"><code>s2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>5</code></td>
+    </tr><tr><td style="text-align: center;"><code>4</code></td>
+     <td style="text-align: center;"><code>s2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>6</code></td>
+    </tr><tr><td style="text-align: center;"><code>5</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>s3</code><br/><code>r1</code></td>
+     <td style="text-align: center;"><code>s4</code><br/><code>r1</code></td>
+     <td style="text-align: center;"><code>r1</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr><tr><td style="text-align: center;"><code>6</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>s3</code><br/><code>r2</code></td>
+     <td style="text-align: center;"><code>s4</code><br/><code>r2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr></tbody></table><br/><li>Notes</li>
+   <ul><li>There is a shift/reduce conflict in <code>action[5,+]</code> between
+        "<code>shift 3</code>" and "<code>reduce by E → E+E</code>"
+        because the associativity of the operator <code>+</code> is not defined
+        by the grammar. This conflict can be resolved in favor of
+        "<code>reduce by E → E+E</code>" if we want <code>+</code>
+        to be left associative.</li>
+
+    <li>There is a shift/reduce conflict in <code>action[5,*]</code>
+        between "<code>shift 4</code>" and "<code>reduce by E → E+E</code>"
+        because the relative precedence of the operators <code>+</code> and
+        <code>*</code> is not defined by the grammar. This conflict can be
+        resolved in favor of "<code>shift 4</code>" if we want <code>*</code>
+        to have higher precedence than <code>+</code>.</li>
+
+    <li>Analogously, there is a shift/reduce conflict in <code>action[6,+]</code>
+        between "<code>shift 3</code>" and "<code>reduce by E → E*E</code>"
+        because the relative precedence of the operators <code>+</code> and
+        <code>*</code> is not defined by the grammar. This conflict can be
+        resolved in favor of "<code>reduce by E → E*E</code>" if we want
+        <code>*</code> to have higher precedence than <code>+</code>.</li>
+
+    <li>There is a shift/reduce conflict in <code>action[6,*]</code> between
+        "<code>shift 4</code>" and "<code>reduce by E → E*E</code>"
+        because the associativity of the operator <code>*</code> is not defined
+        by the grammar. This conflict can be resolved in favor of
+        "<code>reduce by E → E*E</code>" if we want <code>*</code> to be
+        left associative.</li>
+   </ul><h2>3. Using Yacc to Generate LALR(1) Parsers</h2>
+ <ul><li>Consider the yacc program <code>expr1.y</code>:</li>
+  </ul><pre><code>
+%token id
+%%
+E : E '+' E
+  | E '*' E
+  | id
+  ;
+  </code></pre>
+
+  <li>Invoking <code>yacc -v expr1.y</code>, we can see the kernels of the
+      sets of items for this grammar in the yacc output file <code>y.output</code>.</li>
+  <li>The parsing action conflicts are shown for states 5 and 6.</li>
+  <pre><code>
+state 0
+        $accept : _E $end
+
+        id  shift 2
+        .  error
+
+        E  goto 1
+
+state 1
+        $accept :  E_$end
+        E :  E_+ E
+        E :  E_* E
+
+        $end  accept
+        +  shift 3
+        *  shift 4
+        .  error
+
+state 2
+        E :  id_    (3)
+
+        .  reduce 3
+
+state 3
+        E :  E +_E
+
+        id  shift 2
+        .  error
+
+        E  goto 5
+
+state 4
+        E :  E *_E
+
+        id  shift 2
+        .  error
+
+        E  goto 6
+
+5: shift/reduce conflict (shift 3, red'n 1) on +
+5: shift/reduce conflict (shift 4, red'n 1) on *
+state 5
+        E :  E_+ E
+        E :  E + E_    (1)
+        E :  E_* E
+
+        +  shift 3
+        *  shift 4
+        .  reduce 1
+
+6: shift/reduce conflict (shift 3, red'n 2) on +
+6: shift/reduce conflict (shift 4, red'n 2) on *
+state 6
+        E :  E_+ E
+        E :  E_* E
+        E :  E * E_    (2)
+
+        +  shift 3
+        *  shift 4
+        .  reduce 2
+
+
+5/127 terminals, 1/600 nonterminals
+4/300 grammar rules, 7/1000 states
+4 shift/reduce, 0 reduce/reduce conflicts reported
+4/601 working sets used
+memory: states,etc. 17/2000, parser 2/4000
+3/3001 distinct lookahead sets
+0 extra closures
+9 shift entries, 1 exceptions
+3 goto entries
+0 entries saved by goto default
+Optimizer space used: input 25/2000, output 9/4000
+9 table entries, 3 zero
+maximum spread: 257, maximum offset: 257
+  </code></pre>
+
+ 
+
+ <h2>4. Using Yacc with Ambiguous Grammars</h2>
+ <ul><li>We can specify the associativities and relative precedence
+      of the <code>+</code> and <code>*</code> operators in the
+      declarations sections of a yacc program.</li>
+  <li>Consider the yacc program <code>expr2.y</code>:</li>
+  <li>The statement <code>%left '+'</code> makes <code>+</code> left associative.</li>
+  <li>The statement <code>%left '*'</code> makes <code>*</code> left associative.</li>
+  <li>Since the statement for <code>+</code> comes before the statement for
+      <code>*</code>, <code>+</code> has lower precedence than <code>*</code>.</li>
+
+  </ul><pre><code>
+%token id
+%left '+'
+%left '*'
+%%
+E : E '+' E
+  | E '*' E
+  | id
+  ;
+  </code></pre>
+
+  <li>Invoking <code>yacc -v expr2.y</code>, we can now see that
+      no shift-reduce conflicts have been generated in
+      the yacc output file <code>y.output</code>.</li>
+  <pre><code>
+state 0
+        $accept : _E $end
+
+        id  shift 2
+        .  error
+
+        E  goto 1
+
+state 1
+        $accept :  E_$end
+        E :  E_+ E
+        E :  E_* E
+
+        $end  accept
+        +  shift 3
+        *  shift 4
+        .  error
+
+state 2
+        E :  id_    (3)
+
+        .  reduce 3
+
+state 3
+        E :  E +_E
+
+        id  shift 2
+        .  error
+
+        E  goto 5
+
+state 4
+        E :  E *_E
+
+        id  shift 2
+        .  error
+
+        E  goto 6
+
+state 5
+        E :  E_+ E
+        E :  E + E_    (1)
+        E :  E_* E
+
+        *  shift 4
+        .  reduce 1
+
+state 6
+        E :  E_+ E
+        E :  E_* E
+        E :  E * E_    (2)
+
+        .  reduce 2
+
+
+5/127 terminals, 1/600 nonterminals
+4/300 grammar rules, 7/1000 states
+0 shift/reduce, 0 reduce/reduce conflicts reported
+4/601 working sets used
+memory: states,etc. 17/2000, parser 2/4000
+3/3001 distinct lookahead sets
+0 extra closures
+6 shift entries, 1 exceptions
+3 goto entries
+0 entries saved by goto default
+Optimizer space used: input 19/2000, output 10/4000
+10 table entries, 3 zero
+maximum spread: 257, maximum offset: 257
+  </code></pre>
+
+ <li>Unless otherwise instructed, Yacc resolves all parsing
+     action conflicts using the following two rules:</li>
+ <ol><li>A reduce/reduce conflict is resolved by choosing the
+      conflicting production listed first in the Yacc
+      specification.</li>
+  <li>A shift/reduce conflict is resolved in favor of shift.
+      Note that this rule correctly resolves the shift/reduce conflict
+      arising from the dangling-else ambiguity.</li>
+ </ol><h2>5. Error Recovery in Yacc</h2>
+ <ul><li>In Yacc, error recovery can be performed with error productions.</li>
+  <li>To process errors at the level of a nonterminal <code>A</code>,
+      add an error production <code>A → error α</code>
+      where <code>error</code> is a Yacc reserved word, and α is a string
+      of grammar symbols, possibly empty.  Yacc will generate a parser
+      including this production.</li>
+  <li>If Yacc encounters an error during parsing, it pops symbols from its stack
+      until it finds the topmost state on its stack whose underlying set of items
+      includes an item of the form
+      <dt>   <code>A → . error α</code></dt>
+      The parser then shifts the special token <code>error</code> onto the stack
+      as though it saw the token <code>error</code> on the input.</li>
+  <li>If α is not empty, Yacc skips ahead on the input looking for a
+      substring that can be "reduced" to α on the stack. Now the parser
+      will have <code>error α</code> on top of its stack, which it will
+      reduce to <code>A</code>. The parser then resumes normal parsing.</li>
+  <li>Example: See Fig. 4.61, p. 296.  This Yacc specification contains
+      a translation rule</li>
+  </ul><pre><code>
+      lines : error '\n'  { yyerror("reenter previous line:"); yyerrok; }
+  </code></pre>
+  <dt>On encountering an error, the parser starts popping symbols from
+      its stack until it encounters a state with a shift action on <code>error</code>.
+      The parser shifts the token <code>error</code> on to the stack and
+      then skips ahead in the input until it finds a newline which it shifts
+      onto the stack.  The parser reduces <code>error '\n'</code> to
+      <code>lines</code> and emits the error message "reenter previous line:".
+      The special Yacc routine <code>yyerrok</code> resets the parser to its
+      normal mode of operation.</dt>
+ 
+
+ <h2>6. Practice Problems</h2>
+ <ol><dt>Consider the following grammar G:</dt>
+  </ol><ul/><pre><code>
+     (1) S → a S b S
+     (2) S → b S a S
+     (3) S → ε
+   </code></pre>
+  
+  <li>What language does G generate?</li>
+  <li>Construct an SLR(1) parsing table for G.</li>
+  <li>Explain why the parsing action conflicts arise in the parsing table.</li>
+  <li>Construct an equivalent LALR(1) grammar for L(G).</li>
+  <li>Show that your grammar is LALR(1) by using yacc to
+      construct an LALR(1) parsing table for it.</li>
+  <li>Is your grammar LL(1)?</li>
+ 
+
+
+ <h2>7. Reading</h2>
+ <ul><li>ALSU, Sects. 4.8 and 4.9</li>
+
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

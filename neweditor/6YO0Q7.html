@@ -1,0 +1,260 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 23: April 22, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 23: April 22, 2013<br/>
+  The Lambda Calculus
+ </h1>
+
+<h2>Outline</h2>
+ <ul><li>Reduction orders</li>
+  <li>The Church-Rosser theorems</li>
+  <li>The Y combinator</li>
+  <li>Implementing factorial using the Y combinator</li>
+  <li>Church numerals</li>
+  <li>Arithmetic</li>
+  <li>Logic</li>
+  <li>Other programming language constructs</li>
+  <li>The influence of the lambda calculus on functional languages</li>
+ </ul><h2>1. Reduction Orders</h2>
+ <ul><li>Programming languages use many different techniques to pass parameters to procedures
+      such as call by value, call by reference, call by value-return, call by name, and so on.
+      We can model many of these parameter-passing mechanisms using the lambda calculus.</li> 
+  <li>The order in which reductions are applied within a lambda expression
+      can affect the final result.
+      We will use the terms reduction order and evaluation order synonymously.</li>
+  <li>A reducible expression (redex) in a lambda expression is a subexpression
+      that can be reduced using beta reduction.</li>
+  <li>An expression that contains no redexes is said to be in normal form.</li>
+  <li>Some reduction orders for an expression may yield a normal form
+      expression while
+      other orders may not. For example, consider the expression
+  <ul><code>(λx.1)((λx.x x)(λx.x x))</code>
+  </ul></li><li>This expression has two redexes:</li>
+  </ul><ol><li>The entire expression is a redex in which we can apply the function
+       <code>(λx.1)</code> to
+       the argument
+       <code>((λx.x x)(λx.x x))</code> to yield the value 1.</li>
+   <li>The rightmost subexpression <code>((λx.x x)(λx.x x))</code>
+       is also a redex in which
+       we can apply the function <code>(λx.x x)</code> to the argument
+       <code>(λx.x x)</code>. But if we do this reduction we get same subexpression:
+       <code>(λx.x x)(λx.x x)</code> →
+       <code>(λx.x x)(λx.x x)</code>.
+       Thus, continuing this order of evaluation will not terminate in a normal form.</li>
+  </ol><li>A remarkable property of lambda calculus is that every lambda expression
+      has a unique normal form if one exists.</li>
+  <li>The expression <code>(λx.1)((λx.x x)(λx.x x))</code>
+      has the normal form 1.</li>
+  <li>The expression <code>(λx.x x)(λx.x x)</code> does not have a normal form
+      because it always evaluates to itself. We can think of this expression as
+      a representation for an infinite loop.</li>
+  <li>There are two common reduction orders for lambda expressions:
+      normal order evaluation and applicative order evaluation.</li>
+
+  <li>Normal order evaluation</li>
+  <ul><li>In normal order evaluation we always reduce the leftmost outermost redex at each step.</li>
+   <li>The first reduction order above is a normal order evaluation.</li>
+   <li>If an expression has a normal form, then normal order evaluation will always find it.</li>
+  </ul><li>Applicative order evaluation</li>
+  <ul><li>In applicative order evaluation we always reduce the leftmost innermost redex
+       at each step.</li>
+   <li>The second reduction order above is an applicative order evaluation.</li>
+   <li>Thus, even though an expression may have a normal form, applicative order evaluation
+       may fail to find it.</li>
+  </ul><h2>2. The Church-Rosser Theorems</h2>
+ <ul><li>A remarkable property of lambda calculus is that every expression has a unique
+      normal form if one exists.</li>
+  <li><b>Church-Rosser Theorem I:</b> If <code>e →* f</code> and <code>e →* g</code>
+      by any two reduction orders,
+      then there always exists
+      a lambda expression <code>h</code> such that <code>f →* h</code>
+      and <code>g →* h</code>.</li>
+  <ul><li>A corollary of this theorem is that no lambda expression can be reduced to
+       two distinct normal forms. To see this, suppose <code>f</code> and <code>g</code>
+       are in normal form. The Church-Rosser theorem says there must be an expression
+       <code>h</code> such that <code>f</code> and <code>g</code> are each reducible
+       to <code>h</code>.  Since <code>f</code> and <code>g</code> are in normal form,
+       they cannot have any redexes so <code>f = g = h</code>.</li>
+   <li>This corollary says that all reduction sequences that terminate will always
+       yield the same result and that result must be a normal form.</li>
+   <li>The term <i>confluent</i> is often applied to a rewriting system that has the
+       Church-Rosser property.</li>
+  </ul><li><b>Church-Rosser Theorem II:</b> If <code>e →* f</code> and
+      <code>f</code> is in normal form, then there exists a normal order
+      reduction sequence from <code>e</code> to <code>f</code>.</li>
+ </ul><h2>3. The Y Combinator</h2>
+ <ul><li>The <code>Y</code> combinator (sometimes called the paradoxical combinator)
+      is a function that takes a function
+      <code>G</code> as an argument and returns <code>G(YG)</code>.
+      With repeated applications we can get
+      <code>G(G(YG)), G(G(G(YG))),... </code>.</li>
+  <li>We can implement recursive functions using the <code>Y</code> combinator.</li>
+  <li><code>Y</code> is defined as follows:</li>
+  <ul><dt><code>(λf.(λx.f(x x))(λx.f(x x)))<code>
+  </code></code></dt></ul><li>Let us evaluate <code>YG</code> where <code>G</code>
+      is any expression:</li>
+  <ul><dt><code>(λf.(λx.f(x x))(λx'.f(x' x'))) G<br/>
+        → (λx.G(x x))(λx'.G(x' x'))<br/>
+        → G((λx'.G(x' x'))(λx'.G(x' x')))<br/>
+        ↔ G((λf.(λx.f(x x))(λx.f(x x)))G)<br/>
+        = G(YG)</code><br/></dt>
+  </ul><li>Thus, <code>YG →<sup>*</sup> G(YG)</code>;
+      that is, <code>YG</code> reduces to a call of <code>G</code> on
+      <code>(YG)</code>.</li>
+  <li>We will use <code>Y</code> to implement recursive functions.</li>
+  <li><code>Y</code> is an example of a fixed-point combinator.</li>
+ </ul><h2>4. Implementing Factorial using the Y Combinator</h2>
+ <ul><li>If we could name lambda abstractions, we could define the
+      factorial function with the following recursive definition:</li>
+  <ul><dt><code>FAC = (λn.IF (= n 0) 1 (* n (FAC (- n 1 ))))</code></dt>
+  </ul><dt>where <code>IF</code> is a conditional function.</dt>
+  <li>However, functions in lambda calculus cannot be named; they
+      are anonymous.</li>
+  <li>But we can express recursion as the fixed-point of a function <code>G</code>.
+      To do this, let us simplify the essence of the problem.
+      We begin with a skeletal recursive definition:</li>
+  <ul><dt><code>FAC = λn.(... FAC ...)</code></dt>
+  </ul><li>By performing beta abstraction on <code>FAC</code>, we can transform its
+      definition to:</li>
+  <ul><dt><code>FAC = (λf.(λn.(... f ...))) FAC</code><br/><code>    = G FAC</code></dt>
+  </ul><dt>where</dt>
+  <ul><dt><code>G = λf.λn.IF (= n 0) 1 (* n (f (- n 1 )))</code></dt>
+  </ul><dt>Beta abstraction is just the reverse of beta reduction.</dt>
+
+  <li>The equation</li>
+  <ul><dt><code>FAC = G FAC</code><br/></dt></ul><dt>says that when the function <code>G</code> is applied to <code>FAC</code>,
+      the result is <code>FAC</code>.
+      That is, <code>FAC</code> is a fixed-point of <code>G</code>.</dt>
+  <li>We can use the Y combinator to implement <code>FAC</code>:</li>
+  <ul><dt><code>FAC = Y G</code></dt>
+  </ul><li>As an example, let compute <code>FAC 1</code>:</li>
+
+  <ul><dt><code>FAC 1 = Y G 1<br/>
+      = G (Y G) 1<br/>
+      = λf.λn.IF (= n 0) 1 (* n (f (- n 1 ))))(Y G) 1<br/>
+      → λn.IF (= n 0) 1 (* n ((Y G) (- n 1 ))))1<br/>
+      → IF (= n 0) 1 (* n ((Y G) (- 1 1 )))<br/>
+      → * 1 (Y G 0)<br/>
+      = * 1 (G(Y G) 0)<br/>
+      = * 1((λf.λn.IF (= n 0) 1 (* n (f (- n 1 ))))(Y G 0)<br/>
+      → * 1((λn.IF (= n 0) 1 (* n ((Y G) (- n 1 ))))0<br/>
+      → * 1(IF (= 0 0) 1 (* 0 ((Y G) (- 0 1 )))<br/>
+      → * 1 1<br/>
+      → 1</code></dt>
+
+  </ul></ul><h2>5. Church Numerals</h2>
+ <ul><li>Church numberals are a way of representing the integers in lambda calculus.
+  </li><li>Church numerals are defined as functions taking two parameters:</li>
+  <ul><dt><code>0</code> is defined as <code>λf.λx. x</code></dt>
+   <dt><code>1</code> is defined as <code>λf.λx. f x</code></dt>
+   <dt><code>2</code> is defined as <code>λf.λx. f (f x)</code>.</dt>
+   <dt><code>3</code> is defined as <code>λf.λx. f (f (f x))</code>.</dt>
+   <dt><code>n</code> is defined as
+       <code>λf.λx. f<sup><i>n</i></sup> x</code></dt>
+  </ul><li><code>n</code> has the property that for any lambda expressions <code>g</code> and
+      <code>y</code>, <code>ngy →* g<sup><i>n</i></sup>y</code>.
+      That is to say, <code>ngy</code> causes <code>g</code> to be
+      applied to <code>y</code> <i>n</i> times.</li>
+ </ul><h2>6. Arithmetic</h2>
+  <ul><li>In lambda calculus, arithmetic functions can be represented by
+       corresponding operations on Church numerals.</li>
+   <li>We can define a successor function <code>succ</code> of three arguments that adds one
+       to its first argument:</li>
+   <ul><dt><code>λn.λf.λx. f (n f x)</code></dt>
+
+    <li>Example: Let us evaluate <code>succ 0</code>:</li>
+
+      <dt><code>(λn.λf.λx. f (n f x)) 0<br/>
+             → λf.λx. f (0 f x)<br/>
+             = λf.λx. f ((λf.λx. x) f x)<br/>
+             → λf.λx. f (λx. x) x)<br/>
+             → λf.λx. f x<br/>
+             = 1</code>
+      </dt>
+   </ul><li>We can define a function <code>add</code> using the identity
+       <code>f<sup>(<i>m</i>+<i>n</i>)</sup> =
+             f<sup><i>m</i></sup> º f<sup><i>n</i></sup></code>
+       as follows:</li>
+   <ul><dt><code>λm.λn.λf.λx. m f (n f x)</code></dt>
+   </ul><ul><li>Example: Let us evaluate <code>add 1 2</code>:</li>
+
+      <dt><code>λm.λn.λf.λx. m f (n f x) 1 2<br/>
+             →  λn.λf.λx. 1 f (n f x) 2<br/>
+             →* λf.λx. f (f (f x))<br/>
+             =  3</code>
+      </dt>
+   </ul></ul><h2>7. Logic</h2>
+ <ul><li>The boolean value true can be represented by a function of two arguments that
+      always selects its first argument: <code>λx.λy.x</code></li>
+  <li>The boolean value false can be represented by a function of two arguments that
+      always selects its second argument: <code>λx.λy.y</code></li>
+
+  <li>An if-then-else statement can be represented
+      by a function of three arguments <code>λc.λi.λe. c i e</code> that uses its
+      condition <code>c</code> to select either the if-part <code>i</code>
+      or the else-part <code>e</code>.</li>
+   <ul><li>Example: Let us evaluate if true then 1 else 2:</li>
+
+      <dt><code>(λc.λi.λe. c i e) true 1 2<br/>
+             → (λi.λe. true i e) 1 2<br/>
+             → (λe. true 1 e) 2<br/>
+             → true 1 2<br/>
+             = (λx.λy.x) 1 2<br/>
+             → (λy.1) 2<br/>
+             → 1<br/></code></dt>
+   </ul><li>The boolean operators and, or, and not can be implemented as follows:</li>
+  <ul><dt><code>
+          and = λp.λq. p q p<br/>
+          or  = λp.λq. p p q<br/>
+          not = λp.λa.λb. p b a<br/></code></dt>
+
+    <li>Example: Let us evaluate <code>not true</code>:</li>
+
+      <dt><code>(λp.λa.λb. p b a) true<br/>
+             → λa.λb. true b a<br/>
+             = λa.λb. (λx.λy.x) b a<br/>
+             → λa.λb. (λy.b) a<br/>
+             → λa.λb. b<br/>
+             = false </code> (under renaming)<br/></dt>
+   </ul></ul><h2>8. Other Programming Language Constructs</h2>
+ <ul><li>We can readily implement other programming language constructs in lambda calculus.
+      As an example, here are lambda calculus expressions for various list operations
+      such as
+      cons (constructing a list),
+      head (selecting the first item from a list), and
+      tail (selecting the remainder of a list after the first item):</li>
+  <ul><dt><code>
+          cons = λh.λt.λf. f h t<br/>
+          head = λl.l (λh.λt. h)<br/>
+          tail = λl.l (λh.λt. t)<br/></code></dt>
+  </ul></ul><h2>9. The Influence of The Lambda Calculus on Functional Languages</h2>
+ <ul><li>Our next lecture will be by Maria Taku who will talk about the influence
+      of the lambda calculus on functional languages and her experiences
+      implementing the PLT compiler project using OCaml.</li>
+ </ul><h2>10. Practice Problems</h2>
+ <ol><li>Evaluate <code>(λx.((λw.λz. + w z)1))
+               ((λx. xx)(λx. xx)))
+               ((λy. * y 1) (- 3 2))</code>
+      using normal order evaluation and applicative order evaluation.</li>
+  <li>Give an example of a code optimization transformation that has the Church-Rosser property.</li>
+  <li>Evaluate <code>FAC 2</code>.</li>
+  <li>Evaluate <code>succ two</code>.</li>
+  <li>Evaluate <code>add two three</code>.</li>
+  <li>Let <code>mul</code> be the function</li>
+   </ol><ul><dt><code>λm.λn.λf.λx. m (n f x)</code></dt>
+   </ul><dt>Evaluate <code>mul two three</code>.</dt>
+  <li>Write a lambda expression for the boolean predicate <code>isZero</code>
+      and evaluate <code>isZero one</code>.</li>
+ 
+
+ 
+ <h2>11. References</h2>
+ <ul><li>Simon Peyton Jones, <i>The Implementation of Functional Programming Languages</i>,
+      Prentice-Hall, 1987.</li>
+  <li><a href="13-04-22_Edwards-LC.pdf">
+      Stephen A. Edwards: The Lambda Calculus</a>  </li>
+  <li>http://www.inf.fu-berlin.de/lehre/WS01/ALPI/lambda.pdf</li>
+  <li>http://www.soe.ucsc.edu/classes/cmps112/Spring03/readings/lambdacalculus/project3.html</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

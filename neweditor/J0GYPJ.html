@@ -1,0 +1,186 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 12: March 4, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 12: Syntax-Directed Translation<br/>
+  March 4, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>The "dangling-else" ambiguity</li>
+  <li>Syntax-directed definitions and translation schemes</li>
+  <li>Synthesized and inherited attributes</li>
+  <li>S-attributed SDDs</li>
+  <li>L-attributed SDDs</li>
+  <li>Reading</li>
+ </ol><h2>1. The "Dangling-Else" Ambiguity</h2>
+ <ul><li>Consider the following simplified ambiguous grammar for if- and if-else statements:</li>
+</ul><pre><code>
+S' → S
+S  → i S e S | i S | a
+</code></pre>
+  <li>Here the symbol <code>i</code> stands for <code>if expr then</code>,
+      the symbol <code>e</code> stands for <code>else</code>, and
+      the symbol <code>a</code>
+      stands for all other productions.
+      We have also added an augmenting production <code>S' → S</code>.</li>
+
+  <li>The canonical collections of sets of LR(0) items for this grammar is as follows:</li>
+<pre><code>
+I<sub>0</sub>: S' → .S			I<sub>3</sub>: S → a.
+    S  → .iSeS
+    S  → .iS			I<sub>4</sub>: S → iS.eS
+    S  → .a			    S → iS.
+<sp>				
+I<sub>1</sub>: S' → S.			I<sub>5</sub>: S → iSe.S
+				    S → .iSeS				    
+I<sub>2</sub>: S  → i.SeS			    S → .iS
+    S  → i.S			    S → .a
+    S  → .iSeS
+    S  → .iS			I<sub>6</sub>: S → iSeS.
+    S  → .a
+</sp></code></pre>
+  <li>The set of items <code>I<sub>4</sub></code> gives rise to a shift/reduce
+      conflict. The item <code>S → iS.eS</code> calls for a shift on
+      <code>e</code> and since FOLLOW(<code>S</code>} = {<code>e</code>, $},
+      the item <code>S → iS.</code> calls for a reduction by production
+      <code>S → iS.</code> on <code>e</code>. To associate each <code>e</code>
+      with the closest unelsed if, we should resolve the conflict in favor of shift
+      to state 5.</li>
+  <li>See Section 4.8.2 of ALSU for a more detailed discussion.</li>
+
+
+ 
+
+ <h2>2. Syntax-Directed Definitions and Translation Schemes</h2>
+  <ul><li>The syntax analyzer translates its input token stream into an intermediate
+      language representation of the source program, usually an abstract
+      syntax tree (AST).</li>
+
+  <li>A syntax-directed definition can be used to specify this translation.</li>
+
+  <li>A syntax-directed definition (SDD) is a context-free grammar with attributes
+      attached to grammar symbols and semantic rules
+      attached to the productions.</li>
+
+  <li>The semantic rules define values for attributes associated with the
+      symbols of the productions. These values can be computed by
+      creating a parse tree for the input and then making a sequence of
+      passes over the parse tree, evaluating some or all of the rules on each
+      pass.  SDDs are useful for specifying translations.</li>
+  <li>A syntax-directed translation scheme (SDTS) is a context-free grammar with program
+      fragments, called semantic actions, embedded within production bodies.
+      SDTSs are useful for implementing syntax-directed definitions.</li>
+ </ul><h2>3. Synthesized and Inherited Attributes</h2>
+ <ul><li>Attributes are values computed at the nodes of a parse tree.</li>
+  <li><i>Synthesized attributes</i>
+      are values that are computed at a node <i>N</i> in a parse tree from attribute
+      values of the children of <i>N</i> and perhaps <i>N</i> itself.
+      Synthesized attributes can be
+      easily computed by a shift-reduce parser that keeps the
+      values of the attributes on the parsing stack.
+      See Sect. 5.4.2 of ALSU.</li>
+  <li>An SDD is <i>S-attributed</i> if every attribute is synthesized.
+      S-attributed SDDs are useful for bottom-up parsing.</li>
+  <li><i>Inherited attributes</i>
+      are values that are computed at a node <i>N</i> in a parse tree from attribute
+      values of the parent of <i>N</i>, the siblings of <i>N</i>, and <i>N</i> itself.</li>
+  <li>An SDD is <i>L-attributed</i> is every attribute is either synthesized or
+      inherited from the parent or from the left.
+      L-attributed SDDs are useful for top-down parsing.
+      See Sect. 5.2.4 of ALSU for details.</li>
+ </ul><h2>4. Examples of S-Attributed SDDs</h2>
+ <ul><li><b>Example 1.</b> Here is an S-attributed SDD translating signed bit strings
+      into decimal numbers. The attributes, <code>BNum.val</code>,
+      <code>Sign.val</code>, <code>List.val</code>, and
+      <code>Bit.val</code>, are all synthesized attributes that
+      represent integers.</li>
+
+  </ul><pre><code>
+   BNum → Sign List      { BNum.val = Sign.val × List.val }
+   Sign → +              { Sign.val = +1 }
+   Sign → -              { Sign.val = -1 }
+   List → List<sub>1</sub> Bit      { List.val = 2 × List<sub>1</sub>.val + Bit.val }
+   List → Bit            { List.val = Bit.val }
+   Bit  → 0              { Bit.val = 0 }
+   Bit  → 1              { Bit.val = 1 }
+  </code></pre>
+
+  <li><b>Example 2.</b> Here are Yacc translation rules implementing the SDD above
+      for translating signed bit strings
+      into decimal numbers. The identifiers $$, $1, $2 and so on in Yacc actions
+      are synthesized attributes.</li>
+
+  <pre><code>
+   BNum : Sign List      { $$ = $1 * $2; }
+        ;
+   Sign : '+'            { $$ = +1; }
+        | '-'            { $$ = -1; }
+        ;
+   List : List Bit       { $$ = 2*$1 + $2; }
+        | Bit
+        ;        
+   Bit  : '0'            { $$ = 0; }
+        | '1'            { $$ = 1; }
+        ;
+  </code></pre>
+
+
+  <li><b>Example 3.</b> Here is an S-attributed SDD based on an SLR(1) grammar that
+      translates arithmetic expressions
+      into ASTs.
+      <code>E</code> has the synthesized attributed <code>E.node</code> and 
+      <code>T</code> the synthesized attribute <code>T.node</code>.
+      <code>E.node</code> and <code>T.node</code> point to a node in the AST.
+      The function <code>Node(op, left, right)</code>
+      returns a pointer to a node with three fields:
+      the first labeled <code>op</code>, the second a pointer
+      to a left subtree, and the third a pointer to a right subtree.
+      The function <code>Leaf(op, value)</code> returns a pointer to a node
+      with two fields: the first labeled <code>op</code>, the second the
+      value of the token. See Example 5.11 in ALSU.</li>
+
+  <pre><code>
+   E → E<sub>1</sub> + T     { E.node = Node('+', E<sub>1</sub>.node, T.node); }
+
+   E → T          { E.node = T.node; }
+
+   T → ( E )      { T.node = E.node; }
+
+   T → id         { T.node = Leaf(id, id.entry); }
+
+  </code></pre>
+ 
+ 
+ <h2>5. Example of an L-Attributed SDD</h2>
+ <ul><li><b>Example 4.</b> Here is an L-attributed SDD based on an LL(1) grammar for translating arithmetic
+      expressions into ASTs.  See Example 5.12 in ALSU.</li>
+  </ul><pre><code>
+   E → T A        { E.node = A.s;
+                    A.i = T.node; }
+
+   A → + T A<sub>1</sub>     { A1.i = Node('+', A.i, T.node);
+                    A.s = A<sub>1</sub>.s; }
+
+   A → ε          { A.s = A.i; }
+
+   T → ( E )      { T.node = E.node; }
+
+   T → id         { T.node = Leaf(id, id.entry); }
+  </code></pre>
+ 
+
+
+ <h2>6. Practice Problems</h2>
+ <ol><li>Using Yacc, implement a syntax-directed translator that
+      translates sequences of postfix Polish expressions into infix notation.
+      For example, your translator should map <code>345+*</code>
+      into <code>3*(4+5)</code>.</li>
+  <li>Optimize your translator so it doesn't generate any redundant parentheses.
+      For example, your translator should still map <code>345+*</code>
+      into <code>3*(4+5)</code> but it should map <code>345*+</code>
+      into <code>3+4*5</code>.</li>
+ </ol><h2>7. Reading</h2>
+ <ul><li>ALSU, Sects. 5.1-5.4</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

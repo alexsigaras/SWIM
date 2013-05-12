@@ -1,0 +1,246 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 2: January 28, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 2: January 28, 2013<br/>
+  Basic Elements of Languages and Compilers
+ </h1>
+
+ <h2>Overview</h2>
+ <ol><li>Course project</li>
+  <li>What's in a language specification?</li>
+  <li>The C programming language</li>
+  <li>Fundamental elements of programming languages</li>
+  <li>Language processing tools</li>
+ </ol><h2>1. Course Project</h2>
+ <ul><li>Project description</li>
+  <ul><li>Form a team of five. Contact Maria Taku (mat2185@columbia.edu) for help
+       finding or forming a team.
+       Once your team is complete, let Maria know who is on your team.</li>
+   <li>Create an innovative little language of your own design.</li>
+   <li>Write a compiler or interpreter for your language.</li>
+   <li>Each team member must write at least 500 lines of
+       code of the compiler or interpreter.</li>
+   <li>Project constitutes 40% of final grade.</li>
+  </ul><li>Project team: elect one person to serve each of the following functions.</li>
+  <ul><li>Project manager</li>
+   <ul><li>This person sets the project schedule, holds weekly meetings
+        with the entire team, maintains the project log, and makes
+        sure the project deliverables get done on time.</li>
+   </ul><li>Language and tools guru</li>
+   <ul><li>This person defines the baseline process to track language changes
+        and maintain the intellectual integrity of the language.</li>
+    <li>This person teaches the team how to use various tools
+        used to build the compiler.</li>
+   </ul><li>System architect</li>
+   <ul><li>This person defines the compiler architecture, modules, and
+        interfaces.</li>
+   </ul><li>System integrator</li>
+   <ul><li>This person defines the system integration environment
+       and makes sure the compiler components work together.</li>
+   </ul><li>Tester and validator</li>
+   <ul><li>This person defines the test suites and executes them
+        to make sure the compiler meets the language specification.</li>
+   </ul></ul><li>Project due dates and deliverables:</li>
+  <ul><li>Feb. 27: Language white paper (written by entire team, 3-4 pages).</li>
+    <ul><li>See
+        <a href="http://www.oracle.com/technetwork/java/index-136113.html">
+         http://www.oracle.com/technetwork/java/index-136113.html</a>
+        for a sample white paper on Java.</li>
+    </ul><li>Mar. 27: Language tutorial (written by entire team, 15-20 pages).</li>
+    <ul><li>Chapter 1 of Kernighan and Ritchie is a good model of a
+         language tutorial.</li>
+     <li>Describe a few representative programs that illustrate the
+         nature and scope of your language.</li>
+     <li>A "hello, world" program is de rigueur.</li>
+    </ul><li>Mar. 27: Language reference manual (written by entire team, 20-25 pages).</li>
+    <ul><li>Appendix A of Kernighan and Ritchie is a good model.</li>
+     <li>Give a complete description of the lexical and syntactic
+         structure of your language.</li>
+     <li>Include a full grammar for your language.</li>
+    </ul><li>May 14-16: Working compiler and demo.</li>
+    <li>May 14-16: Final project report due at project demo.</li>
+   </ul></ul><h2>2. A Language Specification Defines</h2>
+ <ul><li>the representation of programs</li>
+  <li>the syntax and constraints of the language</li>
+  <li>the semantic rules for interpreting programs</li>
+  <li>the representation of input data to be processed by programs</li>
+  <li>the representation of output data produced by programs</li>
+  <li>other restrictions on programs (such as what makes a program portable
+      across different implementations and platforms)</li>
+ </ul><h2>3. The C Programming Language</h2>
+ <ul><li>C is a general-purpose procedural programming language that was designed in 1969-1972
+      at Bell Labs by Dennis Ritchie who was working on developing the Unix
+      operating system with Ken Thompson. It is still one of the most widely
+      used programming languages in the world.</li> 
+  <li>C was originally designed for and implemented on the UNIX operating system
+      on the DEC PDP-11.</li>
+  <li>In 1978 Brian Kernighan and Dennis Ritchie published the book
+      "The C Programming Language" which for many years
+      served as the informal definition of C ("K&amp;R C").</li>
+  <li>Kernighan and Ritchie described C as "a general-purpose programming language
+      which features economy of expression, modern control flow and data structures,
+      and a rich set of operators."</li>
+  <li>C has gone through a number of versions since K&amp;R C:</li>
+   <ul><li>ANSI C (1989) and ISO C (1990): these versions are identical and are
+        commonly referred to as C89</li>
+    <li>C99: ISO/IEC9899:1999</li>
+    <li>C11, the current standard, adopted in 12/8/2011</li>
+    <li>Embedded C: in 2008 the C Standards Committee extended C to create
+        programs to meet the stringent requirements of microcontroller systems</li>
+   </ul><br/><li>A sample C program
+ <ul/><pre><code>
+ (1)  /* this program computes the greatest common divisor
+ (2)     of two integers entered on the command line */
+
+ (3)  #include &lt;stdio.h&gt;
+ (4)  #include &lt;stdlib.h&gt;
+
+ (5)  int gcd(int m, int n)
+ (6)  {
+ (7)    int r;
+ (8)    while ((r = m % n) != 0) {
+ (9)      m = n;
+(10)      n = r;
+(11)    }
+(12)    return n;
+(13)  }
+
+(14)  int main(int argc, char *argv[])
+(15)  {
+(16)    int m, n;
+(17)    m = atoi(argv[1]);
+(18)    n = atoi(argv[2]);
+(19)    printf("gcd of %d and %d is %d\n", m, n, gcd(m, n)); 
+(20)    return 0;
+(21)  }
+ </code></pre>
+ </li></ul><h2>4. Fundamental Elements of Programming Languages</h2>
+ <ul><li>Programming model</li>
+  <ul><li>The programming model is the model of computation encapsulated
+       into the programming language.</li>
+   <ul><font color="#0000ff">
+    <li>For example, C is an imperative language, designed around the
+      von Neumann model of computation.</li>
+   </font></ul></ul><li>Program structure</li>
+  <ul><li>A program typically consists of one or more translation units stored in files.</li>
+   <ul><font color="#0000ff">
+    <li>In C, a translation unit is a sequence of function definitions and declarations.</li>
+   </font></ul></ul><li>Character set and lexical conventions</li>
+  <ul><li>Source and target character sets may be different.</li>
+   <ul><font color="#0000ff">
+    <li>The character set of C source programs in contained within seven-bit ASCII.</li>
+   </font></ul><li>A token is a meaningful sequence of characters in a source program.</li>
+   <ul><font color="#0000ff">
+    <li>C has six classes of tokens: identifiers, keywords, constants, string literals,
+        operators, and separators.</li>
+   </font></ul></ul><li>Names, scopes, bindings, and lifetimes</li>
+  <ul><li>Names (often called identifiers) have a specified lexical structure.</li>
+   <ul><font color="#0000ff">
+    <li>In C identifiers are sequences of letters (here, underscore is considered a letter) and digits.
+        The first character of an identifier must be a letter. At least the first 31 characters in an
+        identifier are significant.</li>
+   </font></ul><li>The scope of a name is the region of the program in
+       which it is known (visible).</li>
+   <li>A binding is an association between two things such as between a
+       variable and its type or between a symbol and the operation it represents.
+       The time at which this association is determined is called
+       the binding time. Bindings can take place at various times ranging
+       from language design time to run time.</li>
+   <li>The lifetime of a variable is the time during which the variable
+       is bound to a specific memory location.</li>
+  </ul><li>Memory management</li>
+  <ul><li>One important function of a programming language is to provide facilities
+       for managing memory and the objects stored in memory.</li>
+   <ul><font color="#0000ff">
+    <li>C provides three ways to allocate memory for objects:</li>
+    <ul><li>Static allocation where space for an object is provided by the compiler at run time.</li>
+     <li>Automatic allocation where temporary objects are stored by the compiler on the runtime stack.
+         This space is automatically freed by the compiler after the block in which the object is
+         declared is exited.</li>
+     <li>Dynamic allocation where blocks of memory of arbitrary size can be requested
+         by a programmer using runtime library functions such as malloc from a region of
+         memory called the heap.  These blocks
+         persist until freed by a call to a runtime library function such as free.</li>
+    </ul></font></ul></ul><li>Data types and operators</li>
+  <ul><li>A data type defines a set of data values and the operations allowed
+       on those values.</li>
+   <ul><font color="#0000ff">
+    <li>C has a small number of basic types, including <code>char, int, double, float,
+          enum, void</code>.</li>
+    <li>C has a potentially infinite number of recursively
+          defined derived types
+          such as arrays of objects of some type, functions returning objects of
+          some type, pointers to objects of some type, structures containing a sequence
+          of objects of various types, and unions containing any one of several
+          objects of various types.</li>
+    <li>C has a rich set of arithmetic, relational, logical, and assignment operators.</li>
+   </font></ul></ul><li>Expressions and assignment statements</li>
+  <ul><li>Expressions are the primary means for specifying computations
+       in a programming language.</li>
+   <li>Assignment statements are basic constructs in imperative programming languages.
+       Assignment statements allow the programmer to dynamically change
+       the bindings of values to variables.</li>
+  </ul><li>Control flow</li>
+  <ul><li>Flow of control refers to the sequence in which the operations specified in
+       a program are executed at run time. There are flow-of-control issues at
+       many levels such as flow of control within
+       expressions, among statements, and among program units.
+       Most programming languages have control statements and other control
+       structures for controlling the flow of control within a program.</li>
+   <ul><font color="#0000ff">
+    <li>C has a variety of flow-of-control constructs such as blocks and
+        control statements such as <code>if-else, switch, while, for,
+        do-while, break, continue</code> and <code>goto</code>.</li>
+   </font></ul></ul><li>Functions and process abstraction</li>
+  <ul><li>Functions are perhaps the most important building blocks of programs.
+       Functions are often called procedures, subroutines, or subprograms.
+       Functions break large computing tasks into smaller ones and facilitate
+       code reuse.  Functions are such an important topic in programming
+       languages that we will talk about them in much more detail later in
+       this course.</li>
+  </ul><li>Data abstraction and object orientation</li>
+  <ul><li>Data abstraction in the form of abstract data types was introduced
+       into programming languages after process abstraction. The programming
+       language Simula67 was instrumental
+       in motivating constructs for supporting object-oriented programming
+       in modern programming languages such as C++, C#, and Java.
+       Object orientation is characterized by encapsulation, polymorphism,
+       inheritance, and dynamic binding.</li>
+  </ul><li>Concurrency</li>
+  <ul><li>Concurrent execution of programs has assumed much more importance with
+       the widespread use of multi-core and many-core processors.</li>
+   <li>Concurrency
+       in software execution can occur many levels of granularity: instruction,
+       statement, subprogram, and program.</li>
+   <li>Concurrency can be achieved with libraries (like MPI for Fortran, pthreads
+       for C) or with direct language support (as in Cilk, X10).</li>
+   <li>However, effective exploitation of concurrency is still an open
+       research area in software.</li>
+  </ul><li>Exception and event handling</li>
+  <ul><li>Many languages have facilities for reacting to run-time error conditions.
+       C++ has the <code>try-catch</code> construct to catch exceptions raised by the
+       <code>throw</code> statement.</li>
+   <li>Event handling is like exception handling in that an event handler is called
+       by the occurence of an event. Implementing reactions to user interactions
+       with GUI components is a common application of event handling.</li>
+  </ul></ul><h2>5. Language Processing Tools</h2>
+ <ul><li>Basic compiler</li>
+  <li>Interpreter</li>
+  <li>Bytecode interpreter</li>
+  <li>Just-in-time compiler</li>
+  <li>Linker and loader</li>
+  <li>Preprocessor</li>
+ </ul><h2>6. Practice Problems</h2>
+ <ol><li>Describe the von Neumann model of computation (computer architecture).</li>
+  <li>Compare C and Java with regard to their (a) programming model and
+      (b) primitive data types.</li>
+ </ol><h2>7. Reading Assignment</h2>
+ <ul><li>ALSU: Chapters 1 and 2</li>
+ </ul><h2>8. Reference</h2>
+ <ul><li>Brian Kernighan and Dennis Ritchie, <i>The C Programming Language</i>,
+      2nd edition, Prentice Hall, 1988.
+      This is the classic reference on ANSI C (C89).</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+
+</body>

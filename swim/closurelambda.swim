@@ -1,0 +1,15 @@
+/*
+	Simple example of lambda closure
+*/
+
+#include std;
+
+a=1; // Global variable declared to be accessed
+i=1; // Global variable that is unchanged after lambda function is called
+
+(lambda x do while i <x do i++; global a = a+1; end print("local a:"); print(a); print("local i: "); print(i);)(10); // lambda function using closure with global token
+
+print("Global a:");
+print(a);
+print("Global i:");
+print(i);

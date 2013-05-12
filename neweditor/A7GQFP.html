@@ -1,0 +1,475 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>COMS W4115 Programming Languages and Translators</title></head><body bgcolor="#ffffff">
+
+
+<table border="0" cellpadding="0" cellspacing="0" width="750"><tbody><tr><td colspan="2" height="30" width="750">
+</td>
+<td rowspan="1" align="center" height="75">
+<a href="http://www.cs.columbia.edu/"><img src="cs-trans.gif" alt="CS Department Logo" border="0" height="75" width="485"/></a>
+</td></tr><tr><td colspan="3" align="left" width="750"><font face="Helvetica" size="+3"><br/>
+COMS W4115<br/>
+Programming Languages and Translators <br/>
+Spring 2013</font> </td>
+</tr></tbody></table><table border="0" cellpadding="4" cellspacing="0" width="750"><tbody><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Announcements</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80">
+
+</td>
+<td width="750">
+Class meets 2:40-3:55pm on Mondays and Wednesdays, 535 Mudd.<br/><br/>
+
+
+Courseworks site:
+   <a href="https://courseworks.columbia.edu/">https://courseworks.columbia.edu</a><br/><br/>
+
+Piazza bulletin board:
+   <a href="https://piazza.com/class#spring2013/comsw4115">
+      https://piazza.com/class#spring2013/comsw4115</a><br/><br/>
+
+On Wednesday, April 24, 2013, Maria Ayako Taku
+gave a lecture in class on
+<a href="lectures/13-04-24_Taku.pptx">
+"Functional Programming Languages."</a>
+Maria discussed the influence of the lambda calculus on functional languages
+and showed how to implement an interpreter using
+the functional language OCaml.
+
+<br/><h3>Important Dates</h3>
+<ul><li>The final exam for COMS W4115 will be held Monday, May 6, 2013,
+     2:40-3:55pm, in 535 Mudd for people whose last names begin with A-L,
+     and in 702 Hamilton for people whose last names begin with M-Z.
+     It will be based on
+     material covered in the lectures throughout the semester. See
+     <a href="lectures/13-05-06_FinalExamInfo.htm">final exam information</a>
+     for the coverage of the final.</li>
+
+
+ <li>Each team will be required to give a 20-minute presentation on their language
+     and translator during May 14-16, 2013.</li>
+
+ <ul><li>All presentations will be in the Computer Science Conference Room,
+      room 453, Computer Science Building.</li>
+
+  <li>See
+      <a href="lectures/ProjectPresentation.htm">Project Presentations and Reports</a>
+      for presentation and report requirements.</li>
+
+  <li>See <a href="lectures/13-05-14_PresentationSuggestions.htm">
+     language presentation suggestions</a> for hints on how to give a good presentation.</li>
+
+  <li><a href="lectures/13-05-14_PresentationSchedule.htm">
+     Presentation Schedule: May 1 and 14-16, 2013.</a></li>
+ </ul></ul><!--
+
+Dr. Martin argued that producing a high quality programming product on time
+requires the disciplined application of well-tuned individual and team skills.
+While often repackaged with fancy new, consultant-expensive names,
+these skills are based on decades-old ideas. Intriguingly, many programmers
+and programming teams ignore these techniques and assume, by magic,
+they will avoid repeating history's disasters.  There is no magic.
+
+<p>
+
+Dr. Martin serves on the advisory boards of several venture capital and startup companies.
+He was the Chief Technology Officer of Bell Laboratories and a Corporate Officer of the
+Software Business Unit at Bell Communications Research.
+He has extensive experience in the development of Unix and software systems for
+the telecommunications industry.
+He has served on the National Research Council's Computer Science and Telecommunications
+Board and the FCC's Technological Advisory Board.
+He is a Fellow of the IEEE and has a PhD in EECS from MIT.
+
+--><!--
+
+<br>
+<h3>Important Dates</h3>
+<ul>
+ <li>The final exam will be in class on Monday, April 30, 2012. It will be based on
+     material covered in the lectures throughout the semester. A sample final with
+     answers has been posted on Courseworks/Assignments. See
+     <a href="lectures/12-04-30_FinalExamInfo.htm">final information</a>
+     for the coverage of the final.<br><br>
+
+ <li><a href="lectures/12-05-07_ProjectPresentationAndReport.htm">
+     Project presentation and report, May 7-9, 2012.</a></li>
+
+ <li>See <a href="lectures/12-04-18_PresentationSuggestions.htm">
+     language presentation suggestions</a> for hints on how to give a good presentation.</li>
+
+ <li><a href="lectures/12-05-07_PresentationSchedule.htm">
+     Presentation Schedule, May 7-9, 2012.</a></li>
+</ul>
+--></td></tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Teaching Staff</b></font></td></tr><tr><td height="5"/></tr><!--
+
+<tr><td width="20">&nbsp;</td><td valign="top" width="80">
+</td>
+<td width="750">
+
+--><tr><td colspan="3">
+
+<table border="0"><tbody><tr><th> Name </th>
+    <th> email </th>
+    <th> Office hours </th>
+    <th>  Location </th>
+  </tr><tr><td>Prof. Al Aho</td>
+    <td>  <a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></td>
+    <td>  Mon &amp; Wed 1:00-2:00</td>
+    <td>  513 CSB</td>
+  </tr><tr><td> </td>
+  </tr><tr><td>Karan Bathla</td>
+   <td>  <a href="mailto:kb2658@columbia.edu">kb2658@columbia.edu</a></td>
+   <td>  Mon &amp; Tue 4:00-5:00</td>
+   <td>  TA Room, 122 Mudd</td>
+  </tr><tr><td>Melanie Kambadur</td>
+   <td>  <a href="mailto:melanie@cs.columbia.edu">melanie@cs.columbia.edu</a></td>
+   <td>  Thu 10:00-12:00</td>
+   <td>  TA Room, 122 Mudd</td>
+  </tr><tr><td>Jared Pochtar</td>
+   <td>  <a href="mailto:jrp2181@columbia.edu">jrp2181@columbia.edu</a></td>
+   <td>  Fri 4:30-6:30</td>
+   <td>  TA Room, 122 Mudd</td>
+  </tr><tr><td>Maria Taku</td>
+   <td>  <a href="mailto:mat2185@columbia.edu">mat2185@columbia.edu</a></td>
+   <td>  Tue &amp; Thu 12:30-2:30</td>
+   <td>  TA Room, 122 Mudd</td>
+  </tr></tbody></table></td></tr><!--
+</tr>
+--><tr><td width="20"> </td><td valign="top" width="80">
+</td>
+</tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Course Overview</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80">
+</td>
+<td width="750">
+
+In PLT you will learn the syntactic
+and semantic elements and the computational models of the most important modern
+programming languages 
+as well as the algorithms and techniques used
+by compilers to translate them into machine and other
+target languages.
+The course will cover imperative, object-oriented, functional,
+logic and scripting languages, as well as trends in the evolution of programming languages.
+<p>
+A highlight of this course is a semester-long programming
+project in which you will work in a small team to create
+and implement an innovative little language of your own design.
+This project will teach you computational thinking in language design as
+well as project management, teamwork, and
+communication skills that you can apply in all aspects of your
+career.<br/><br/>
+
+Examples of past languages created in PLT can be found at<br/>
+   
+  <a href="http://www1.cs.columbia.edu/%7Esedwards/classes/2012/w4115-fall/index.html">Fall 2012 PLT Languages</a><br/>
+   
+  <a href="http://www1.cs.columbia.edu/%7Eaho/cs4115_Spring-2012/lectures/12-05-07_PresentationSchedule.htm">Spring 2012 PLT Languages</a><br/>
+   
+  <a href="http://www1.cs.columbia.edu/%7Esedwards/classes/2011/w4115-fall/index.html">Fall 2011 PLT Languages</a><br/>
+   
+  <a href="http://www1.cs.columbia.edu/%7Eaho/cs4115_Spring-2011/lectures/11-05-09_ProjectPresentations.htm">Spring 2011 PLT Languages</a><br/></p><p>
+The concepts, techniques, and tools that you will learn in this course have broad application to many areas
+of computer science outside of programming languages and compilers.
+
+
+
+
+</p></td>
+</tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Prerequisites</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80">
+</td>
+<td width="750">
+Fluency in C and Java
+
+
+</td>
+</tr><tr><td width="20"> </td><td valign="top" width="80">
+
+</td>
+<td width="750">
+COMS W3137 Data Structures and Algorithms
+
+</td>
+</tr><tr><td width="20"> </td><td valign="top" width="80">
+</td>
+<td width="750">
+COMS W3261 Computer Science Theory
+
+</td>
+</tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Schedule 2013</b></font></td></tr><tr><td height="5"/></tr><tr><td colspan="3">
+
+
+<table border="0" cellpadding="4" cellspacing="0"><tbody><tr><th>Date </th>
+<th>Lecture </th>
+<th>Reading </th>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Jan 23  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-01-23.htm">Introduction to PLT</a> </td>
+<td colspan="1" bgcolor="#dddddd">
+Chs 1 and 2  </td>
+</tr><tr><td colspan="1">
+Jan 23  </td>
+<td colspan="1">
+<a href="lectures/13-01-23_L1.ppt">Introduction to PLT (powerpoint)</a>  </td>
+<td colspan="1">
+Chs 1 and 2  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Jan 28  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-01-28.htm">The Basic Elements of Languages and Compilers</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+Chs 1 and 2  </td>
+</tr><tr><td colspan="1">
+Jan 30  </td>
+<td colspan="1">
+<a href="lectures/13-01-30.htm">Structure of a Compiler</a>  </td>
+<td colspan="1">
+3.1-3.3  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Feb 4  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-02-04.htm">Regular Expressions and Lexical Analysis</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+3.3, 3.5  </td>
+</tr><tr><td colspan="1">
+Feb 4  </td>
+<td colspan="1">
+<a href="lectures/13-02-04_HW1.htm">Homework Assignment #1</a>  </td>
+<td colspan="1">
+Due Feb 13  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Feb 6  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-02-06.htm">Implementing a Lexical Analyzer</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+Ch 3  </td>
+</tr><tr><td colspan="1">
+Feb 11  </td>
+<td colspan="1">
+<a href="lectures/13-02-11.htm">Context-Free Grammars</a>  </td>
+<td colspan="1">
+4.1, 4.2  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Feb 13  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-02-13.htm">Parsing Context-Free Grammars</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+4.3, 4.4, 4.9 </td>
+</tr><tr><td colspan="1">
+Feb 18  </td>
+<td colspan="1">
+<a href="lectures/13-02-18_Martin.ppt">Software Project Management</a>  </td>
+<td colspan="1">
+Robert L. Martin </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Feb 20  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-02-20.htm">Predictive Top-Down Parsers</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+4.4 </td>
+</tr><tr><td colspan="1">
+Feb 25  </td>
+<td colspan="1">
+<a href="lectures/13-02-25.htm">Bottom-Up Parsing</a>  </td>
+<td colspan="1">
+4.5, 4.6 </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Feb 25  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-02-25_HW2.htm">Homework Assignment #2</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+Due Mar 6 </td>
+</tr><tr><td colspan="1">
+Feb 27  </td>
+<td colspan="1">
+<a href="lectures/13-02-27.htm">Parsing Action Conflicts</a>  </td>
+<td colspan="1">
+4.8, 4.9 </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Mar 4  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-03-04.htm">Syntax-Directed Translation</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+5.1-5.5  </td>
+</tr><tr><td colspan="1">
+Mar 6  </td>
+<td colspan="1">
+<a href="lectures/13-03-06.htm">Intermediate Representations</a>  </td>
+<td colspan="1">
+6.1-6.3  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Mar 11  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-03-11.htm">Midterm Review</a>  </td>
+<td colspan="1" bgcolor="#dddddd">  </td>
+</tr><tr><td colspan="1">
+Mar 25  </td>
+<td colspan="1">
+<a href="lectures/13-03-25.htm">Intermediate Code Generation</a>  </td>
+<td colspan="1">
+6.1-6.3 </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Mar 27  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-03-27.htm">Translation of Statements</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+6.4-6.8, 7.1 </td>
+</tr><tr><td colspan="1">
+Apr 1  </td>
+<td colspan="1">
+<a href="lectures/13-04-01.htm">Procedures</a>  </td>
+<td colspan="1">
+7.1-7.2  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 1  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-01_HW3.htm">Homework Assignment #3</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+Due Apr 10  </td>
+</tr><tr><td colspan="1">
+Apr 3  </td>
+<td colspan="1">
+<a href="lectures/13-04-03.htm">Run-time Environments</a>  </td>
+<td colspan="1">
+7.1-7.2, 7.6.1 </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 8  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-08.htm">Code Generation</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+8.1-8.5  </td>
+</tr><tr><td colspan="1">
+Apr 10  </td>
+<td colspan="1">
+<a href="lectures/13-04-10.htm">Code Generation Algorithms</a>  </td>
+<td colspan="1">
+8.2-8.4, 8.6, 8.8, 8.10  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 15  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-15.pdf">Code Optimization</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+8.5, 8.7, 9.1  </td>
+</tr><tr><td colspan="1">
+Apr 15  </td>
+<td colspan="1">
+<a href="lectures/13-04-15_HW4.htm">Homework Assignment #4</a>  </td>
+<td colspan="1">
+Due Apr 24  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 17  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-17.htm">Introduction to The Lambda Calculus</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+  </td>
+</tr><tr><td colspan="1">
+Apr 22  </td>
+<td colspan="1">
+<a href="lectures/13-04-22.htm">The Lambda Calculus</a>  </td>
+<td colspan="1">
+  </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 24  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-24_Taku.pptx">Functional Programming Languages</a>  </td>
+<td colspan="1" bgcolor="#dddddd">
+Maria Ayako Taku  </td>
+</tr><tr><td colspan="1">
+Apr 29  </td>
+<td colspan="1">
+<a href="lectures/13-04-29_SampleFinal.pdf">Sample Final</a>
+</td><td colspan="1">
+ </td>
+</tr><tr><td colspan="1" bgcolor="#dddddd">
+Apr 29  </td>
+<td colspan="1" bgcolor="#dddddd">
+<a href="lectures/13-04-29_SampleFinalSolutions.pdf">Sample Final Solutions</a>
+</td><td colspan="1" bgcolor="#dddddd">
+  </td>
+</tr><!--
+
+<tr>
+<td colspan=1>
+May 7-9 &nbsp;</td>
+<td colspan=1>
+<a href="lectures/12-05-07_ProjectPresentationAndReport.htm">
+        Project Presentation and Report, May 7-9, 2012.</a>
+<td colspan=1>
+ &nbsp;</td>
+</tr>
+
+<tr>
+<td colspan=1 bgcolor="#dddddd">
+May 7-9 &nbsp;</td>
+<td colspan=1 bgcolor="#dddddd">
+<a href="lectures/12-05-07_PresentationSchedule.htm">Presentation Schedule</a>
+<td colspan=1 bgcolor="#dddddd">
+ &nbsp;</td>
+</tr>
+
+--></tbody></table></td></tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Required Text</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80">
+</td>
+<td width="750">
+
+Alfred V. Aho, Monica Lam, Ravi Sethi, and Jeffrey D. Ullman<br/><i>Compilers: Principles, Techniques, and Tools</i>, Second Edition<br/>
+Addison-Wesley, 2007, ISBN 978-0321486813<br/></td>
+</tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Additional References</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  Alfred V. Aho and Jeffrey D. Ullman<br/><i>Foundations of Computer Science</i>, C Edition<br/>
+  W. H. Freeman, 1995<br/>
+  An online version of this book is available
+  <a href="http://infolab.stanford.edu/%7Eullman/focs.html"> here</a>.<br/><br/></td>
+</tr><tr/><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  Andrew W. Appel<br/><a href="http://www.cs.princeton.edu/%7Eappel/modern/java/"><i>Modern Compiler Implementation in Java</i>, Second Edition</a><br/>
+  Cambridge University Press, 2002<br/><br/></td>
+</tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+   Keith D. Cooper and Linda Torczon <br/><i>Engineering a Compiler</i>, Second Edition<br/>
+   Morgan Kaufmann, 2012<br/><br/></td>
+</tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  Steven S. Muchnick <br/><i>Advanced Compiler Design and Implementation</i><br/>
+  Morgan Kaufmann, 1997<br/><br/></td>
+</tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  Michael L. Scott<br/><i>Programming Language Pragmatics</i>, Third Edition<br/>
+  Morgan Kaufmann, 2009 <br/><br/></td>
+</tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  Robert W. Sebesta<br/><i>Concepts of Programming Languages</i>,
+    Tenth Edition <br/>
+  Pearson/Addison-Wesley, 2012 <br/><br/></td>
+</tr><tr><td width="20"> </td><td valign="top" width="80"/>
+
+<td width="750">
+  <a href="http://www.cs.columbia.edu/%7Esedwards/classes/2012/w4115-fall/index.html">Stephen Edward's CS4115 Web Page</a><br/></td>
+</tr><tr><td height="10"/></tr><tr><td colspan="3" bgcolor="black" height="15">
+<font color="#ffffff" face="Helvetica"> <b>Class Policies</b></font></td></tr><tr><td height="5"/></tr><tr><td width="20"> </td><td valign="top" width="80">
+Grading</td>
+<td width="750">
+
+40 % Project <br/>
+10 % Homework <br/>
+20 % Midterm <br/>
+30 % Final <br/></td></tr><!--
+<tr><td width=20>&nbsp;</td><td width=80 valign=top>
+Late Policy</td>
+<td width=750>
+All assignments can be handed in one week after they are due for 50% credit.
+</td>
+</tr>
+--></tbody></table><hr align="left" width="750"/><table border="0" cellpadding="0" cellspacing="0" width="550"><tbody><tr><td>
+ <small><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></small>
+ </td>
+ <td align="center"> <small>Updated January 21, 2013</small> </td>
+
+</tr></tbody></table></body>

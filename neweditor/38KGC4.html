@@ -1,0 +1,246 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 10: February 25, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 10: Bottom-Up Parsing<br/>
+  February 25, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Bottom-up parsing</li>
+  <li>LR(1) parsing</li>
+  <li>Constructing a simple LR(1) parser</li>
+  <li>DFA for viable prefixes</li>
+ </ol><h2>1. Bottom-up Parsing</h2>
+ <ul><li>Bottom-up parsing can be viewed as trying to find a
+       rightmost derivation in reverse for an input string.</li>
+   <li>A <i>handle</i> is a rightmost substring in right-sentential form
+       that matches the body of a production and whose
+       reduction by that production represents one step in
+       the reverse of the rightmost derivation.</li>
+ <ul><li>Consider the grammar <i>G</i>:</li>
+    </ul></ul><pre><code>
+      (1) S → S ( S )
+      (2) S → ε
+   </code></pre>
+
+  <li>The handles in a rightmost derivation for the input string <code>( ) ( )</code>:</li>
+  <pre><code>
+      S ⇒ S ( S )      // handle is S ( S )
+        ⇒ S ( )        // handle is the empty string between ( )
+        ⇒ S ( S ) ( )  // handle is S ( S )
+        ⇒ S ( ) ( )    // handle is the empty string between first ( )
+        ⇒ ( ) ( )      // handle is the empty string prefix
+  </code></pre>
+  
+
+  <li><i>Shift-reduce parsing</i> is a form of bottom-up parsing 
+       in which we shift terminal symbols of the string to be parsed onto
+       a stack until a handle appears on top of the stack. We then
+       replace the handle by the nonterminal symbol on the left-hand
+       side of the associated production (this is a "reduce" action).  We keep
+       repeating this process until we have reduced the input string
+       to the start symbol of the grammar. This process simulates the
+       reverse of a rightmost derivation for the input string.
+       Thus, we can think of shift-reduce parsing as "handle pruning."</li>
+ 
+
+
+ <h2>2. LR(1) Parsing</h2>
+ <ul><li>Model of an LR(1) parser (Fig. 4.35).</li>
+  <li>"L" means left-to-right scanning of the input, the "R" means
+      constructing a rightmost derivation in reverse, and the "1"
+      means one symbol of lookahead in making parsing decisions.</li>
+
+  <li>LR parsing table for <i>G</i>:</li><br/><ul><code>
+   </code><table border="2"><tbody><tr><th rowspan="2"><code> State </code></th>
+     <th colspan="3"><code>Action</code></th>
+     <th><code>Goto</code></th>
+    </tr><tr><td style="text-align: center;"><code> ( </code></td>
+     <td style="text-align: center;"><code> ) </code></td>
+     <td style="text-align: center;"><code> $ </code></td>
+     <td style="text-align: center;"><code> S </code></td>
+    </tr><tr><td style="text-align: center;"><code>0</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>1</code></td>
+    </tr><tr><td style="text-align: center;"><code>1</code></td>
+     <td style="text-align: center;"><code>s2</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code>acc</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr><tr><td style="text-align: center;"><code>2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>r2</code></td>
+     <td style="text-align: center;"><code>3</code></td>
+    </tr><tr><td style="text-align: center;"><code>3</code></td>
+     <td style="text-align: center;"><code>s2</code></td>
+     <td style="text-align: center;"><code>s4</code></td>
+     <td style="text-align: center;"><code> </code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr><tr><td style="text-align: center;"><code>4</code></td>
+     <td style="text-align: center;"><code>r1</code></td>
+     <td style="text-align: center;"><code>r1</code></td>
+     <td style="text-align: center;"><code>r1</code></td>
+     <td style="text-align: center;"><code> </code></td>
+    </tr></tbody></table></ul><br/><dt>r2 means reduce the handle on top of the stack by production (2) 
+       <code>S → ε</code>.</dt>
+   <dt>s2 means shift the input symbol on the stack and then push state 2
+       on top of the stack.</dt>
+   <dt>acc means accept and stop parsing.</dt>
+   <dt>Goto[0,S] = 1 means push state 1 on top of the stack after reducing a
+       handle to the nonterminal S in state 0.</dt>
+   <dt>A blank entry means report a syntax error.</dt>
+   
+   <br/><li>Moves made by an LR(1) parser on input <code>( ) ( )</code> [Alg. 4.44].</li>
+
+    </ul><pre><code>
+    <b>Stack      Input           Action</b>
+    0          ()()$    reduce by (2) S → ε; push state 1 on stack
+    0S1        ()()$    shift ( on stack; push state 2 on stack
+    0S1(2       )()$    reduce by (2) S → ε and push state 3
+    0S1(2S3     )()$    shift ( and push state 2
+    0S1(2S3)4    ()$    reduce by (1) S → S(S) and push state 1
+    0S1          ()$    shift ( and push state 2
+    0S1(2         )$    reduce by (2) S → ε and push state 3
+    0S1(2S3       )$    shift ) and push state 4
+    0S1(2S3)4      $    reduce by (1) S → S(S) and push state 1
+    0S1            $    accept       
+   </code></pre>
+  <li>Note that an LR parser is a shift-reduce parser that traces out a
+      rightmost derivation in reverse.</li>
+
+ 
+
+
+ <h2>3. Constructing a Simple LR(1) Parsing Table for a Grammar</h2>
+ <ul><li>An <i>LR</i>(0) <i>item</i> of a grammar is a production of the grammar with a dot
+      at some position of the right side.
+      E.g., <code>S → ·S(S)</code>, <code>S → S·(S)</code>,
+      or <code>S → S(S)·</code>.</li>
+  <li>We will use two functions to construct the sets of items for a grammar:</li>
+  <ul><li><i>closure</i>(<i>I</i>), where <i>I</i> is a set of items, is the set of items
+       constructed by the following two rules:</li>
+   </ul></ul><ol><li>Initially, put every item in <i>I</i> into <i>closure</i>(<i>I</i>).</li>
+    <li>If <i>A</i> → α·<i>B</i>β is in <i>closure</i>(<i>I</i>)
+        and <i>B → γ</i> is a production, then add the item
+        <i>B</i> → ·γ to <i>closure</i>(<i>I</i>) if it is not already there.
+        Keep repeating this step until no more new items can be added to <i>I</i>.</li>
+   </ol><li><i>goto</i>(<i>I</i>, <i>X</i>), where <i>I</i> is a set of items and
+       <i>X</i> is a grammar symbol, is the closure of the set of all items
+       <i>A</i> → α<i>X</i>·β where
+       <i>A</i> → α·<i>X</i>β is in <i>I</i>.</li>
+  
+  <li>An <i>augmented</i> grammar <i>G'</i> is one to which we have added
+      a new starting production <i>S'</i> → <i>S</i> where <i>S</i> is
+      the start symbol of the given grammar <i>G</i>.
+      Reducing by the new starting production signals acceptance of the input
+      string being parsed. We will always augment a grammar when we construct
+      an SLR parsing table for it.</li>
+
+  <li>The sets-of-items construction
+  <ul><li>Input: An augmented grammar <i>G'</i>.</li>
+   <li>Output: <i>C</i>, the canonical collection of sets of LR(0) items for <i>G'</i>.</li>
+   <li>Method:</li>
+   </ul><pre><code>
+   I<sub>0</sub> = closure({[S' → ·S]});
+   C = {I<sub>0</sub>};
+   repeat
+     for each set of items I in C and grammar symbol X such that
+       goto(I,X) is not empty and not in C do
+         add goto(I,X) to C;
+   until no more sets of items can be added to C;
+   </code></pre>
+  
+  </li><li>Example: Given the augmented grammar <i>G'</i></li>
+  <pre><code>
+  S' → S
+  S  → S(S)
+  S  → ε
+  </code></pre>
+  <dt><i>C</i>, the canonical collection of sets of LR(0) items for <i>G'</i>, is</dt>
+
+  <pre><code>
+  I<sub>0</sub>: S' → ·S
+      S → ·S(S)
+      S → ·
+
+  I<sub>1</sub>: S' → S·
+      S → S·(S)
+
+  I<sub>2</sub>: S → S(·S)
+      S → ·S(S)
+      S → ·
+
+  I<sub>3</sub>: S → S(S·)
+      S → S·(S)
+
+  I<sub>4</sub>: S' → S(S)·
+  </code></pre>
+
+
+  <li>Algorithm to construct the SLR(1) parsing table from <code>C</code>,
+      the canonical collection of sets of LR(0) items for an augmented grammar
+      <i>G'</i></li>
+  <ul><li>Input: <code>C = {I<sub>0</sub>, I<sub>1</sub>, ... , I<sub>n</sub></code>}.</li>
+   <li>Output: The SLR parsing table functions <code>action</code> and
+       <code>goto</code>.</li>
+   <li>Method:</li>
+   <ul><li>State <code>i</code> and its <code>action</code> and <code>goto</code>
+        functions are constructed from <code>I<sub>i</sub></code> as follows:</li>
+    <ul><li>If item [<code>A→ α·aβ</code>] is in
+         <code>I<sub>i</sub></code> and <code>goto(I<sub>i</sub>, a) =
+         I<sub>j</sub></code>, then add "<code>shift j</code>" to
+         <code>action[i, a]</code>. Here <code>a</code> is a terminal.</li>
+     <li>If item [<code>A → α·</code>] is in <code>I<sub>i</sub></code>,
+         then add "<code>reduce A → α</code>" to <code>action[i, a]</code>
+         for all <code>a</code> in FOLLOW(<code>A</code>).
+         Here <code>A</code> cannot be <code>S'</code>.</li>
+     <li>If item [<code>S' → S·</code>] is in <code>I<sub>i</sub></code>,
+         then add "<code>accept</code>" to <code>action[i, $]</code>.</li>
+    </ul><li>If <code>goto(I<sub>i</sub>, A) = I<sub>j</sub></code>, then in
+        the parsing table set <code>goto[i, A] = j</code>.</li>
+    <li>The initial state of the parser is constructed from the set of items
+        containing [<code>S' → ·S</code>].</li>
+   </ul><li>Notes:</li>
+  <ul><li>If each parsing table entry has at most one action, then the grammar
+       is said to be <i>SLR(1)</i>. If any entry has more than one action,
+       then the algorithm fails to produce a parser.</li>
+   <li>All undefined entries are made <code>error</code>.</li>
+  </ul><li>Example: the LR parsing table above is an SLR(1) parsing table for the
+      balanced-parentheses grammar.</li>
+      
+  </ul><h2>4. DFA for Viable Prefixes</h2>
+ <ul><li>A <i>viable prefix</i>
+      is a prefix of a right sentential form that does not continue past the
+      right end of the rightmost handle of that sentential form.</li>
+  <li>The shift and goto functions of the canonical collection of sets
+      of LR(0) items for a grammar <i>G</i> define a DFA that recognizes the
+      viable prefixes of <i>G</i>.
+  </li><li>An item [<code>A → β·γ</code>] is <i>valid</i> for a viable prefix <code>αβ</code> if there is a rightmost derivation from <code>S'</code> to <code>αAw</code> to <code>αβγw</code>.</li>
+ </ul><h2>5. Practice Problems</h2>
+ <ol><dt>Consider the following grammar G:</dt>
+
+  </ol><ul/><pre><code>
+     (1) S → S S +
+     (2) S → S S *
+     (3) S → a
+   </code></pre>
+  
+  <li>Construct a rightmost derivation and parse tree for the input string
+      <code>aaa*+$</code>.</li>
+  <li>Show the handle in each sentential form
+      in the derivation.</li>
+  <li>Construct the canonical collection of sets of LR(0) items for the augmented grammar.</li>
+  <li>Construct an SLR(1) parsing table for G.</li>
+  <li>Show how your SLR(1) parser processes the input string <code>aaa*+$</code>.</li>
+ 
+
+
+
+ <h2>6. Reading</h2>
+ <ul><li>ALSU, Sects. 4.5, 4.6.</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

@@ -1,0 +1,68 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 14: March 11, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 14: Midterm Review<br/>
+  March 11, 2013
+ </h1>
+
+ <h2>1. What you should know for the midterm</h2>
+ <ol><li>The different kinds of programming languages</li>
+  </ol><ul><li>Lecture 1</li>
+  </ul><li>The fundamental elements of programming languages</li>
+  <ul><li>Lecture 2, ALSU Ch.1</li>
+  </ul><li>Language processing tools</li>
+  <ul><li>Lecture 2, ALSU Ch. 1</li>
+  </ul><li>The structure of a compiler</li>
+  <ul><li>Lecture 3, ALSU Chs. 1 and 2</li>
+  </ul><li>Regular languages, regular expressions, finite automata</li>
+  <ul><li>Lectures 4 and 5, ALSU Ch. 3 except for Sect. 3.9</li>
+  </ul><li>Lexical analysis</li>
+  <ul><li>Lectures 4 and 5, ALSU Chs. 2 and 3 except for Sect. 3.9</li>
+  </ul><li>Context-free languages and grammars</li>
+  <ul><li>Lectures 6 and 7, ALSU Ch. 4 except for Sect. 4.7</li>
+  </ul><li>Top-down parsing</li>
+  <ul><li>Lecture 9, ALSU Chs. 2 and 4 except for Sect. 4.7</li>
+  </ul><li>Bottom-up parsing</li>
+  <ul><li>Lectures 10 and 11, ALSU Ch. 4 except for Sect. 4.7</li>
+  </ul><li>Syntax-directed translation</li>
+  <ul><li>Lectures 12 and 13, ALSU Chs. 2 and Ch. 5 except for Sect. 5.5</li>
+  </ul><h2>2. Automata and Language Theory Review</h2>
+ <ul><li>Regular languages</li>
+  <ul><li>Finite automata</li>
+   <li>Regular expressions</li>
+   <li>Closure properties of regular languages</li>
+   <li>Decision properties of regular languages</li>
+   <li>Pumping lemma for regular languages and its uses
+  </li></ul><li>Context-free languages</li>
+  <ul><li>Context-free grammars</li>
+   <li>Parse trees, derivations, and ambiguity</li>
+   <li>Pushdown automata and deterministic pushdown automata</li>
+   <li>Closure properties of CFLs</li>
+   <li>Decision properties of CFLs</li>
+   <li>Pumping lemma for CFLs and its uses
+  </li></ul><li>Syntax-directed translation</li>
+  <ul><li>Syntax-directed definitions and translation schemes</li>
+   <li>Attribute grammars, inherited and synthesized attributes</li>
+   <li>S-attributed and L-attributed SDDs</li>
+  </ul></ul><h2>3. Not all LL(1) grammars are SLR(1) and vice versa</h2>
+ <ul><li>An LL(1) grammar that is not SLR(1)</li>
+</ul><pre><code>
+S → AaAb | BbBa
+A → ε
+B → ε
+</code></pre>
+
+  <li>An SLR(1) grammar that is not LL(1)</li>
+<pre><code>
+S → SA | A
+A → a
+</code></pre>
+
+ 
+
+
+
+
+<hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

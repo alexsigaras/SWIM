@@ -1,0 +1,258 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 17, April 1, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 17: Procedures<br/>
+  April 1, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Names</li>
+  <li>Procedures</li>
+  <li>Parameter-passing mechanisms</li>
+  <li>Evaluation strategies</li>
+  <li>Storage-allocation strategies</li>
+  <li>Activation trees and records</li>
+ </ol><h2>1. Names</h2>
+ <ul><li>A name is a character string used to represent something.</li>
+  <li>Names in most languages are identifiers.</li>
+  <li>In some programming languages, certain identifiers fall into distinct namespaces that
+      do not interfere with one another.
+      For example, in the C structure declaration</li>
+  <ul/></ul><pre><code>
+struct id {  /* here id is a structure tag */
+  int id;    /* here id is a structure member */
+} id;        /* here id is a structure variable */
+</code></pre>
+  
+<dt>the structure tag <code>id</code>, the structure member <code>id</code>,
+and the structure variable <code>id</code>
+are in different namespaces and hence distinct identifiers that
+can be distinguished by context.</dt>
+
+  <li>A binding is an association between two things such as between a
+      name and its type or between a symbol and the operation it represents.
+      The time at which this association is determined is called
+      the binding time. Bindings can take place
+      from language design time to runtime.
+
+  </li><li>The textual region of a program in which a binding is active
+      is called its scope. A scope is often with respect to a namespace.</li>
+  <ul><li>In a language with static scoping,
+       the bindings between names and objects are determined at compile time
+       by examining the text of the program.
+       Static scoping is sometimes called lexical scoping.
+       In static scoping, a name refers to its lexically closest declaration.</li>
+   <li>In a language with dynamic scoping,
+       the bindings between names and objects depend on the order in which
+       procedures are called at runtime.</li>
+  </ul><li>Lifetimes</li>
+  <ul><li>The lifetime of a name-object binding is the time between the creation and
+       destruction of that binding.</li>
+   <li>The lifetime of an object is the time between the creation and destruction of the
+       object. Depending on the language,
+       the lifetime of an object may be different than that of lifetime of the name-object binding.</li>
+   <ul><li>In C, an object is a location in storage. The storage class determines the lifetime of the
+        storage associated with an object.</li>
+    <li>In C, there are two storage classes: automatic and static. Automatic objects are local to
+        a block and are discarded on exit from the block. Static objects retain their values across
+        entry from and reentry to functions and blocks.</li>
+   </ul><li>Object lifetimes are usually determined by the storage-allocation strategy
+       used to manage the storage for that object.</li>
+   <ul><li>Static objects are allocated memory in the code space and have an address that is retained
+        throughout the execution of a program.</li>
+    <li>Stack objects are allocated in a last-in, first-out order on the runtime stack
+        usually in conjunction with
+        procedure calls and returns.</li>
+    <li>Heap objects are dynamically allocated and deallocated at arbitrary times on the runtime heap.
+        Some languages such as Java and C# use a garbage collection mechanism to
+        identify and reclaim heap objects that
+        become unreachable during program execution.</li>
+   </ul></ul><h2>2. Procedures</h2>
+ <ul><li>A procedure <i>P</i> in a programming language is a collection
+      of statements that defines a parameterized computation.
+      An invocation of <i>P</i> is called an activation of <i>P</i>.</li>
+  <li>We use the term <i>actual parameters</i> to denote the parameters
+      used in the call of a procedure.</li>
+  <li>We use the term <i>formal parameters</i> to denote the parameters
+      used in the definition of a procedure.</li>
+  <li>We will often call a procedure that returns a value a <i>function</i>.
+      (C uses the term function for procedure as well.)</li>
+  <li>The type of the function <code>return_type f(arg1_type a, arg2_type b)</code>
+      can be denoted by the type expression</li>
+      <dt>   <code>arg1_type x arg2_type → return_type</code></dt>
+  <li>Some design issues for implementing procedures</li>
+  <ul><li>choice of parameter-passing mechanism</li>
+   <li>storage allocation for local variables: static or dynamic</li>
+   <li>can procedure declarations nest</li>
+   <li>can procedures be passed as parameters, returned as values</li>
+   <li>can procedure names be overloaded</li>
+   <li>generic procedures, ones whose computations can be done on different types</li>
+   <li>does language have closures (encapsulations of procedures with their runtime context)</li>
+  </ul></ul><h2>3. Parameter-Passing Mechanisms</h2>
+ <ul><li>Programming languages differ in how the values of parameters are passed to called procedures.</li>
+  <li>Call by value</li>
+  <ul><li>The actual parameter is evaluated if it is an expression or copied
+       if it is a variable. The r-value is placed in the location
+       belonging to the corresponding formal parameter of the called procedure.</li>
+   <li>C and Java use call by value. C leaves the order in which the parameters
+       are evaluated unspecified;
+       Java evaluates the parameters left to right.</li>
+   <li>"swap" example from C</li>
+   <ul><li>Consider the following C program fragment</li>
+    </ul></ul></ul><pre><code>
+      a = 1;
+      b = 2;
+      swap(a, b);
+      printf("a = %d, b = %d\n", a, b);
+    </code></pre>
+    <dt>where the function <code>swap</code> is defined as
+    <pre><code>
+      void swap(int x, int y) {
+        int temp;
+        temp = x;
+        x = y;
+        y = temp;
+      }
+    </code></pre>
+    <li>Now consider the same program fragment with
+        <code>swap(&amp;a, &amp;b)</code> in place of
+        <code>swap(a, b)</code> and with
+        <code>swap</code> defined as</li>
+    <pre><code>
+      void swap(int *px, int *py) {
+        int temp;
+        temp = *px;
+        *px = *py;
+        *py = temp;
+      }
+    </code></pre>
+
+
+   </dt>
+  
+
+  <li>Call by reference</li>
+  <ul><li>The address of the actual parameter is passed to the callee as the
+       value of the corresponding formal parameter.</li>
+   <li>If the parameter is an expression, the expression is evaluated and its value
+       is stored in a new location
+       before the call. The address
+       of that location is passed.</li>
+   <li>Useful for passing large parameters to procedures.</li>
+   <li>Used for reference parameters in C++. In C++, <code>swap</code> can be written
+       with reference parameters as</li>
+    </ul><pre><code>
+      void swap(int &amp;x, int &amp;y) {
+        int temp;
+        temp = x;
+        x = y;
+        y = temp;
+      }
+    </code></pre>
+       <dt>In the body, <code>x</code> and <code>y</code> are <code>int</code>'s,
+           not pointers to <code>int</code>'s. The caller passses as parameters
+           the variables whose values are to be swapped, not their
+           addresses.</dt>
+  
+
+  <li>Call by name</li>
+  <ul><li>A call-by-name parameter is re-evaluated in the caller's
+       referencing environment each time it is used. The effect is
+       as though the called procedure is textually expanded at the
+       point of the call with each actual parameter substituted
+       for the corresponding formal parameter at every occurrence
+       in the body of the procedure.
+       Local names in the called procedure may need to be
+       renamed to keep them distinct.</li>
+   <li>Used in Algol 60.</li>
+   <li>Also used at compile time by macros in the C preprocessor.</li>
+   <li>Example: Consider the macro definition in C</li>
+   <ul><dt><code>#define max(a, b)   ((a) &gt; (b) ? (a) : (b))</code></dt></ul><dt>The C statement</dt>
+   <ul><dt><code>x = max(p+q, r*s);</code></dt></ul><dt>will be replaced by the statement</dt>
+   <ul><dt><code>x = ((p+q) &gt; (r*s) ? (p+q) : (r*s);</code></dt></ul></ul><h2>4. Evaluation Strategies for the Arguments of a Procedure</h2>
+  <ul><li>An evaluation strategy defines when and in what order the parameters
+       to a procedure are evaluated.</li>
+   <li>In applicative-order evaluation, all parameters are evaluated
+       before applying the procedure. C functions
+       and Java methods use applicative-order evaluation.</li>
+   <li>In normal-order evaluation, parameters are evaluated after applying
+       the procedure, and then only if the result is needed to complete the
+       evaluation of the procedure. Normal-order evaluation is used with
+       macros and call-by-name parameters.
+       Haskell uses a memoized version of call by name called call by need.</li>
+  </ul><h2>5. Storage-Allocation Strategies</h2>
+ <ul><li>Static allocation</li>
+  <ul><li>Storage for all data objects is laid out at compile time.</li>
+   <li>Names are bound to storage as program is compiled.</li>
+   <li>Static allocation was used in early versions of Fortran.</li>
+   <li>Recursion is restricted.</li>
+   <li>Size of all data objects must be known at compile time.</li>
+   <li>No dynamic data structures can be supported.</li>
+  </ul><li>Stack allocation</li>
+  <ul><li>Run-time storage is organized as a stack.</li>
+   <li>Activation records (ARs) are pushed and popped as activations
+       of procedures begin and end.</li>
+   <li>Typical kinds of data appearing in an activation record:</li>
+
+  </ul></ul><pre><code>
+                 Actual parameters
+                 Returned values
+                 Control link
+                 Access link
+                 Saved machine status
+                 Local data
+                 Temporaries
+  </code></pre>
+
+   <li>Storage for the locals in each call is contained in the AR for that call.</li>
+   <li>Used by C and Java.</li>
+  
+
+  <li>Heap allocation
+   <ul><li>Storage is allocated and deallocated as needed at run time from a data area called a heap.</li>
+   <li>Necessary when data outlives the call to the procedure that created it.</li>
+   <li>Also needed when the values of local names must be retained after an activation ends.</li>
+  </ul></li>
+
+ <h2>6. Activation Trees and Records</h2>
+ <ul><li>Consider the following C program for Euclid's algorithm.</li>
+
+</ul><pre><code>
+#include <stdio.h>
+int x, y;
+int gcd(int u, int v) {
+   if (v == 0)
+      return u;
+   else
+      return gcd(v, u%v);
+}
+
+main() {
+   scanf("%d%d", &amp;x, &amp;y);
+   printf("%d\n", gcd(x, y));
+   return 0;
+}
+</stdio.h></code></pre>
+
+  <li>A tree, called an activation tree, can be used to represent the procedure calls made during
+      an execution of gcd because the lifetimes of the procedure activations are nested.</li>
+  <li>Note that:</li>
+  <ul><li>The sequence of procedure calls corresponds to a preorder traversal
+       of the tree.</li>
+   <li>The sequence of returns corresponds to a postorder travseral.</li>
+   <li>The path from the root to a node <i>N</i> shows the activations
+       that are live at the time <i>N</i> is executing.</li>
+  </ul><li>Procedure calls and returns are managed by a control stack.</li>
+  <li>On each procedure call, an activation record for that procedure
+      is pushed on the stack. The activation record for each procedure call contains the information
+      needed to manage the execution of that procedure call.
+      When the call returns, that activation
+      record is popped from the stack.</li>
+ 
+
+
+ <h2>7. Reading</h2>
+ <ul><li>ALSU, Sections 6.9, 7.1, 7.2</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

@@ -1,0 +1,68 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 13: March 6, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 13: Intermediate Representations<br/>
+  March 6, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Syntax-directed translation</li>
+  <li>Variants of syntax trees</li>
+  <li>Three-address code</li>
+  <li>Semantic analysis</li>
+ </ol><h2>1. Syntax-Directed Translation</h2>
+ <ul><li>Postfix translation schemes</li>
+  <li>Translation schemes with actions inside productions</li>
+  <li>Producing ASTs with top-down parsing</li>
+  <ul><li>Here is the L-attributed SDD based on an LL(1) grammar for translating arithmetic
+      expressions into ASTs from Lecture 12.</li>
+  </ul></ul><pre><code>
+   E → T A        { E.node = A.s;
+                    A.i = T.node; }
+
+   A → + T A<sub>1</sub>     { A1.i = Node('+', A.i, T.node);
+                    A.s = A<sub>1</sub>.s; }
+
+   A → ε          { A.s = A.i; }
+
+   T → ( E )      { T.node = E.node; }
+
+   T → id         { T.node = Leaf(id, id.entry); }
+  </code></pre>
+  
+ 
+
+ <h2>2. Variants of Syntax Trees</h2>
+ <ul><li>Abstract syntax trees</li>
+  <li>Directed acyclic graphs</li>
+  <ul><li>Algorithm 6.3: Value-number method for constructing a DAG (p. 361)</li>
+  </ul></ul><h2>3. Three-Address Code</h2>
+ <ul><li>Three-address instructions</li>
+  <li>Representations for three-address code</li>
+  <ul><li>Records</li>
+   <li>Quadruples</li>
+   <li>Triples</li>
+  </ul><li>Static single-assignment form</li>
+ </ul><h2>4. Semantic Analysis</h2>
+ <ul><li>Uses made of semantic information for a variable <code>x</code>:</li>
+  <ul><li>What kind of value is stored in <code>x</code>?</li>
+   <li>How big is <code>x</code>?</li>
+   <li>Who is responsible for allocating space for <code>x</code>?</li>
+   <li>Who is responsible for initializing <code>x</code>?</li>
+   <li>How long must the value of <code>x</code> be kept?</li>
+   <li>If <code>x</code> is a procedure, what kinds of arguments does it take and what
+       kind of return value does it have?</li>
+  </ul><li>Storage layout for local names</li>
+ </ul><h2>5. Practice Problems</h2>
+ <ol><li>Construct a DAG for the expression</li>
+      <dt><code>((x + y) - ((x + y) * (x - y))) + ((x + y) * (x - y))</code></dt>
+  <li>Translate the following assignments into (a) syntax trees, (b) quadruples, (c) triples,
+      (d) three-address code:</li>
+  <ol style="list-style-type: lower-alpha;"><li><code>x = a + -(b+c)</code></li>
+   <li><code>x[i] = y[i] + z[i]</code></li>
+   <li><code>x = f(y+1) + 2</code></li>
+  </ol></ol><h2>6. Reading</h2>
+ <ul><li>ALSU, Sections 6.1-6.3</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

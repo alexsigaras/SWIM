@@ -1,0 +1,191 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 18, April 3, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 18: Run-time Environments<br/>
+  April 3, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Activation trees</li>
+  <li>Calling sequences</li>
+  <li>Access to local arrays</li>
+  <li>Heap memory management</li>
+ </ol><h2>1. Activation Trees</h2>
+ <ul><li>Consider the following C program:</li>
+    </ul><pre><code>
+    int x = 2;
+
+    void f(int n) {
+      static int x = 1;
+      g(n);
+      x--;
+    }
+
+    void g(int m) {
+      int y = m-1;
+      if (y &gt; 0) {
+        f(y);
+        x--;
+        g(y);
+      }
+    }
+
+    main() {
+      g(x);
+      return 0;
+    }
+    </code></pre>
+
+   <li>The activation tree for this program is</li>
+    <pre><code>
+       main()
+         |
+        g(2)
+        / \
+     f(1) g(1)
+      |
+     g(1)
+    </code></pre>
+
+  
+
+
+ <h2>2. Calling Sequences</h2>
+ <ul><li>Procedure calls are implemented by calling sequences, code that allocates
+      an activation record on the control stack and enters information into its
+      fields.</li>
+  <li>A return sequence is code invoked after the call to restore the state
+      of the machine so the calling procedure can continue its execution after
+      the call.</li>
+  <li>The code in a calling sequence is usually divided between the calling
+      procedure (the "caller") and the procedure it calls (the "callee").</li>
+  <li>When a procedure p calls a procedure q, we might do something like the following:</li>
+  <ul><li>Evaluate the parameters of q and store them in a new AR for q.</li>
+   <li>Store the frame pointer (fp) for p as the control link in the AR for q.</li>
+   <li>Update fp to point to the AR of q.</li>
+   <li>Store the return address in the AR for q.</li>
+   <li>Jump to the code for q.</li>
+   <li>Have q allocate and initialize its local data and temporaries on the stack.</li>
+  </ul><li>When q exits:</li>
+  <ul><li>Copy the fp of the AR for q into sp (the top of stack pointer).</li>
+   <li>Load the control link of the AR for q into the fp.</li>
+   <li>Jump to the return address.</li>
+   <li>Change the stack pointer to pop the parameters of q off the run-time stack.</li>
+  </ul><li>Contrast the run-time stack during the first and second calls to <code>g(1)</code>
+      in the program in section (1).</li>
+ </ul><h2>3. Allocating Space for Arrays</h2>
+ <ul><li>Fixed-size arrays
+   <pre><code>
+   void f(int x) {
+     int a;
+     int b[4];
+     int c;
+     ...
+   }
+   </code></pre>
+  </li><li>Space for the array <code>b</code> can be allocated on the runtime stack
+      between the space for <code>a</code> and <code>c</code>.</li>
+
+  <li>Variable-size arrays
+   <pre><code>
+   void f(int x) {
+     int a;
+     int b[n];
+     int c;
+     ...
+   }
+   </code></pre>
+  </li><li>A pointer to the space for <code>b</code> can be allocated on the runtime stack
+      between the space for <code>a</code> and <code>c</code> so variables remain
+      a constant offset from the frame pointer.
+      The actual space for <code>b</code> can be allocated after <code>c</code>.</li>
+ </ul><h2>4. Heap Memory Management</h2>
+ <ul><li>The runtime heap is used for data objects whose lifetimes may exist long after
+      the procedure that created them.</li>
+  <li>The heap memory manager is the subsystem that allocates and deallocates space
+      within the heap.</li>
+  <li>Garbage collection is the process of finding memory within the heap that is no
+      longer used by the program and can therefore be reallocated to house other
+      data objects. In some programming languages like C allocatation and deallocation
+      needs to be done manually using library functions like <code>malloc</code>
+      and <code>free</code>. In other languages like Java it is the garbage collector
+      that deallocates memory.</li>
+  <li>There are many different garbage collection algorithms that vary in performance
+      metrics such as execution time, space usage, pause time, and program locality.</li>
+  <li>Mark-and-sweep garbage collection</li>
+  <ul><li>A basic mark-and-sweep (M&amp;S) garbage collection algorithm is straightforward to
+       implement and works well for languages like C because it does not move
+       data objects during garbage collection.</li>
+   <li>A M&amp;S collector firsts visits and marks all reachable data objects in the heap,
+       setting the reached-bit of each object to 1.</li>
+   <li>It then sweeps the entire heap, freeing up unreachable objects.</li>
+   <li>See Algorithm 7.12 (ALSU, p. 471) for details.</li>
+  </ul></ul><h2>5. Practice Problem</h2>
+ <ul><li>Consider the following program written in a hypothetical
+      statically scoped
+      language that allows nested functions. In this program,
+      main calls f which calls g2 which calls h
+      which calls g1.</li>
+  </ul><pre><code>
+     function main() {
+       int i;
+
+       function f() {
+         int a, b, c;
+
+         function g1() {
+           int a, d;
+
+           a = b + c;               // point 1
+
+         }; // end of g1
+
+         function g2(int x) {
+           int b, e;
+
+           function h() {
+             int c, e;
+
+             g1();
+             e = b + a;             // point 2
+
+           }; // end of h
+
+           h();
+           a = d + e;               // point 3
+
+         }; // end of g2
+
+         g2(1);
+
+       }; //end of f
+
+       // execution of main begins here
+
+       f();
+
+     }; // end of main
+  </code></pre>
+
+  <ol style="list-style-type: lower-alpha;"><li>Suppose we have activation records with the following fields:</li>
+   </ol><ul><dt>Parameters</dt>
+       <dt>Control Link</dt>
+       <dt>Access Link</dt>
+       <dt>Return Address</dt>
+       <dt>Local data</dt>
+   </ul><dt>If function p is nested immediately within function q, then the
+       access link in any AR for p points to the most recent AR for q.</dt>
+   <dt>Show the activation records on the run-time stack
+       when execution first arrives at point 1 in the program above.</dt>
+   <li>To which declarations are the references to variables a, b, c at position 1?</li>
+   <li>To which declarations are the references to variables a, b, e at position 2?</li>
+   <li>To which declarations are the references to variables a, d, e at position 3?</li>
+  
+ 
+
+ <h2>6. Reading</h2>
+ <ul><li>ALSU, Sections 7.1, 7.2, 7.6.1</li>
+  <li>K. C. Louden, Compiler Construction, PWS Publishing, 1997.</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

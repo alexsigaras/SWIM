@@ -1,0 +1,97 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 5: February 6, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 5: Implementing a Lexical Analyzer<br/>
+  February 6, 2013
+ </h1>
+
+ <h2>Outline</h2>
+ <ol><li>Finite automata</li>
+  <li>Converting an NFA to a DFA</li>
+  <li>Equivalence of regular expressions and finite automata</li>
+  <li>Simulating an NFA</li>
+  <li>The pumping lemma for regular languages</li>
+  <li>Closure and decision properties of regular languages</li>
+ </ol><h2>1. Finite Automata</h2>
+ <ul><li>Variants of finite automata are commonly used to match regular expression patterns.</li>
+  <li>A nondeterministic finite automaton (NFA) consists of</li>
+   <ul><li>A finite set of states <i>S</i>.</li>
+    <li>An input alphabet consisting of a finite set of symbols Σ.</li>
+    <li>A transition function δ that maps <i>S</i> × (Σ ∪ {ε})
+        to subsets of <i>S</i>. This transition function can be represented
+        by a transition graph in which the nodes are labeled by states
+        and there is a directed edge labeled <i>a</i> from node <i>w</i> to node <i>v</i>
+        if δ(<i>w</i>, <i>a</i>) contains <i>v</i>.</li>
+    <li>An initial state <i>s</i><sub>0</sub> in <i>S</i>.</li>
+    <li><i>F</i>, a subset of <i>S</i>, called the final (or accepting) states.</li>
+   </ul><li>An NFA accepts an input string <i>x</i> iff there is a path in the transition
+      graph from the initial state to a final state that spells out <i>x</i>.</li>
+  <li>The language defined by an NFA is the set of strings accepted by the NFA.</li>
+  <li>A deterministic finite automaton (DFA) is an NFA in which</li>
+  </ul><ol><li>There are no ε moves, and</li>
+   <li>For each state <i>s</i> and input symbol <i>a</i> there is exactly one transition
+       out of <i>s</i> labeled <i>a</i>.</li>
+  </ol><h2>2. Converting an NFA to a DFA</h2>
+ <ul><li>Every NFA can be converted to an equivalent DFA using the subset construction
+      (Algorithm 3.20, ALSU, pp. 153-154).</li>
+  <li>Every DFA can be converted into an equivalent minimum-state DFA
+      Using Algorithm 3.39, ALSU, pp. 181-183.
+      All equivalent minimum-state DFAs are isomorphic up to state renaming.</li>
+ </ul><h2>3. Equivalence of Regular Expressions and Finite Automata</h2>
+ <ul><li>Regular expressions and finite automata define the same
+      class of languages, namely the regular sets.</li>
+  <li>Every regular expression can be converted into an equivalent
+      NFA using the McNaughton-Yamada-Thompson algorithm
+      (Algorithm 3.23, ALSU, pp. 159-161).</li>
+  <li>Every finite automaton can be converted into a regular expression
+      using Kleene's algorithm.</li>
+ </ul><h2>4. Simulating an NFA</h2>
+ <ul><li>Two-stack simulation of an NFA: Algorithm 3.22, ALSU, pp. 156-159.</li>
+ </ul><h2>5. The Pumping Lemma for Regular Languages</h2>
+ <ul><li>The pumping lemma allows us to prove certain languages, like
+      { <code>a</code><sup><i>n</i></sup><code>b</code><sup><i>n</i></sup> |
+      <i>n</i> ≥ 0 }, are not regular.</li>
+  <li><b>The pumping lemma.</b> If L is a regular language, then there exists a
+      constant <i>n</i> associated with L such that for every string <i>w</i> in L where
+      |<i>w</i>| ≥ <i>n</i>, we can partition <i>w</i> into three strings
+      <i>xyz</i> (i.e., <i>w</i> = <i>xyz</i>) such that
+  <ul><li><i>y</i> is not the empty string,</li>
+   <li>the length of <i>xy</i> is less than or equal to <i>n</i>, and</li>
+   <li>for all <i>k</i> ≥ 0, the string <i>xy<sup>k</sup>z</i> is in L.</li>
+  </ul></li></ul><h2>6. Closure and Decision Properties of Regular Languages</h2>
+ <ul><li>The regular languages are closed under the following operations:</li>
+  <ul><li>union</li>
+   <li>intersection</li>
+   <li>complement</li>
+   <li>reversal</li>
+   <li>Kleene star</li>
+   <li>homomorphism</li>
+   <li>inverse homomorphism</li>
+  </ul><li>Decision properties</li>
+  <ul><li>Given a regular expression <i>r</i> and a string <i>w</i>, it is decidable
+       whether <i>r</i> matches <i>w</i>.</li>
+   <li>Give a finite automaton A, it is decidable whether L(A) is empty.</li>
+   <li>Given two finite automata A and B, it is decidable whether L(A) = L(B).</li>
+  </ul></ul><h2>7. Practice Problems</h2>
+ <ol><li>Write down deterministic finite automata for the following regular expressions:</li>
+  <ol style="list-style-type: lower-alpha;"><li><code>(a*b*)*</code></li>
+   <li><code>(aa|bb)*((ab|ba)(aa|bb)*(ab|ba)(aa|bb)*)*</code></li>
+   <li><code>a(ba|a)*</code></li>
+   <li><code>ab(a|b*c)*bb*a</code></li>
+  </ol><li>Construct a deterministic finite automaton that will recognize all strings
+      of 0's and 1's representing integers that are divisible by 3.
+      Assume the empty string represents 0.</li>
+  <li>Use the McNaughton-Yamada-Thompson algorithm to convert the regular
+      expression <code>a(a|b)*a</code> into a nondeterministic finite automaton.</li>
+  <li>Convert the NFA of (3) into a DFA.</li>
+  <li>Minimize the number of states in the DFA of (4).</li>
+ </ol><h2>8. Reading Assignment</h2>
+ <ul><li>ALSU Chapter 3, all sections except 3.9.</li>
+  <li>Russ Cox's article <a href="http://swtch.com/%7Ersc/regexp/regexp1.html">
+      Regular Expression Matching Can Be Simple and Fast (but is slow in
+      Java, Perl, PHP, Python, Ruby, ...)</a> has a good historical account on
+      the evolution of regular expression matching programs.</li>
+      
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

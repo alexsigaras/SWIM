@@ -1,0 +1,172 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 20, April 10, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 20: Code Generation Algorithms<br/>
+  April 10, 2013
+ </h1>
+
+
+ <h2>1. Target Machine</h2>
+ <ul><li><i>n</i> general-purpose registers</li>
+   <li>Instructions: load, store, compute, jump, conditional jump</li>
+   <li>Various addressing modes:</li>
+   <ul><li>indexed address</li>
+    <li>integer indexed by a register</li>
+    <li>indirect addressing</li>
+    <li>immediate constant</li>
+   </ul><li>Example 1: for <code>x = y + z</code> we can generate</li>
+   </ul><pre><code>
+   LD  R1, y       // R1 = y
+   LD  R2, z       // R2 = z
+   ADD R1, R1, R2  // R1 = R1 + R2
+   ST  x, R1       // x  = R1
+   </code></pre>
+
+   <li>Example 2: for <code>b = a[i]</code> where a is an
+       array of integers we can generate</li>
+   <pre><code>
+   LD  R1, i       // R1 = i
+   MUL R1, R1, #4  // R1 = R1 * 4
+   LD  R2, a(R1)   // R2 = contents(a + contents(R1))
+   ST  b, R2       // b  = R2
+   </code></pre>
+
+   <li>Example 3: for <code>a[j] = c</code> where a is an
+       array of integers we can generate</li>
+   <pre><code>
+   LD  R1, c       // R1 = c
+   LD  R2, j       // R2 = j
+   MUL R2, R2, #4  // R2 = R2 * 4
+   ST  a(R2), R1   // contents(a + contents(R2)) = R1
+   </code></pre>
+
+   <li>Example 4: for <code>x = *p</code> we can generate</li>
+   <pre><code>
+   LD  R1, p       // R1 = p
+   LD  R2, 0(R1)   // R2 = contents(0 + contents(R1))
+   ST  x, R2       // x = R2
+   </code></pre>
+
+   <li>Example 5: for <code>*p = y</code> we can generate</li>
+   <pre><code>
+   LD  R1, p       // R1 = p
+   LD  R2, y       // R2 = y
+   ST  0(R1), R2   // contents(0 + contents(R1)) = R2
+   </code></pre>
+
+   <li>Example 6: for <code>if x &lt; y goto L</code> we can generate</li>
+   <pre><code>
+   LD   R1, x      // R1 = x
+   LD   R2, y      // R2 = y
+   SUB  R1, R1, R2 // R1 = R1 - R2
+   BLTZ R1, M      // if R1 &lt; 0 jump to M
+   </code></pre>
+   <dt>Here <code>M</code> is the label of the first machine instruction
+       generated from the three-address instruction that has label <code>L</code></dt>
+
+  <li>Instruction cost: 1 + cost associated with the addressing modes of the operands</li>
+ 
+
+ <h2>2. Names to Addresses</h2>
+ <ul><li>Addresses in the target code are in the runtime address space.</li>
+  <li>Names in the IR need to be converted into addresses in the target code.</li>
+  <li>Example: managing the addresses in the runtime stack</li>
+  <ul><li>The code for the first procedure initializes the runtime stack by setting
+       the stack pointer SP to the start of the stack.</li>
+   <li>A procedure call increments SP, saves the return address, and
+       transfers control to the called procedure.</li>
+   <li>In the return sequence</li>
+   <ul><li>the called procedure transfers control to the return address
+        using the instruction <code>BR *0(SP)</code></li>
+    <li>the caller decrements SP to its previous value</li>
+   </ul></ul></ul><h2>3. Computing Next-Use Information</h2>
+ <ul><li>Knowing when the value of a variable will be used next is essential
+      for generating good code.</li>
+  <li>If there is a three-address instruction sequence of the form</li>
+  </ul><pre><code>
+       i:  x = y + z
+
+       .
+       . no assignments to x between instructions i and j
+       .
+
+       j:  a = x + b
+  </code></pre>
+
+  <dt>then we say statement <code>j</code> <i>uses</i> the
+      value of <code>x</code> computed at <code>i</code>.</dt>
+
+  <li>We also say that variable <code>x</code> is <i>live</i> at statement <code>i</code>.</li>
+  <li>A simple way to find next uses is to scan backward from
+      the end of a basic block keeping track for each name
+      <code>x</code> whether <code>x</code> has a next use in
+      the block and if not whether <code>x</code> is live on
+      exit from that block. See Alg. 8.7, p. 528.</li>
+ 
+
+
+ <h2>4. A Simple Code Generator</h2>
+ <ul><li>Here we describe an algorithm for generating code for a basic block
+      that keeps track of what values are in registers so it can avoid
+      generating unnecessary loads and stores.</li>
+  <li>It uses a register descriptor to keep track of what variable values
+      are in each available register.</li>
+  <li>It uses an address descriptor to keep track of the location or locations
+      where the current value of each variable can be found.</li>
+  <li>For the instruction x = y + z it generates code as follows:</li>
+  <ul><li>It calls a function getReg(x = y + z) to select registers Rx, Ry, and Rz for
+       variables x, y, and z.</li>
+   <li>If y is not in Ry, it issues the load instruction <code>LD Ry, My</code>
+       where My is one of the memory locations for y in the address descriptor.</li>
+   <li>Similarly, if z is not in Rz, it issues a load instruction <code>LD Rz, Mz</code>.</li>
+   <li>It then issues the instruction <code>ADD Rx, Ry, Rz</code>.</li>
+  </ul><li>For the instruction x = y it generates code as follows:</li>
+  <ul><li>It calls a function getReg(x = y) to select a register Ry for
+       both x and y.  We assume retReg will always choose the same register
+       for both x and y.</li>
+   <li>If y is not in Ry, issue the load instruction <code>LD Ry, My</code>
+       where My is one of the memory locations for y in the address descriptor.</li>
+   <li>If y is already in Ry, we issue no instruction.</li>
+  </ul><li>At the end of the basic block, it issues a store instruction
+      <code>ST x, R</code> for every variable x that is live on exit from
+      the block and whose current value resides only in a register R.</li>
+  <li>The register and address descriptors are updated appropriately as each
+      machine instruction is issued.</li>
+  <li>If there are no empty registers and a register is needed, the function
+      getReg generates a store instruction <code>ST v, R</code> to store the value
+      of the variable v in some occupied register R.  Such a store is called
+      a <i>spill</i>.  There are a number of heuristics to choose the register
+      to spill.</li>
+ </ul><h2>5. Optimal Code Generation for Expression Trees</h2>
+ <ul><li>In this section we assume we are using a <i>k</i>-register machine with
+      instructions of the form</li>
+  <ul><li><code>LD reg, mem</code></li>
+   <li><code>ST mem, reg</code></li>
+   <li><code>OP reg, reg, reg</code></li>
+  </ul><dt>to evaluate expressions.
+  <li>Ershov numbers</li>
+  <ul><li>An expression tree is a syntax tree for an expression.</li>
+   <li>Numbers, called Ershov numbers, can be assigned to label the nodes of an expression
+       tree. The Ershov number at a node gives the minimum number of registers needed
+       to evaluate on a register machine the expression generated by that node
+       with no spills.</li>
+   <li>Algorithm to label the nodes of an expression tree with Ershov numbers</li>
+   </ul><ol><li>Label all leaves 1.</li>
+    <li>The label of an interior node with one child is the label of its child.</li>
+    <li>The label of an interior node with two children is the larger of the
+        labels of its children if these labels are different; otherwise, it is
+        one plus the label of the left child.</li>
+   </ol><li>Sethi-Ullman algorithm
+      generates register machine code that minimizes the number of spills to evaluate
+      an expression tree. Ershov numbers guide the evaluation order.</li>
+  <ul><li>Input: an expression tree labeled with Ershov and a <i>k</i>-register machine.</li>
+   <li>Output: an optimal sequence of register machine instructions to evaluate
+       the root of the tree into a register.</li>
+   <li>The details of the algorithm are in Section 8.10 of ALSU, pp. 567-573.</li>
+  </ul></dt></ul><h2>6. Practice Problems</h2>
+ <ol><li>ALSU, Exercise 8.2.5 (p. 517).</li>
+  <li>ALSU, Exercise 8.10.2 (p. 573).</li>
+ </ol><h2>7. Reading</h2>
+ <ul><li>ALSU, Sections 8.2-8.4, 8.6, 8.10</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+</body>

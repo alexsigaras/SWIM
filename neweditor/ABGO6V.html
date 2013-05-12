@@ -1,0 +1,108 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>Lecture 19, April 8, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 19: Code Generation<br/>
+  April 8, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Issues in code generation</li>
+  <li>Memory hierarchy</li>
+  <li>Categories of target machines</li>
+  <li>Primary tasks of a code generator</li>
+  <li>Basic blocks and flow graphs</li>
+ </ol><h2>1. Issues in Code Generation</h2>
+ <ul><li>Role of the code generator</li>
+  <ul><li>Input: IR of the source program produced by the font end</li>
+   <li>Output: good target machine code</li>
+  </ul><li>Challenges of code generation</li>
+  <ul><li>The target program must preserve the semantic meaning of the
+       source program.</li>
+   <li>The target program should make efficient use of the target
+       machine's resources.</li>
+   <li>The code generator itself should be efficient.</li>
+   <li>The problem of optimal code generation is undecidable.</li>
+   <li>Many subproblems in code generation, such as optimal register
+       allocation, are computationally intractable.</li>
+   <li>The design of a good code generator often reverts to the problem of
+       designing good heuristics.</li>
+  </ul></ul><h2>2. Memory Hierarchy</h2>
+ <ul><li>Processor registers are the fastest devices in a computer's
+      memory hierarchy.  Here are some typical access times and sizes
+      of the components of a computer's memory hierarchy.</li>
+ </ul><pre><code>
+		 Access Time		   Size
+registers	0.2 - 0.5 ns		256 -  1024 B
+L1 cache	0.4 -   1 ns		 32 -   256 KB
+L2 cache	  4 -  10 ns		512 KB -  2 MB
+main memory	 50 - 500 ns		256 MB - 16 GB
+disk		  5 -  15 ms		 80 GB
+tape		  1 -  50 s		infinite
+ </code></pre>
+  <li>As we can see, there are several orders of magnitude difference
+      in the access time between registers and main memory.  As a consequence,
+      compiler code generators attempt to use registers to hold the most frequently
+      used objects in the target program. But since there are a small number
+      of registers, the compiler will have to make choices as to what quantities
+      it keeps in registers and what quantities it must spill into main memory.</li>
+ 
+
+ <h2>3. Categories of Target Machines</h2>
+ <ul><li>Reduced instruction set machines (RISC)</li>
+  <ul><li>many registers</li>
+   <li>three-address instructions</li>
+   <li>simple addressing modes</li>
+   <li>simple instruction set architecture</li>
+  </ul><li>Complex instruction set machines (CISC)</li>
+  <ul><li>few registers</li>
+   <li>two-address instructions</li>
+   <li>variety of addressing modes</li>
+   <li>several register classes</li>
+   <li>variable-length instructions</li>
+   <li>instructions with side effects</li>
+  </ul><li>Stack-based machines</li>
+  <ul><li>push operands onto stack</li>
+   <li>perform operations on operands at top of stack</li>
+   <li>stack kept in registers</li>
+   <li>model for Java Virtual Machine</li>
+  </ul><li>Multicore machines</li>
+ </ul><h2>4. Primary Tasks of a Code Generator</h2>
+  <ul><li>Instruction selection</li>
+   <ul><li>Determining factors:</li>
+    <ul><li>level of IR</li>
+     <li>nature of ISA</li>
+     <li>desired quality of generated code</li>
+    </ul></ul><li>Register allocation and assignment</li>
+   <ul><li>Register allocation determines the set of variables that
+        will reside in registers at each point in the program.</li>
+    <li>Register assignment determines the specific register in which
+        a variable will reside.</li>
+   </ul><li>Evaluation order</li>
+   <ul><li>Some computation orders require fewer registers to hold intermediate
+        results than others.</li>
+    <li>Picking an optimal order in the general case is NP-complete.</li>
+   </ul></ul><h2>5. Basic Blocks and Flow Graphs</h2>
+ <ul><li>A basic block is a maximal sequence of consecutive three-address
+     instructions such that</li>
+  </ul><ol><li>The flow of control can only enter the basic block throught the
+       first instruction in the block.</li>
+   <li>Control will leave the block without halting or branching
+       except possibly at the last instruction in the block.</li>
+  </ol><li>A flow graph for the basic blocks of an intermediate program
+      can be constructed as follows:</li>
+  <ul><li>The basic blocks are the nodes of the flow graph.</li>
+   <li>There is an edge from block B to block C iff it is possible
+       for the first instruction in C to immediately follow the last
+       instruction in B.</li>
+  </ul><li>A set of nodes L in a flow graph is a loop if</li>
+  <ol><li>There is a node in L called the loop entry with the property
+       that no other node in L has a predecessor outside L.</li>
+   <li>Every node in L has a nonempty path completely within L to
+       the entry of L.</li>
+  </ol><h2>6. Practice Problem</h2>
+ <ol><li>ALSU, Exercise 8.4.1, p. 531.</li>
+ </ol><h2>7. Reading</h2>
+ <ul><li>ALSU, Sections 8.1-8.5</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>

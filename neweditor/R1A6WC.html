@@ -1,0 +1,227 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>
+  Lecture 1: January 23, 2013
+ </title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 1: January 23, 2013<br/>
+  Introduction to PLT
+ </h1>
+
+ <h2>1. Teaching Staff</h2>
+ <ul><h3>Instructor</h3>
+ <dl><dt>Professor Alfred V. Aho</dt>
+  <dt><a href="http://www.cs.columbia.edu/%7Eaho"> http://www.cs.columbia.edu/~aho  </a></dt>
+  <dt>aho@cs.columbia.edu</dt>
+  <dt>513 Computer Science Building</dt>
+  <dt>Office hours: Mondays and Wednesdays 1:00-2:00pm</dt>
+  <dt>Course webpage: <a href="http://www.cs.columbia.edu/%7Eaho/cs4115">
+      http://www.cs.columbia.edu/~aho/cs4115 </a></dt>
+  <dt>Courseworks website: <a href="https://courseworks.columbia.edu/">
+      https://courseworks.columbia.edu </a></dt>
+  <dt>Piazza bulletin board: <a href="https://piazza.com/class#spring2013/comsw4115">
+      https://piazza.com/class#spring2013/comsw4115 </a></dt>
+
+  <p>
+  </p><dt>Lectures on Mondays and Wednesdays, 2:40-3:55pm, 535 Mudd</dt>
+ </dl><h3>TAs</h3>
+
+ <dl><dt>Karan Bathla</dt>
+  <dt>kb2658@columbia.edu</dt>
+  <dt>Office hours: Mondays &amp; Tuesdays 4:00-5:00</dt>
+  <dt>TA Room: 122 Mudd</dt>
+ </dl><br/><dl><dt>Melanie Kambadur</dt>
+  <dt>melanie@cs.columbia.edu</dt>
+  <dt>Office hours: Thursdays 10:00-12:00</dt>
+  <dt>TA Room: 122 Mudd</dt>
+ </dl><br/><dl><dt>Jared Pochtar</dt>
+  <dt>jrp2181@columbia.edu</dt>
+  <dt>Office hours: Fridays 3:00-5:00</dt>
+  <dt>TA Room: 122 Mudd</dt>
+
+ </dl><br/><dl><dt>Maria Taku</dt>
+  <dt>mat2185@columbia.edu</dt>
+  <dt>Office hours: Tuesdays and Thursdays 12:30-2:30</dt>
+  <dt>TA Room: 122 Mudd</dt>
+ </dl></ul><h2>2. Course Objectives</h2>
+ <ul><li>You will learn about the syntactic and semantic elements of modern programming languages.</li>
+  <li>You will learn the important algorithms used by compilers to
+       translate high-level source languages into machine and other
+       target languages.</li>
+  <li>You will learn about imperative, object-oriented, functional, logic, scripting languages, and parallel languages.</li>
+  <li>A highlight of this course is a semester-long programming
+      project in which you will work in a small team to create
+      and implement an innovative little language of your own design.</li>
+  <li>You will learn computational thinking and good software engineering practices.</li>
+  <li>The concepts, techniques, and tools that you will learn in this
+      course have broad application to many areas of computer science
+      and software development outside of programming
+      languages and compilers.</li>
+ </ul><h2>3. Course Syllabus</h2>
+  <ul><li>Computational thinking</li>
+   <li>Kinds of programming languages</li>
+   <li>Principles of compilers</li>
+   <li>Lexical analysis</li>
+   <li>Syntax analysis</li>
+   <li>Tools for constructing compilers</li>
+   <li>Syntax-directed translation</li>
+   <li>Semantic analysis</li>
+   <li>Run-time organization</li>
+   <li>Intermediate code generation</li>
+   <li>Code generation</li>
+   <li>Code optimization</li>
+   <li>Parallel and concurrent programming languages</li>
+  </ul><h2>4. Textbooks and References</h2>
+ <ul><li>The course text is</li>
+   <ul><li>Alfred V. Aho, Monica Lam, Ravi Sethi, and Jeffrey D. Ullman</li>
+     <dt><i>Compilers: Principles, Techniques, and Tools</i>, Second Edition</dt>
+     <dt>Pearson Addison-Wesley, 2007</dt>
+   </ul><br/><li>Other good references are</li>
+   <ul><li>Andrew W. Appel</li>
+      <dt><i>Modern Compiler Implementation in Java</i>, second edition</dt>
+      <dt>Cambridge University Press, 2002</dt>
+     <br/><li>Keith D. Cooper and Linda Torczon</li>
+      <dt><i>Engineering a Compiler</i>, Second Edition</dt>
+      <dt>Morgan Kaufmann, 2012</dt>
+     <br/><li>Steven S. Muchnick</li>
+      <dt><i>Advanced Compiler Design and Implementation</i></dt>
+      <dt>Morgan Kaufmann, 1997</dt>
+     <br/><li>Michael L. Scott</li>
+      <dt><i>Programming Language Pragmatics</i>, Third Edition</dt>
+      <dt>Morgan Kaufman, 2009</dt>
+     <br/><li>Robert W. Sebesta</li>
+      <dt><i>Concepts of Programming Languages</i>, Tenth Edition</dt>
+      <dt>Pearson/Addison-Wesley, 2012</dt>
+     <br/></ul><br/><li><a href="http://www1.cs.columbia.edu/%7Esedwards/classes/2012/w4115-fall/index.html">
+        Also see Professor Stephen Edwards' PLT website. Well worth a look!</a></li>
+
+ </ul><h2>5. Course Requirements, Grading, and Late Policy</h2>
+ <ul><li>Homework (10% of final grade)</li>
+  <li>Midterm (20% of final grade): Wednesday, March 13, 2013</li>
+  <li>Final (30% of final grade): Monday, May 6, 2013</li>
+  <li>Course project (40% of final grade): project has team and individual components</li>
+  <li>All assignments can be handed in one week after they are due for 50% credit.</li>
+ </ul><h2>6. Project Requirements</h2>
+ <ul><li>Form a team of five. Teams should be formed by Monday, February 4, 2013.</li>
+  <li>Design a new innovative little language</li>
+  <li>Build a compiler or interpreter for it.</li>
+  <li>Project deliverables and due dates:</li>
+  </ul><ol><li>Feb 27: Language white paper.
+        See Section 1.2 of
+        <a href="http://www.oracle.com/technetwork/java/index-136113.html">
+         http://www.oracle.com/technetwork/java/index-136113.html</a>
+        for a sample white paper on Java.</li>
+    <li>Mar 27: Language tutorial and reference manual.</li>
+    </ol><ul><li>See Chapter 1 of K&amp;R for a sample language tutorial.</li>
+     <li>See Appendix A of K&amp;R for a sample language reference manual.</li>
+    </ul><li>May 14-16: Final project report and demo to teaching staff.</li>
+   
+  <li>Start to form project teams of five right away.  Elect a</li>
+  <ul><li>Project manager</li>
+   <li>Language guru</li>
+   <li>System architect</li>
+   <li>System integrator</li>
+   <li>Verification and validation person</li>
+  </ul><h2>7. Programming Languages</h2>
+ <ul><li>A programming language is a notation for specifying computational tasks that a person can understand
+      and a computer can execute.</li>
+  <li>Every programming language has a syntax and a semantics.</li>
+  <ul><li>The syntax specifies how a concept is expressed.</li>
+   <li>The syntax is often defined using a (context-free) grammar.</li>
+   <dl><dd><i>statement</i> -&gt; <code>while (</code> <i>expression</i> <code>)</code> <i>statement</i></dd>
+   </dl><li>The semantics specifies what the concept means or does.</li>
+   <li>Semantics can be specified operationally, axiomatically or denotationally.</li>
+  </ul><li>Ambiguity</li>
+  <ul><li>"Time flies like an arrow."</li>
+  </ul><li>Domains of application</li>
+  <ul><li>Scientific</li>
+   <ul><li>Fortran</li>
+   </ul><li>Business</li>
+   <ul><li>COBOL</li>
+   </ul><li>Artificial intelligence</li>
+   <ul><li>LISP</li>
+   </ul><li>Systems</li>
+   <ul><li>C</li>
+   </ul><li>Web</li>
+   <ul><li>Java</li>
+   </ul><li>General purpose</li>
+   <ul><li>C++</li>
+   </ul></ul></ul><h2>8. Kinds of Languages</h2>
+ <ul><li>Imperative</li>
+  <ul><li>Specifies how a computation is to be done.</li>
+   <li>Examples: C, C++, C#, Fortran, Java</li>
+  </ul><li>Declarative</li>
+  <ul><li>Specifies what computation is to be done.</li>
+   <li>Examples: Haskell, ML, Prolog</li>
+  </ul><li>von Neumann</li>
+  <ul><li>One whose computational model is based on the von Neumann architecture.</li>
+   <li>Basic means of computation is through the modification of variables (computing
+       via side effects).</li>
+   <li>Statements influence subsequent computations by changing the value of memory.</li>
+   <li>Examples: C, C++, C#, Fortran, Java</li>
+  </ul><li>Object-oriented</li>
+  <ul><li>Program consists of interacting objects.</li>
+   <li>Each object has its own internal state and executable functions (methods)
+       to manage that state.</li>
+   <li>Object-oriented programming is based on encapsulation, modularity,
+       polymorphism, and inheritance.</li>
+   <li>Examples: C++, C#, Java, OCaml, Simula 67, Smalltalk</li>
+  </ul><li>Scripting</li>
+  <ul><li>An interpreted language with high-level operators for
+       "gluing together" computations.</li>
+   <li>Examples: AWK, Perl, PHP, Python, Ruby</li>
+  </ul><li>Functional</li>
+  <ul><li>One whose computational model is based on the recursive definition of functions
+       (lambda calculus).</li>
+   <li>Examples: Haskell, Lisp, ML.</li>
+  </ul><li>Parallel</li>
+  <ul><li>One that allows a computation to run concurrently on multiple processors.</li>
+   <li>Examples</li>
+   <ul><li>Libraries: POSIX threads, MPI</li>
+    <li>Languages: Ada, Cilk, OpenCL, Chapel, X10</li>
+    <li>Architecture: CUDA (parallel programming architecture for GPUs)</li>
+   </ul></ul><li>Domain specific</li>
+  <ul><li>Many areas have special-purpose languages to facilitate the creation of applications.</li>
+   <li>Examples</li>
+   <ul><li>YACC for creating parsers</li>
+    <li>LEX for creating lexical analyzers</li>
+    <li>MATLAB for numerical computations</li>
+    <li>SQL for database applications</li>
+   </ul></ul><li>Markup</li>
+  <ul><li>Not programming languages in the sense of being Turing complete, but widely used
+       for document preparation.</li>
+   <li>Examples: HTML, XHTML, XML</li>
+  </ul></ul><h2>9. Influential Languages</h2>
+ <ul><li>1950s: assembler, Cobol, Fortran, Lisp</li>
+  <li>1960s: Algol60, Basic, Simula67</li>
+  <li>1970s: C, ML, scripting languages, application-specific languages</li>
+  <li>See
+      <a href="http://www.tiobe.com/">TIOBE Index</a>
+      for their list of this month's 100 most popular programming languages.</li>
+  <ul><li>TIOBE top ten for January 2013: C, Java, Objective-C, C++, C#, PHP,
+       Visual Basic, Python, Perl, Ruby</li>
+  </ul></ul><h2>10. Language Design Issues</h2>
+ <ul><li>Application domain</li>
+  <ul><li>Exploit domain restrictions for expressiveness and performance.</li>
+  </ul><li>Computational model</li>
+  <ul><li>Choose a model that encourages simplicity and ease of expression.</li>
+   <li>Incorporate a few primitives that can be elegantly combined to
+       solve large classes of problems.</li>
+  </ul><li>Abstraction mechanisms</li>
+  <ul><li>Abstractions should foster reuse and be suggestive of solutions.</li>
+  </ul><li>Type system</li>
+  <ul><li>Type systems can help reliability and security of programs.</li>
+  </ul><li>Usability</li>
+  <ul><li>Language design should promote readability, writability, and efficiency.</li>
+  </ul></ul><h2>11. To Do</h2>
+ <ol><li>Start forming your project team immediately. Teams should be in place by Feb 4, 2013.</li>
+  <li>Use Courseworks discussion board (https://courseworks.columbia.edu) to publicize your interests.</li>
+  <li>Contact Maria Taku (mat2185@columbia.edu) for help forming
+      or finding a team.</li>
+  <li>Give your language a name.</li>
+ </ol><h2>12. Reading Assignment</h2>
+ <ul><li>ALSU: Chapters 1 and 2</li>
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+
+
+</body>

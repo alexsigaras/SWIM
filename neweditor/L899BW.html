@@ -1,0 +1,185 @@
+<head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/><title>
+  Lecture 15: March 25, 2013
+ </title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 15: Intermediate Code Generation<br/>
+  March 25, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Intermediate Representations</li>
+  <li>Semantic analysis</li>
+  <li>Purpose of types in programming languages</li>
+  <li>Type systems</li>
+  <li>Typing in programming languages</li>
+  <li>Type inference rules</li>
+  <li>Type conversions</li>
+ </ol><h2>1. Intermediate Representations</h2>
+ <ul><li>Abstract syntax trees</li>
+  <li>Directed acyclic graphs (DAGs)</li>
+  <li>Three-address code</li>
+  <ul><li>Addresses</li>
+   <ul><li>Names</li>
+    <li>Constants</li>
+    <li>Compiler-generated temporaries</li>
+   </ul><li>Instructions</li>
+   <ul><li>Three-address code has instructions of various forms for
+        assignments, conditional and unconditional jumps, procedure calls and returns, indexed copy,
+        address and pointer assignments.</li>
+   </ul><li>Common representations for three-address code include
+      records, quadruples, and triples.</li>
+  </ul><li>Static single-assignment (SSA) form is an intermediate reprentation that facilitates
+      certain code optimizations. Assignments in SSA are to variables with distinct names.
+      It also uses a special function, called a φ-function, to combine two definitions of the same variable
+      arising from two different control-flow paths.</li>
+ </ul><h2>2. Semantic Analysis</h2>
+ <ul><li>The semantic analyzer uses the syntax tree and information in the symbol
+      table to check the source program for semantic consistency with the
+      language definition.</li>
+  <li>It gathers type information for intermediate code generation.</li>
+  <li>Type checking is an important part of semantic analysis. During type
+      checking the compiler checks that each operator has compatible operands.</li>
+  <li>Uses made of semantic information for a variable <code>x</code>:</li>
+  <ul><li>What kind of value is stored in <code>x</code>?</li>
+   <li>How big is <code>x</code>?</li>
+   <li>Who is responsible for allocating space for <code>x</code>?</li>
+   <li>Who is responsible for initializing <code>x</code>?</li>
+   <li>How long must the value of <code>x</code> be kept?</li>
+   <li>If <code>x</code> is a procedure, what kinds of arguments does it take and what
+       kind of return value does it have?</li>
+  </ul><li>Storage layout for local names</li>
+ </ul><h2>3. Purpose of Types in Programming Languages</h2>
+ <ul><li>Virtually all high-level programming languages associate types with values.</li>
+  <li>Types often provide an implicit context for operations.
+      For example, in C the expression <code>x + y</code> will use integer addition
+      if <code>x</code> and <code>y</code> are <code>int</code>'s, and floating-point
+      addition if <code>x</code> and <code>y</code> are <code>float</code>'s.</li>
+  <li>Types can catch programming errors at compile time by making sure
+      operators are applied to semantically valid operands. For example, a Java compiler
+      will report an error if <code>x</code> and <code>y</code> are <code>String</code>'s
+      in the expression <code>x * y</code>.
+ </li></ul><h2>4. Type Systems</h2>
+ <ul><li>The type of a construct in a program can be denoted by a type expression.</li>
+  <li>A type expression is either a basic type (e.g., <code>integer</code>) or
+      a type constructor applied to a type expression (e.g., a function from an integer
+      to an integer).</li>
+  <li>A type system is a set of rules for assigning type expressions to the
+      syntactic constructs of a program and for specifying</li>
+  <ul><li>type equivalence (when the types of two values are the same),</li>
+   <li>type compatibility (when a value of a given type can be used in
+       a given context), and</li>
+   <li>type inference (rules that determine the type of a language construct based
+       on how it is used).</li>
+  </ul><li>Forms of type equivalence</li>
+  <ul><li>Name equivalence: two types are equivalent iff they have the same name.</li>
+   <li>Structural equivalence: two types are equivalent iff they have the same structure.</li>
+   <li>To test for structural equivalence, a compiler must encode the structure
+       of a type in its representation. A tree (or type graph) is typically
+       used.</li>
+  </ul><li>A type checker makes sure that a program obeys the type-compability rules
+      of the language.</li>
+  <li>We can think about types in several different ways:</li>
+  <ul><li>Denotational: a type is a set of values called a domain.</li>
+   <li>Constructive: a type is either a primitive type (such as an integer or a character)
+       or a composite type created by applying a type constructor (such as a structure
+       or an array) to simpler types.</li>
+   <li>Abstraction-based: a type is an interface consisting of a set of operations
+      with well-defined and mutually consistent semantics.</li>
+  </ul></ul><h2>6. Typing in Programming Languages</h2>
+ <ul><li>The type system of a language determines whether type checking can be
+      be performed at compile time (statically) or at run time (dynamically).</li>
+  <li>A statically typed language is one in which all constructs of a language can be
+      typed at compile type. C, ML, and Haskell are statically typed.</li>
+  <li>A dynamically typed language is one in which some of the constructs of a language
+      can only be
+      typed at run time. Perl, Python, and Lisp are dynamically typed.</li>
+  <li>A strongly typed language is one in which the compiler can guarantee that the
+      programs it accepts will run without type errors.
+      ML and Haskell are strongly typed.</li>
+  <li>A type-safe language is one in which the only operations that can be performed
+      on data in the language are those sanctioned by the type of the data. [Vijay
+      Saraswat]</li>
+ </ul><h2>7. Type Inference Rules</h2>
+ <ul><li>Type inference rules specify for each operator the mapping between the types
+      of the operands and the type of the result.</li>
+  <li>E.g., result types for <code>x + y</code>:</li>
+   </ul><pre><code>
+   </code></pre><table border="1"><tbody><tr><th><code> + </code></th>
+     <th><code>int</code></th>
+     <th><code>float</code></th>
+    </tr><tr><td style="text-align: center;"><code> <b>int</b> </code></td>
+     <td style="text-align: center;"><code> int </code></td>
+     <td style="text-align: center;"><code> float </code></td>
+    </tr><tr><td style="text-align: center;"><code><b>float</b></code></td>
+     <td style="text-align: center;"><code>float</code></td>
+     <td style="text-align: center;"><code>float</code></td>
+    </tr></tbody></table><br/><li>Operator and function overloading</li>
+  <ul><li>In Java the operator <code>+</code> can mean addition or string concatenation
+       depending on the types of its operands.</li>
+   <li>We can choose between two versions of an overloaded function by
+       looking at the types of their arguments.</li>
+  </ul><li>Function calls</li>
+  <ul><li>Compiler must check that the type of each actual parameter is compatible with
+       the type of the corresponding formal parameter. It must check that the
+       type of the returned value is compatible with the type of the function.</li>
+   <li>The <i>type signature</i> of a function specifies the types of the formal
+       parameters and the type of the return value.</li>
+   <li>Example: <code>strlen</code> in C</li>
+   <ul><li>Function prototype in C:</li>
+    </ul></ul><pre><code>
+    unsigned int strlen(const char *s);
+    </code></pre>
+    <li>Type expression:</li>
+    <pre><code>
+    strlen: const char * → unsigned int
+    </code></pre>
+   
+  
+
+  <li>Polymorphic functions</li>
+  <ul><li>A polymorphic function allows a function to manipulate data structures
+       regardless of the types of the elements in the data structure</li>
+   <li>Example: Fig. 6.28 (p. 391) -- an ML program for the length of a list</li>
+  </ul><h2>8. Type Conversions</h2>
+ <ul><li>Implicit type conversions</li>
+  <ul><li>In an expression like <code>f + i</code> where <code>f</code> is a float and
+       <code>i</code> is an integer a compiler must first convert the integer to a
+       float before the floating point addition operation is performed. That is, the
+       expression must be transformed into an intermediate representation like</li>
+       </ul></ul><pre><code>
+         t1 = INTTOFLOAT i
+         t2 = x FADD t1
+       </code></pre>
+  
+  <li>Explicit type conversions</li>
+  <ul><li>In C, explicit type conversions can be forced ("coerced") in an expression using a
+       unary operator called a cast.  E.g., <code>sqrt((double) n)</code> converts the
+       value of the integer <code>n</code> to a <code>double</code> before passing it
+       on to the square root routine <code>sqrt</code>.</li>
+  </ul><h2>9. Practice Problems</h2>
+ <ol><dt>The following grammar generates programs consisting of
+     a sequence of declarations D followed by a single expression E.
+     Each identifier must be declared before its use.</dt>
+  </ol><ul/><pre><code>
+     P → D ; E
+     D → D ; D | T id
+     T → int | float | T [ num ]
+     E → num | id | E [ E ] | E + E
+   </code></pre>
+  
+  <li>Construct type expressions as in Section 6.3.1 (pp. 371-372)
+      for the following programs:</li>
+  <ol style="list-style-type: lower-alpha;"><li>int a; int b; a + b
+   </li><li>float[10][20] a; a[1] + a[2]</li>
+  </ol><li>Write pseudcode for a function <code>sequiv(exp1, exp2)</code> that will test the
+      structural equivalence of two type expressions <code>exp1</code> and <code>exp2</code>.</li>
+  <li>Show how your function computes
+      <code>sequiv(array(2, array(2, int)), array(2, array(3, int))).</code></li>
+ 
+
+  
+ <h2>10. Reading</h2>
+ <ul><li>ALSU, Sects. 6.1-6.4.</li>
+ </ul><br/><br/><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+</body>

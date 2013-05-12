@@ -1,0 +1,226 @@
+<head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"/><title>Lecture 4: February 4, 2013</title></head><body>
+ <h1>COMS W4115<br/>
+  Programming Languages and Translators<br/>
+  Lecture 4: Regular Expressions and Lexical Analysis<br/>
+  February 4, 2013
+ </h1>
+
+ <h2>Lecture Outline</h2>
+ <ol><li>Regular expressions</li>
+  <li>Lex regular expressions</li>
+  <li>Specifying a lexical analyzer with Lex</li>
+  <li>Example Lex programs</li>
+  <li>Creating a lexical processor with Lex</li>
+  <li>Lex history</li>
+ </ol><h2>1. Regular Expressions</h2>
+ <ul><li>Regular expressions in various forms are used in many programming languages
+      and software tools to specify patterns and match strings.</li>
+  <li>Regular expressions are well suited for matching lexemes in
+      programming languages.</li>
+  <li>In formal language theory regular expressions use a finite alphabet of symbols and the
+      operators union, concatenation, and Kleene closure. They define the regular languages.</li>
+  <li>Unix programs like egrep, awk, and Lex extend this simple notation
+      with additional operators and shorthands.</li>
+  <li>The POSIX (Portable Operating System Inteface for Unix) standard defines two
+      flavors of regular expressions for Unix systems: Basic Regular Expressions
+      and Extended Regular Expressions.</li>
+  <li>Perl has amazingly rich regular expressions which further extend the
+      egrep, awk, and Lex regular expressions. Perl compatible regular expressions
+      have been adopted by Java, JavaScript, PHP, Python, and Ruby.</li>
+  <li>The back-referencing operator in Perl regular expressions allows nonregular languages
+      to be recognized and makes the pattern-matching problem NP-complete.
+ </li></ul><h2>2. Lex Regular Expressions</h2>
+ <ul><li>The declarative language Lex has been
+      widely used for creating many useful lexical analysis tools
+      including lexers.</li> 
+  <li>The following symbols in Lex regular expressions have special meanings:</li>
+  <ul><dt><code>\ " . ^ $ [ ] * + ? { } | ( ) /</code></dt>
+   <dt>To turn off their special meaning, precede the symbol by <code>\</code>.</dt>
+   <ul><li>Thus, <code>\*</code> matches <code>*</code>.</li>
+    <li><code>\\</code> matches <code>\</code>.</li>
+   </ul></ul><li>Examples of Lex regular expressions and the strings they match.</li>
+  </ul><ol><li><code>"a.*b"</code> matches the string <code>a.*b</code>.</li>
+  <li><code>.</code> matches any character except a newline.</li>
+  <li><code>^</code> matches the empty string at the beginning of a line.</li>
+  <li><code>$</code> matches the empty string at the end of a line.</li>
+  <li><code>[abc]</code> matches an <code>a</code>, or a <code>b</code>, or a <code>c</code>.</li>
+  <li><code>[a-z]</code> matches any lowercase letter between <code>a</code>
+      and <code>z</code>.</li>
+  <li><code>[A-Za-z0-9]</code> matches any alphanumeric character.</li>
+  <li><code>[^abc]</code> matches any character except an
+      <code>a</code>, or a <code>b</code>, or a <code>c</code>.</li>
+  <li><code>[^0-9]</code> matches any nonnumeric character.</li>
+  <li><code>a*</code> matches a string of zero or more <code>a</code>'s.</li>
+  <li><code>a+</code> matches a string of one or more <code>a</code>'s.</li>
+  <li><code>a?</code> matches a string of zero or one <code>a</code>'s.</li>
+  <li><code>a{2,5}</code> matches any string consisting of two to five <code>a</code>'s.</li>
+  <li><code>(a)</code> matches an <code>a</code>.</li>
+  <li><code>a/b</code> matches an <code>a</code> when followed by a <code>b</code>.</li>
+  <li><code>\n</code> matches a newline.</li>
+  <li><code>\t</code> matches a tab.</li>
+  </ol><li>Lex chooses the longest match if there is more than one match.
+      E.g., <code>ab*</code> matches the prefix <code>abb</code>
+      in <code>abbc</code>.</li>
+ 
+
+ <h2>3. Specifying a Lexical Analyzer with Lex</h2>
+ <ul><li>Lex is a special-purpose programming language for creating programs
+      to process streams of input characters.</li>
+  <li>Lex has been widely used for contructing lexical analyzers.</li>
+  <li>A Lex program has the following form:</li>
+  </ul><pre>	declarations
+	%%
+	translation rules
+	%%
+	auxiliary functions
+  </pre>
+  <li>The declarations section can contain declarations of variables,
+      manifest constants, and regular definitions. The declarations
+      section can be empty.</li>
+  <li>The translation rules are each of the form</li>
+  <pre>	pattern	{action}
+  </pre>
+
+  <ul><li>Each pattern is a regular expression which may use regular definitions
+       defined in the declarations section.</li>
+   <li>Each action is a fragment of C-code.</li>
+  </ul><li>The auxiliary functions section starting with the second %% is optional.
+      Everything in this section is copied directly to the file <code>lex.yy.c</code>
+      and can be used in the actions of the translation rules.</li>
+ 
+
+ <h2>4. Example Lex programs</h2>
+ <h4>Example 1: Lex program to print all words in an input stream</h4>
+  <ul><li>The following Lex program will print all alphabetic words in an input stream:</li>
+  </ul><pre><code>
+	%%
+	[A-Za-z]+	{ printf("%s\n", yytext); }
+	.|\n		{ }
+  </code></pre>
+
+   <li>The pattern part of the first translation rule says that if the
+       current prefix of the unprocessed input stream consists of a sequence of one or more letters,
+       then the longest such prefix is matched and assigned to the Lex string variable
+       <code>yytext</code>. 
+       The action part of the first translation rule prints the prefix that was matched.
+       If this rule fires, then the matching prefix is removed
+       from the beginning of the unprocessed input stream.</li>
+   <li>The dot in pattern part of the second translation rule matches any character except
+       a newline at the beginning of the unprocessed input stream.  The <code>\n</code>
+       matches a newline at the beginning of the unprocessed input stream.
+       If this rule fires, then the character of the beginning of the unprocessed
+       input stream is removed.
+       Since the action is empty, no output is generated.</li>
+   <li>Lex repeated applies these two rules until the input stream is exhausted.</li>
+  
+
+ <h4>Example 2: Lex program to print number of words, numbers, and lines in a file</h4>
+  <ul/><pre><code>
+
+         int num_words = 0, num_numbers = 0, num_lines = 0;
+word     [A-Za-z]+
+number   [0-9]+
+%%
+{word}   {++num_words;}
+{number} {++num_numbers;}
+\n       {++num_lines; }
+.        { }
+%%
+int main()
+{
+  yylex();
+  printf("# of words = %d, # of numbers = %d, # of lines = %d\n",
+         num_words, num_numbers, num_lines );
+}
+
+  </code></pre>
+
+  
+
+
+ <h4>Example 3: Lex program for some typical programming language tokens</h4>
+ <ul><li>See ALSU, Fig. 3.23, p. 143.</li>
+  </ul><pre><code>
+
+%{ /* definitions of manifest constants */
+   LT, LE,
+   IF, ELSE, ID, NUMBER, RELOP */
+
+/* regular definitions */
+delim	 [ \t\n]
+ws	 {delim}+
+letter	 [A-Za-z]
+digit    [0-9]
+id	 {letter}({letter}|{digit})*
+number	 {digit}+(\.{digit}+)?(E[+-]?{digit}+)?
+%%
+{ws}	 { }
+if	 {return(IF);}
+else	 {return(ELSE);}
+{id}	 {yylval = (int) installID(); return(ID);}
+{number} {yylval = (int) installNum(); return(NUMBER);}
+"&lt;"	 {yylval = LT; return(RELOP); }
+"&lt;="	 {yylval = LE; return(RELOP); }
+%%
+int installID()
+{
+  /* function to install the lexeme, whose first character
+     is pointed to by yytext, and whose length is yyleng,
+     into the symbol table; returns pointer to symbol table
+     entry */
+}
+
+int installNum() {
+  /* analogous to installID */
+}
+
+  </code></pre>
+
+ 
+ 
+ 
+
+ <h2>5. Creating a Lexical Processor with Lex</h2>
+ <ul><li>Put lex program into a file, say <code>file.l</code>.</li>
+  <li>Compile the lex program with the command:</li> 
+</ul><pre><code>
+lex file.l
+</code></pre>
+      <dt>This command produces an output file <code>lex.yy.c.
+  </code><li>Compile this output file with the C compiler and the lex library
+      <code>-ll</code>:</li>
+<pre><code>
+gcc lex.yy.c -ll
+</code></pre>
+  </dt><dt>The resulting <code>a.out</code> is the lexical processor.</dt>
+ 
+ 
+
+ <h2>6. Lex History</h2>
+ <ul><li>The initial version of Lex was written by Michael Lesk at
+      Bell Labs to run on Unix.</li>
+  <li>The second version of Lex with more efficient regular expression
+      pattern matching was written by Eric Schmidt at Bell Labs.</li>
+  <li>Vern Paxson wrote the POSIX-compliant variant of Lex, called Flex, at Berkeley.</li>
+  <li>All versions of Lex use variants of the regular-expression pattern-matching
+      technology described in Chapter 3 of ALSU.</li>
+  <li>Today, many versions of Lex use C, C++, C#, Java, and other languages
+      to specify actions.</li>
+ </ul><h2>7. Practice Problems</h2>
+ <ol><li>Write a Lex program that copies a file, replacing each nonempty sequence
+      of whitespace consisting of blanks, tabs, and newlines by a single blank.</li>
+  <li>Write a Lex program that converts a file of English text to "Pig Latin."
+      Assume the file is a sequence of words separated by whitespace. If a word
+      begins with a consonant, move the consonant to the end
+      of the word and add "ay". (E.g.,
+      "pig" gets mapped into "igpay".) If a word begins with a vowel, just add "ay"
+      to the end. (E.g., "art" gets mapped to "artay".)
+  </li></ol><h2>8. Reading Assignment</h2>
+ <ul><li>ALSU, Sects. 3.3, 3.5</li>
+  <li>See <a href="http://dinosaur.compilertools.net/">
+      The Lex &amp; Yacc Page</a>
+      for Lex and Flex tutorials and manuals.</li>
+
+ </ul><br/><hr/><address><a href="mailto:aho@cs.columbia.edu">aho@cs.columbia.edu</a></address>
+
+</body>
