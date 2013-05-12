@@ -21,12 +21,12 @@
 #-----------------------------------------------------------------------------#
 
 #-----------------------------------------------------------------------------#
-# File: std.swim                               		                  		  #
-# Description: Swim Standard Library                                          #
+# File: math.swim                           			                      #
+# Description: Swim Math Library                                    		  #
 #-----------------------------------------------------------------------------#
 
-include datastructures; # Data Stuctures library
-include math;			# Math Library
-include html;			# HTML library
+e = e(); // e() returns the mathematical constant e, to the precision available
+pi = pi(); // pi() returns the mathematical constant pi, to the precision available
+phi = phi(); // phi() returns the mathematical constant phi, to the precision available
 
 #-----------------------------------------------------------------------------#
