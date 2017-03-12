@@ -1,5 +1,5 @@
-Semantic Analysis
-----------------
+# Semantic Analysis
+
 AST + Symbol Table -> semantic consistency/errors, type information
 
 >Type checking is an important part of semantic analysis. During type checking the compiler checks that each operator has compatible operands.
@@ -19,9 +19,6 @@ AST + Symbol Table -> semantic consistency/errors, type information
 >If x is a procedure, what kinds of arguments does it take and what kind of return value does it have?
 
 >Storage layout for local names
-
-
-
 
 Type system/check/inference
 --------------------
@@ -46,15 +43,10 @@ Type system/check/inference
 ```template == hash on (operator, n.type, n2.type)
 	if keyerror on lookup then type error```
 
-
-
 2. Symbol Table:
-
-
 
 Procedures:
 -----------
-
 
 + choice of parameter-passing mechanism
 + storage allocation for local variables: static or dynamic
