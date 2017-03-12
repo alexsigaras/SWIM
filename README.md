@@ -9,6 +9,7 @@ Final Project for COMS W4115 - Programming Languages &amp; Translators
 3. [Language Reference Manual](docs/3.%20Language%20Reference%20Manual/Team%203%20-%20SWIM%20Language%20Reference%20Manual.pdf)
 4. [Grammar](docs/4.%20Grammar/Full%20Grammar.pdf)
 5. [Presentation](docs/5.%20Presentation/13-05-01_Team3_SWIM.pdf)
+6. [Presentation Video](https://youtu.be/YznTNys4B84)
 
 ## Deployment
 
