@@ -10,12 +10,9 @@ Final Project for COMS W4115 - Programming Languages &amp; Translators
 4. [Grammar](docs/4.%20Grammar/Full%20Grammar.pdf)
 5. [Presentation](docs/5.%20Presentation/13-05-01_Team3_SWIM.pdf)
 
-
-
 ## Deployment
 
 Coming soon...
-
 
 ### Installing on a MAC
 
